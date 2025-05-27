@@ -87,3 +87,88 @@ get_params <- function(params, julia_sampler) {
   return(param_values)
 }
 
+
+#' Wrap BUGS Model for Julia
+#'
+#' Wraps a BUGS model string with `model = @bugs begin` and `end`,
+#' if it is not already wrapped. This is useful for preparing BUGS models
+#' for use with Julia packages that expect this specific block structure.
+#'
+#' @param model_code A character string containing the body of a BUGS model.
+#'   If the model already starts with `model = @bugs begin` and ends with `end`,
+#'   the function returns it unchanged.
+#'
+#' @return A character string with the BUGS model wrapped properly in Julia-compatible syntax.
+#'
+#' @examples
+#' model_body <- "
+#'   for i in 1:N
+#'     r[i] ~ dbin(p[i], n[i])
+#'     b[i] ~ dnorm(0.0, tau)
+#'     p[i] = logistic(alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1[i] * x2[i] + b[i])
+#'   end
+#'   alpha0 ~ dnorm(0.0, 1.0E-6)
+#'   tau ~ dgamma(0.001, 0.001)
+#'   sigma = 1 / sqrt(tau)
+#' "
+#' wrap_model_to_juliaBUGS(model_body)
+#'
+#' @export
+wrap_model_to_juliaBUGS <- function(model_code){
+
+  trimmed_code <- trimws(model_code)
+
+  starts_correctly <- grepl("^model = @bugs begin", trimmed_code)
+  ends_correctly <- grepl("end\\s*$", trimmed_code)
+
+  if(starts_correctly && ends_correctly){
+    return(trimmed_code)
+  } else {
+    return(cat('model = @bugs begin\n',
+                  trimmed_code,
+                  '\nend'))
+  }
+}
+
+
+#' Convert BUGS Model to Julia's `@bugs` Macro Format
+#'
+#' Formats a BUGS model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
+#' used in the Julia ecosystem for running BUGS models. By default, this macro converts
+#' R-style variable names (e.g., `a.b.c`) to Julia-style (`a_b_c`). You can disable this behavior
+#' by setting `convert_var_name = FALSE`.
+#'
+#' @param model_code A character string containing the BUGS model.
+#' @param convert_var_name Logical; if `TRUE` (default), R-style variable names such as `a.b.c`
+#'   are translated to `a_b_c` in the Julia model. Set to `FALSE` to preserve original names.
+#'
+#' @return A character string formatted as a Julia `@bugs` macro call.
+#'
+#' @examples
+#' model <- "
+#'   for i in 1:N
+#'     y[i] ~ dnorm(mu, tau)
+#'   end
+#'   mu ~ dnorm(0.0, 1.0E-6)
+#'   tau ~ dgamma(0.001, 0.001)
+#' "
+#' bugs2juliaBUGS(model)
+#' bugs2juliaBUGS(model, convert_var_name = FALSE)
+#'
+#' @export
+bugs2juliaBUGS <- function(model_code,
+                           convert_var_name = TRUE) {
+
+  trimmed_code <- trimws(model_code)
+  julia_bool <- c("TRUE" = "true", "FALSE" = "false")
+
+  return(cat(
+    'model = @bugs("""\n',
+    trimmed_code,
+    '\n""", ',
+    julia_bool[as.character(convert_var_name)],
+    ', true)'
+  ))
+}
+
+
