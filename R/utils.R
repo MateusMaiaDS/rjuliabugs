@@ -171,27 +171,67 @@ bugs2juliaBUGS <- function(model_code,
   ))
 }
 
-setup_juliaBUGS <- function(extra_packages = NULL){
+#' Setup Julia Environment for JuliaBUGS
+#'
+#' Installs and loads required Julia packages for using JuliaBUGS with R via JuliaCall.
+#'
+#' This function checks for the required Julia packages for running `JuliaBUGS` and installs them if they are not already installed.
+#' It also loads these packages into the current Julia session. Optionally, users can provide additional Julia packages to install and load.
+#'
+#' @param extra_packages A character vector of additional Julia packages to install and load.
+#'   Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.
+#'
+#' @details
+#' The function uses `JuliaCall::julia_install_package_if_needed()` to install core Julia packages:
+#' \itemize{
+#'   \item LogDensityProblemsAD
+#'   \item ReverseDiff
+#'   \item AdvancedHMC
+#'   \item AbstractMCMC
+#'   \item LogDensityProblems
+#'   \item MCMCChains
+#'   \item JuliaBUGS
+#' }
+#' After installation, these packages are loaded in the Julia session with the `using` statement.
+#' Any additional packages specified in `extra_packages` will also be installed and loaded.
+#'
+#' @examples
+#' \dontrun{
+#' # Setup Julia with default required packages
+#' setup_juliaBUGS()
+#'
+#' # Setup Julia with additional packages
+#' setup_juliaBUGS(extra_packages = c("Distributions", "Turing"))
+#' }
+#'
+#' @return This function is called for its side effects (installing and loading Julia packages). It returns `NULL` invisibly.
+#'
+#' @seealso [JuliaCall::julia_install_package_if_needed()], [JuliaCall::julia_eval()]
+#'
+#' @export
+setup_juliaBUGS <- function(extra_packages = NULL,
+                            verify_package = FALSE){
+
+  julia <- JuliaCall::julia_setup(installJulia=TRUE,...)
 
   # Install all dependencies if needed
-  JuliaCall::julia_install_package_if_needed("LogDensityProblemsAD")
-  JuliaCall::julia_install_package_if_needed("ReverseDiff")
-  JuliaCall::julia_install_package_if_needed("AdvancedHMC")
-  JuliaCall::julia_install_package_if_needed("AbstractMCMC")
-  JuliaCall::julia_install_package_if_needed("LogDensityProblems")
-  JuliaCall::julia_install_package_if_needed("MCMCChains")
-  JuliaCall::julia_install_package_if_needed("JuliaBUGS")
-
+  if(verify_package){
+    JuliaCall::julia_install_package_if_needed("LogDensityProblemsAD")
+    JuliaCall::julia_install_package_if_needed("ReverseDiff")
+    JuliaCall::julia_install_package_if_needed("AdvancedHMC")
+    JuliaCall::julia_install_package_if_needed("AbstractMCMC")
+    JuliaCall::julia_install_package_if_needed("LogDensityProblems")
+    JuliaCall::julia_install_package_if_needed("MCMCChains")
+    JuliaCall::julia_install_package_if_needed("JuliaBUGS")
+  }
   # Loading those libraries
   JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains")
 
-  if(!is.null(extra_packages)){
-    for(i in 1:length(extra_packages)){
+  if (!is.null(extra_packages)) {
+    for (i in seq_along(extra_packages)) {
       JuliaCall::julia_install_package_if_needed(extra_packages)
-      JuliaCall::julia_eval(paste0("using ",extra_packages[i]))
+      JuliaCall::julia_eval(paste0("using ", extra_packages[i]))
     }
   }
-
 }
-
 
