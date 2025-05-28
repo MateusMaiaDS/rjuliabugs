@@ -171,4 +171,27 @@ bugs2juliaBUGS <- function(model_code,
   ))
 }
 
+setup_juliaBUGS <- function(extra_packages = NULL){
+
+  # Install all dependencies if needed
+  JuliaCall::julia_install_package_if_needed("LogDensityProblemsAD")
+  JuliaCall::julia_install_package_if_needed("ReverseDiff")
+  JuliaCall::julia_install_package_if_needed("AdvancedHMC")
+  JuliaCall::julia_install_package_if_needed("AbstractMCMC")
+  JuliaCall::julia_install_package_if_needed("LogDensityProblems")
+  JuliaCall::julia_install_package_if_needed("MCMCChains")
+  JuliaCall::julia_install_package_if_needed("JuliaBUGS")
+
+  # Loading those libraries
+  JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains")
+
+  if(!is.null(extra_packages)){
+    for(i in 1:length(extra_packages)){
+      JuliaCall::julia_install_package_if_needed(extra_packages)
+      JuliaCall::julia_eval(paste0("using ",extra_packages[i]))
+    }
+  }
+
+}
+
 

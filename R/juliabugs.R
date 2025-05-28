@@ -5,4 +5,8 @@ juliaBUGS <- function(data,
                       n_thin = 1){
 
 
+  JuliaCall::julia_install_package_if_needed("JuliaBUGS")
+
+
+
 }
