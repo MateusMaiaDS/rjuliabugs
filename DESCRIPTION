@@ -12,3 +12,4 @@ LazyData: true
 Imports: 
     bayesplot,
     JuliaCall
+RoxygenNote: 7.3.1

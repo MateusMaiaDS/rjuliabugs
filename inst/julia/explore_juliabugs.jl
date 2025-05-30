@@ -25,6 +25,7 @@ model_def = @bugs begin
     sigma = 1 / sqrt(tau)
 end
 
+
 model = compile(model_def,data)
 ad_model = ADgradient(:ReverseDiff, model; compile=Val(true))
 
@@ -32,25 +33,14 @@ n_samples, n_adapts = 2000, 1000
 
 D = LogDensityProblems.dimension(model); initial_θ = rand(D)
 
-# samples_and_stats = AbstractMCMC.sample(
-#                         ad_model,
-#                         NUTS(0.8),
-#                         n_samples;
-#                         chain_type = Chains,
-#                         n_adapts = n_adapts,
-#                         init_params = initial_θ,
-#                         discard_initial = n_adapts
-#                     )
-
-n_chains = 2
 samples_and_stats = AbstractMCMC.sample(
-    ad_model,
-    AdvancedHMC.NUTS(0.65),
-    AbstractMCMC.MCMCThreads(),
-    n_samples,
-    n_chains;
-    chain_type = Chains,
-    n_adapts = n_adapts,
-    init_params = [initial_θ for _ = 1:n_chains],
-    discard_initial = n_adapts,
-)
+                       ad_model,
+                       NUTS(0.8),
+                       n_samples;
+                       chain_type = Chains,
+                       n_adapts = n_adapts,
+                       init_params = initial_θ,
+                       discard_initial = n_adapts
+                   )
+
+

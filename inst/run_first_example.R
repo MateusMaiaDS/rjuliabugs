@@ -1,4 +1,5 @@
 rm(list=ls())
+set.seed(42)
 devtools::load_all()
 
 data <- list(
@@ -49,5 +50,18 @@ n_warmup= floor(n_iter/2)
 n_discard = n_warmup
 n_thin = 1
 
-params_to_save <- c("alpha0","alpha1","alpha2","alpha12","tau","sigma")
-control = NULL
+params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
+
+posterior <- juliaBUGS(data = data,
+          model = model,
+          params_to_save = params_to_save,
+          n_iter = n_iter,
+          n_warmup = n_warmup,
+          n_discard = n_discard,
+          n_thin = 1)
+
+library(bayesplot)
+
+mcmc_areas(posterior$params,
+           pars = params_to_save,
+           prob = 0.8)

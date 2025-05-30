@@ -69,22 +69,21 @@ get_params <- function(params, julia_sampler) {
   }
 
   params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
-  params_values <- JuliaCall::julia_eval(
-    paste0("Array(", julia_sampler, "[:,", params_names, ",:])"),
-    need_return = "R"
-  )
 
-  if (length(dim(params_values)) == 0) {
-    param_values <- matrix(params_values, ncol = 1)
-    colnames(param_values) <- params
-  } else if (length(dim(params_values)) == 2) {
-    param_values <- params_values
-    colnames(param_values) <- params
-  } else {
-    param_values <- params_values
+  JuliaCall::julia_eval("julia_params = get_params(sampler_juliaBUGS)",need_return = "Julia")
+
+  post_samples <- vector("list",length = length(params))
+
+  for(i in 1:length(params)){
+     post_samples[[i]] <- JuliaCall::julia_eval(paste0("Float64.(julia_params.",params[i],".data)"),
+                                                need_return = "R")
   }
 
-  return(param_values)
+  post_samples <- do.call(cbind,post_samples)
+
+  colnames(post_samples) <- params
+
+  return(post_samples)
 }
 
 
@@ -124,7 +123,7 @@ wrap_model_to_juliaBUGS <- function(model_code){
   if(starts_correctly && ends_correctly){
     return(trimmed_code)
   } else {
-    return(cat('model = @bugs begin\n',
+    return(paste0('model = @bugs begin\n',
                   trimmed_code,
                   '\nend'))
   }
@@ -162,7 +161,7 @@ bugs2juliaBUGS <- function(model_code,
   trimmed_code <- trimws(model_code)
   julia_bool <- c("TRUE" = "true", "FALSE" = "false")
 
-  return(cat(
+  return(paste0(
     'model = @bugs("""\n',
     trimmed_code,
     '\n""", ',
@@ -210,9 +209,11 @@ bugs2juliaBUGS <- function(model_code,
 #'
 #' @export
 setup_juliaBUGS <- function(extra_packages = NULL,
-                            verify_package = FALSE){
+                            verify_package = TRUE,
+                            install_from_dev = FALSE){
 
-  julia <- JuliaCall::julia_setup(installJulia=TRUE,...)
+  cat("Preparing JuliaBUGS setup... \n")
+  julia <- JuliaCall::julia_setup(installJulia=TRUE)
 
   # Install all dependencies if needed
   if(verify_package){
@@ -222,10 +223,15 @@ setup_juliaBUGS <- function(extra_packages = NULL,
     JuliaCall::julia_install_package_if_needed("AbstractMCMC")
     JuliaCall::julia_install_package_if_needed("LogDensityProblems")
     JuliaCall::julia_install_package_if_needed("MCMCChains")
+  }
+  if(install_from_dev && verify_package){
+    JuliaCall::julia_eval('Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl.git")')
+  } else if (verify_package) {
     JuliaCall::julia_install_package_if_needed("JuliaBUGS")
   }
+
   # Loading those libraries
-  JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains")
+  JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, JuliaBUGS")
 
   if (!is.null(extra_packages)) {
     for (i in seq_along(extra_packages)) {
@@ -234,4 +240,52 @@ setup_juliaBUGS <- function(extra_packages = NULL,
     }
   }
 }
+
+#' Convert Numeric Elements in a List to Integer or Float
+#'
+#' This function takes a list of numeric vectors and returns a new list
+#' where each numeric element is automatically converted to either an
+#' integer (if it is a whole number) or kept as a float (numeric).
+#' It also preserves the original names of vector elements, if any.
+#'
+#' @param data A list of numeric vectors.
+#'
+#' @return A list of the same structure where each numeric element is coerced to the appropriate type:
+#' integers for whole numbers, and floats otherwise. Names are preserved.
+#'
+#' @examples
+#' input_list <- list(
+#'   a = c(x = 1.0, y = 2.5, z = 3.0),
+#'   b = c(foo = 4.0, bar = 5.1),
+#'   c = c(6, 7, 8)
+#' )
+#' convert_numeric_types(input_list)
+#'
+#' @export
+convert_numeric_types <- function(data) {
+  result <- lapply(data, function(vec) {
+
+    # Get existing names (can be NULL)
+    nms <- names(vec)
+
+    # Process each element
+    converted <- sapply(vec, function(x) {
+      if (is.na(x)) {
+        return(NA)
+      } else if (x %% 1 == 0) {
+        return(as.integer(x))
+      } else {
+        return(as.numeric(x))
+      }
+    }, USE.NAMES = FALSE)
+
+    # Re-assign names if they exist
+    if (!is.null(nms)) names(converted) <- nms
+
+    return(converted)
+  })
+
+  return(result)
+}
+
 
