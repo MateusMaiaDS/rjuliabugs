@@ -14,6 +14,7 @@ model <- "
 model = @bugs begin
   for i in 1:N
     r[i] ~ dbin(p[i], n[i])
+    r_hat[i] ~ dbin(p[i],n[i])
     b[i] ~ dnorm(0.0, tau)
     p[i] = logistic(alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1[i] * x2[i] + b[i])
   end
@@ -65,3 +66,9 @@ library(bayesplot)
 mcmc_areas(posterior$params,
            pars = params_to_save,
            prob = 0.8)
+
+
+alpha0_sigma_post <-get_params(params = c("alpha0","sigma"),julia_sampler =  posterior$sampler_name)
+mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
+           n_warmup = 0,
+           facet_args = list(nrow = 2, labeller = label_parsed))

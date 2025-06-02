@@ -44,8 +44,13 @@ juliaBUGS <- function(data,
                       n_warmup= floor(n_iter/2),
                       n_discard = n_warmup,
                       n_thin = 1,
+                      sampler_name = NULL,
                       control = NULL){
 
+  # Defining the sampler name
+  if(is.null(sampler_name)){
+    sampler_name <- "sampler_juliaBUGS"
+  }
 
   # Verify over the data obj
   if(!is.list(data)){
@@ -97,25 +102,16 @@ juliaBUGS <- function(data,
 
 
 
-  JuliaCall::julia_eval("
-sampler_juliaBUGS = AbstractMCMC.sample(
-  ad_model,
-  NUTS(0.8),
-  n_iter,
-  chain_type = Chains,
-  n_adapts = n_warmup,
-  discard_initial = n_discard,
-  thinning = n_thin
-)
-  ")
+  JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,NUTS(0.8),n_iter,chain_type = Chains,n_adapts = n_warmup,discard_initial = n_discard,thinning = n_thin)"))
 
   params <- if(!is.null(params_to_save)){
     get_params(params = params_to_save,
-               julia_sampler = "sampler_juliaBUGS")
+               julia_sampler = sampler_name)
   }
 
   rjuliabugs <- list(params = params,
-                    sampler = JuliaCall::julia_eval("sampler_juliaBUGS",need_return = "R"))
+                     sampler_name = sampler_name,
+                     sampler = JuliaCall::julia_eval(sampler_name,need_return = "R"))
 
   class(rjuliabugs) <- "rjuliabugs"
 

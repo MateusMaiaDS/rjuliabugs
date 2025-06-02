@@ -51,3 +51,6 @@ n_thin = 1
 
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","tau","sigma")
 control = NULL
+
+
+## Setting

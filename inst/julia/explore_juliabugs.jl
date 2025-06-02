@@ -14,6 +14,7 @@ data = (
 model_def = @bugs begin
     for i in 1:N
         r[i] ~ dbin(p[i], n[i])
+        r_hat[i] ~ dbin(p[i], n[i])
         b[i] ~ dnorm(0.0, tau)
         p[i] = logistic(alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1[i] * x2[i] + b[i])
     end
@@ -39,7 +40,6 @@ samples_and_stats = AbstractMCMC.sample(
                        n_samples;
                        chain_type = Chains,
                        n_adapts = n_adapts,
-                       init_params = initial_θ,
                        discard_initial = n_adapts
                    )
 
