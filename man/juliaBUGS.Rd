@@ -7,11 +7,12 @@
 juliaBUGS(
   data,
   model,
+  params_to_save,
   n_iter = 2000,
   n_warmup = floor(n_iter/2),
   n_discard = n_warmup,
   n_thin = 1,
-  params_to_save = NULL,
+  sampler_name = NULL,
   control = NULL
 )
 }
@@ -20,6 +21,9 @@ juliaBUGS(
 
 \item{model}{A character string representing the Julia model definition. Must be a valid expression in Julia.}
 
+\item{params_to_save}{Names of model parameters to extract from the Julia sampler. Must match identifiers in the `model` string.
+if NULL no parameters will be returned.}
+
 \item{n_iter}{Integer. Number of total MCMC iterations. Default is 2000.}
 
 \item{n_warmup}{Integer. Number of warm-up (adaptation) iterations. Default is `floor(n_iter / 2)`.}
@@ -27,8 +31,6 @@ juliaBUGS(
 \item{n_discard}{Integer. Number of initial samples to discard. Default is `n_warmup`.}
 
 \item{n_thin}{Integer. Thinning interval for saving samples. Default is 1 (no thinning).}
-
-\item{params_to_save}{Optional character vector. Names of model parameters to extract from the Julia sampler. Must match identifiers in the `model` string.}
 
 \item{control}{Optional list of control parameters. Currently supports:
 - `data_convert_int`: Logical. Whether to attempt converting numeric values to integers if they are whole numbers. Default is `TRUE`.}

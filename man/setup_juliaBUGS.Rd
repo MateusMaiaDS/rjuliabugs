@@ -7,7 +7,7 @@
 setup_juliaBUGS(
   extra_packages = NULL,
   verify_package = TRUE,
-  install_from_dev = TRUE
+  install_from_dev = FALSE
 )
 }
 \arguments{
