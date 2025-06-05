@@ -223,6 +223,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
     JuliaCall::julia_install_package_if_needed("AbstractMCMC")
     JuliaCall::julia_install_package_if_needed("LogDensityProblems")
     JuliaCall::julia_install_package_if_needed("MCMCChains")
+    JuliaCall::julia_install_package_if_needed("DataFrames")
   }
   if(install_from_dev && verify_package){
     JuliaCall::julia_eval('Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl.git")')
@@ -231,7 +232,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
   }
 
   # Loading those libraries
-  JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, JuliaBUGS")
+  JuliaCall::julia_eval("using LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
 
   if (!is.null(extra_packages)) {
     for (i in seq_along(extra_packages)) {
@@ -288,4 +289,9 @@ convert_numeric_types <- function(data) {
   return(result)
 }
 
+break_string_to_numeric <- function(input_string) {
+  parts <- strsplit(input_string, ":")[[1]]
+  numeric_parts <- as.numeric(parts)
+  return(numeric_parts)
+}
 
