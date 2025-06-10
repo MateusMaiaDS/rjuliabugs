@@ -32,11 +32,13 @@ ad_model = ADgradient(:ReverseDiff, model; compile=Val(true))
 n_samples, n_adapts = 2000, 1000
 
 D = LogDensityProblems.dimension(model); initial_θ = rand(D)
-
+n_chain = 2
 samples_and_stats = AbstractMCMC.sample(
                        ad_model,
                        NUTS(0.8),
-                       n_samples;
+                       AbstractMCMC.MCMCSerial(),
+                       n_samples,
+                       n_chain;
                        chain_type = Chains,
                        n_adapts = n_adapts,
                        discard_initial = n_adapts

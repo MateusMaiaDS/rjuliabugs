@@ -47,10 +47,12 @@ summary.rjuliabugs <- function(object,
 
     ## Retrieving the MCMC settings
     mcmc_settings <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("range(",object$sampler_name,")"),need_return = "Julia")))
+    mcmc_n_chains <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("size(",object$sampler_name,", 3)"),need_return = "Julia")))
     cat("Summary of JuliaBUGS sampler:\n\n")
     cat(paste0("Iterations        = ",mcmc_settings[3],"\n"))
-    cat(paste0("Number of chains = ",mcmc_settings[2],"\n"))
-    cat(paste0("Number of posterior samples = ",mcmc_settings[3]-mcmc_settings[1]+1,"\n"))
+    cat(paste0("Number of chains = ",mcmc_n_chains,"\n"))
+    cat(paste0("Number of posterior samples = ",floor((mcmc_settings[3]-mcmc_settings[1]+1)/mcmc_settings[2]),"\n"))
+    cat(paste0("Thinning parameter = ",mcmc_settings[2],"\n"))
     cat(paste0("Samples per chain = ",mcmc_settings[1],":",mcmc_settings[3],"\n\n"))
 
     summary_obj <- JuliaCall::julia_eval(paste0("df"))

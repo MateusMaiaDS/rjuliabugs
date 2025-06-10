@@ -79,9 +79,27 @@ get_params <- function(params, julia_sampler) {
                                                 need_return = "R")
   }
 
-  post_samples <- do.call(cbind,post_samples)
+  mcmc_n_chains <- as.numeric((JuliaCall::julia_eval(paste0("size(",julia_sampler,", 3)"),need_return = "Julia")))
 
-  colnames(post_samples) <- params
+
+  if(mcmc_n_chains==1){
+    post_samples <- do.call(cbind,post_samples)
+    colnames(post_samples) <- params
+
+  } else {
+
+    post_samples_array <- array(dim = c(nrow(post_samples[[1]]),
+                                        ncol(post_samples[[1]]),
+                                        length(post_samples)))
+    for(i in 1:length(params)){
+      post_samples_array[,,i] <- post_samples[[i]]
+    }
+
+    dimnames(post_samples_array)[[3]] <- params
+
+    post_samples <- post_samples_array
+
+  }
 
   return(post_samples)
 }

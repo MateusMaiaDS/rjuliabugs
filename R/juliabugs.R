@@ -44,6 +44,7 @@ juliaBUGS <- function(data,
                       n_warmup= floor(n_iter/2),
                       n_discard = n_warmup,
                       n_thin = 1,
+                      n_chain = 1,
                       sampler_name = NULL,
                       control = NULL){
 
@@ -99,10 +100,16 @@ juliaBUGS <- function(data,
   julia_assign_int("n_warmup", as.integer(n_warmup))
   julia_assign_int("n_thin", as.integer(n_thin))
   julia_assign_int("n_discard", as.integer(n_discard))
+  julia_assign_int("n_chain", as.integer(n_chain))
 
 
 
-  JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,NUTS(0.8),n_iter,chain_type = Chains,n_adapts = n_warmup,discard_initial = n_discard,thinning = n_thin)"))
+  print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
+                                                                         NUTS(0.8),
+                                                                         AbstractMCMC.MCMCSerial(),
+                                                                         n_iter,
+                                                                         n_chain;
+                                                                         chain_type = Chains,n_adapts = n_warmup,discard_initial = n_discard,thinning = n_thin)")))
 
   params <- if(!is.null(params_to_save)){
     get_params(params = params_to_save,

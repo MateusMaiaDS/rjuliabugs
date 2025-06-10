@@ -14,7 +14,7 @@ model <- "
 model = @bugs begin
   for i in 1:N
     r[i] ~ dbin(p[i], n[i])
-    r_hat[i] ~ dbin(p[i],n[i])
+
     b[i] ~ dnorm(0.0, tau)
     p[i] = logistic(alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1[i] * x2[i] + b[i])
   end
@@ -43,14 +43,14 @@ end
 #     sigma <- 1 / sqrt(tau)
 # }"
 
-model <- wrap_model_to_juliaBUGS(model_code = bugs_code)
+# model <- wrap_model_to_juliaBUGS(model_code = model)
 # bugs2juliaBUGS(bugs_code)
 
 n_iter = 2000
 n_warmup= floor(n_iter/2)
 n_discard = n_warmup
 n_thin = 1
-
+n_chain = 2
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
@@ -58,7 +58,7 @@ posterior <- juliaBUGS(data = data,
           params_to_save = params_to_save,
           n_iter = n_iter,
           n_warmup = n_warmup,
-          n_discard = n_discard,
+          n_discard = n_discard,n_chain = n_chain,
           n_thin = 1)
 
 library(bayesplot)
@@ -71,4 +71,5 @@ mcmc_areas(posterior$params,
 alpha0_sigma_post <-get_params(params = c("alpha0","sigma"),julia_sampler =  posterior$sampler_name)
 mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
            n_warmup = 0,
-           facet_args = list(nrow = 2, labeller = label_parsed))
+           facet_args = list(nrow = 2))
+summary.rjuliabugs(posterior,julia_summary_only = TRUE)
