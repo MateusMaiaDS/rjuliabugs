@@ -37,7 +37,7 @@ julia_assign_int <- function(x, value) {
 #' It supports extracting one or more parameters and returns the result as a numeric matrix in R.
 #'
 #' @param params A character vector of parameter names (as defined in the Julia model) to extract.
-#' @param julia_sampler A character string giving the name of the Julia object in the current Julia session,
+#' @param sampler_name A character string giving the name of the Julia object in the current Julia session,
 #'   which must be a `Chains` object (from the `MCMCChains.jl` package).
 #'
 #' @details
@@ -59,13 +59,13 @@ julia_assign_int <- function(x, value) {
 #' }
 #'
 #' @export
-get_params <- function(params, julia_sampler) {
+get_params <- function(params, sampler_name) {
   if (!is.character(params)) {
     stop("`params` must be a character vector of parameter names.")
   }
 
-  if (!is.character(julia_sampler)) {
-    stop("`julia_sampler` must be the name of a Julia object (as a string).")
+  if (!is.character(sampler_name)) {
+    stop("`sampler_name` must be the name of a Julia object (as a string).")
   }
 
   params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
@@ -79,7 +79,7 @@ get_params <- function(params, julia_sampler) {
                                                 need_return = "R")
   }
 
-  mcmc_n_chains <- as.numeric((JuliaCall::julia_eval(paste0("size(",julia_sampler,", 3)"),need_return = "Julia")))
+  mcmc_n_chains <- as.numeric((JuliaCall::julia_eval(paste0("size(",sampler_name,", 3)"),need_return = "Julia")))
 
 
   if(mcmc_n_chains==1){

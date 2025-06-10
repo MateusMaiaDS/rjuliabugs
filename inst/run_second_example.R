@@ -60,7 +60,7 @@ posterior <- juliaBUGS(data = data,
                        params_to_save = params_to_save,
                        n_iter = n_iter,
                        n_warmup = n_warmup,
-                       n_discard = n_discard,
+                       n_discard = n_discard,n_chain = 2,use_parallel = TRUE,
                        n_thin = 1)
 
 library(bayesplot)

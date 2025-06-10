@@ -45,6 +45,7 @@ juliaBUGS <- function(data,
                       n_discard = n_warmup,
                       n_thin = 1,
                       n_chain = 1,
+                      use_parallel = TRUE,
                       sampler_name = NULL,
                       control = NULL){
 
@@ -68,6 +69,14 @@ juliaBUGS <- function(data,
 
   if(!all(check_params_to_save)){
     stop(paste0("The params ",paste0(names(check_params_to_save)[!check_params_to_save],collapse = ", ")," are not part of the model."))
+  }
+
+  # Checking the number of threads() in Julia are correctly specified
+  n_threads <- JuliaCall::julia_call("Threads.nthreads",need_return = "R")
+
+  if(n_threads==1){
+    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see PUT LINK HERE for a complete documentation.\n")
+    use_parallel <- FALSE
   }
 
   # Setting up the Julia Enviroment
@@ -103,25 +112,40 @@ juliaBUGS <- function(data,
   julia_assign_int("n_chain", as.integer(n_chain))
 
 
+  if(use_parallel){
+    print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(model,
+                                                                           AdvancedHMC.NUTS(0.8),                                                AbstractMCMC.MCMCThreads(),
+                                                                           AbstractMCMC.MCMCThreads(),
+                                                                           n_iter,
+                                                                           n_chain;
+                                                                           chain_type = Chains,
+                                                                           n_adapts = n_warmup,
+                                                                           init_params = initial,
+                                                                           discard_initial = n_discard,
+                                                                           thinning = n_thin)")))
 
-  print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
-                                                                         NUTS(0.8),
-                                                                         AbstractMCMC.MCMCSerial(),
-                                                                         n_iter,
-                                                                         n_chain;
-                                                                         chain_type = Chains,
-                                                                         n_adapts = n_warmup,
-                                                                         discard_initial = n_discard,
-                                                                         thinning = n_thin)")))
+  } else {
+    print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
+                                                                           NUTS(0.8),
+                                                                           AbstractMCMC.MCMCSerial(),
+                                                                           n_iter,
+                                                                           n_chain;
+                                                                           chain_type = Chains,
+                                                                           n_adapts = n_warmup,
+                                                                           discard_initial = n_discard,
+                                                                           thinning = n_thin)")))
+  }
 
   params <- if(!is.null(params_to_save)){
     get_params(params = params_to_save,
-               julia_sampler = sampler_name)
+               sampler_name = sampler_name)
+
   }
 
   rjuliabugs <- list(params = params,
                      sampler_name = sampler_name,
-                     sampler = JuliaCall::julia_eval(sampler_name,need_return = "R"))
+                     sampler = JuliaCall::julia_eval(sampler_name,need_return = "R"),
+                     n_threads = n_threads)
 
   class(rjuliabugs) <- "rjuliabugs"
 

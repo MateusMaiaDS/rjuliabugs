@@ -36,11 +36,12 @@ n_chain = 2
 samples_and_stats = AbstractMCMC.sample(
                        ad_model,
                        NUTS(0.8),
-                       AbstractMCMC.MCMCSerial(),
+                       AbstractMCMC.MCMCThreads(),
                        n_samples,
                        n_chain;
                        chain_type = Chains,
                        n_adapts = n_adapts,
+                       init_params = initial_θ,
                        discard_initial = n_adapts
                    )
 
