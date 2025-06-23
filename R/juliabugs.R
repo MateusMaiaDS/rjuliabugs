@@ -114,7 +114,7 @@ juliaBUGS <- function(data,
   # Defining which type of computational scheme will be used
   parallel_scheme <- ifelse(use_parallel,"AbstractMCMC.MCMCThreads()","AbstractMCMC.MCMCSerial()")
 
-  print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
+  JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
                                                                          AdvancedHMC.NUTS(0.8),
                                                                          ",parallel_scheme,",
                                                                          n_iter,
@@ -123,8 +123,7 @@ juliaBUGS <- function(data,
                                                                          n_adapts = n_warmup,
                                                                          init_params = initial,
                                                                          discard_initial = n_discard,
-                                                                         thinning = n_thin)")))
-
+                                                                         thinning = n_thin)"))
 
   params <- if(!is.null(params_to_save)){
     get_params(params = params_to_save,

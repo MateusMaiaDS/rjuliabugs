@@ -76,7 +76,7 @@ mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
            n_warmup = 0,
            facet_args = list(nrow = 2))
 
-summary <- summary.rjuliabugs(posterior,julia_summary_only = FALSE)
+summary <- summary.rjuliabugs(posterior,julia_summary_only = TRUE)
 
 
 # using any other posterior
