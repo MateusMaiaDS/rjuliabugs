@@ -46,21 +46,21 @@ end
 # model <- wrap_model_to_juliaBUGS(model_code = model)
 # bugs2juliaBUGS(bugs_code)
 
-n_iter = 10000
+n_iter = 2000
 n_warmup= floor(n_iter/2)
 n_discard = n_warmup
-n_thin = 5
-n_chain = 4
+n_thin = 1
+n_chain = 2
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
-          model = model,
-          params_to_save = params_to_save,
-          n_iter = n_iter,
-          n_warmup = n_warmup,
-          n_discard = n_discard,
-          n_chain = n_chain,use_parallel = FALSE,
-          n_thin = n_thin)
+                      model = model,
+                      params_to_save = params_to_save,
+                      n_iter = n_iter,
+                      n_warmup = n_warmup,
+                      n_discard = n_discard,
+                      n_chain = n_chain,use_parallel = TRUE,
+                      n_thin = n_thin)
 
 library(bayesplot)
 
@@ -74,7 +74,8 @@ alpha0_sigma_post <-get_params(params = c("alpha0","sigma"),
 mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
            n_warmup = 0,
            facet_args = list(nrow = 2))
-summary.rjuliabugs(posterior,julia_summary_only = TRUE)
+
+summary <- summary.rjuliabugs(posterior,julia_summary_only = FALSE)
 
 
 # using any other posterior
@@ -82,4 +83,4 @@ posterior::summarise_draws(posterior$params)
 
 # Any other diagnostic is also available by
 help("diagnostics", "posterior")
-ess_basic(posterior$params)
+posterior::ess_basic(posterior$params)

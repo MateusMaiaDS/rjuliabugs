@@ -99,7 +99,7 @@ juliaBUGS <- function(data,
   JuliaCall::julia_eval(model)
   JuliaCall::julia_eval("model = compile(model,data)")
 
-  JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model; compile=Val(true))")
+  JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
   JuliaCall::julia_eval("D = LogDensityProblems.dimension(model)")
   JuliaCall::julia_eval("initial = rand(D)")
 
@@ -113,8 +113,8 @@ juliaBUGS <- function(data,
 
 
   if(use_parallel){
-    print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(model,
-                                                                           AdvancedHMC.NUTS(0.8),                                                AbstractMCMC.MCMCThreads(),
+    print(JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
+                                                                           AdvancedHMC.NUTS(0.8),
                                                                            AbstractMCMC.MCMCThreads(),
                                                                            n_iter,
                                                                            n_chain;
