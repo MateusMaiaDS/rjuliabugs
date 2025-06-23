@@ -1,5 +1,6 @@
 rm(list=ls())
 set.seed(42)
+library(JuliaCall)
 devtools::load_all()
 
 data <- list(
@@ -50,7 +51,7 @@ n_iter = 2000
 n_warmup= floor(n_iter/2)
 n_discard = n_warmup
 n_thin = 1
-n_chain = 2
+n_chain = 4
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
