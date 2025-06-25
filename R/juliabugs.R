@@ -176,6 +176,7 @@ juliaBUGS <- function(data,
   cat(" DONE!\n")
 
 
+
   params_raw <- if(!is.null(params_to_save)){
     get_params(params = params_to_save,
                sampler_name = sampler_name)
