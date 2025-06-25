@@ -70,7 +70,7 @@ get_params <- function(params, sampler_name) {
 
   params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
 
-  JuliaCall::julia_eval("julia_params = get_params(sampler_juliaBUGS)",need_return = "Julia")
+  JuliaCall::julia_eval(paste0("julia_params = get_params(",sampler_name,")"),need_return = "Julia")
 
   post_samples <- vector("list",length = length(params))
 
@@ -178,13 +178,14 @@ bugs2juliaBUGS <- function(model_code,
 
   trimmed_code <- trimws(model_code)
   julia_bool <- c("TRUE" = "true", "FALSE" = "false")
+  not_has_model_block <- !grepl("model\\s*\\{", model_code)
 
   return(paste0(
     'model = @bugs("""\n',
     trimmed_code,
     '\n""", ',
     julia_bool[as.character(convert_var_name)],
-    ', true)'
+    ', ',julia_bool[as.character(not_has_model_block)],')'
   ))
 }
 
@@ -230,7 +231,8 @@ setup_juliaBUGS <- function(extra_packages = NULL,
                             verify_package = TRUE,
                             install_from_dev = FALSE){
 
-  cat("Preparing JuliaBUGS setup... \n")
+
+  cat("Preparing JuliaBUGS setup... ")
   julia <- JuliaCall::julia_setup(installJulia=TRUE)
 
   # Install all dependencies if needed
@@ -258,6 +260,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
       JuliaCall::julia_eval(paste0("using ", extra_packages[i]))
     }
   }
+  cat("DONE!\n")
 }
 
 #' Convert Numeric Elements in a List to Integer or Float

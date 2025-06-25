@@ -28,39 +28,38 @@ model = @bugs begin
 end
 "
 
-# bugs_code <- "
-# model{
-#     for( i in 1 : N ) {
-#         r[i] ~ dbin(p[i],n[i])
-#         b[i] ~ dnorm(0.0,tau)
-#         logit(p[i]) <- alpha0 + alpha1 * x1[i] + alpha2 * x2[i] +
-#         alpha12 * x1[i] * x2[i] + b[i]
-#     }
-#     alpha0 ~ dnorm(0.0,1.0E-6)
-#     alpha1 ~ dnorm(0.0,1.0E-6)
-#     alpha2 ~ dnorm(0.0,1.0E-6)
-#     alpha12 ~ dnorm(0.0,1.0E-6)
-#     tau ~ dgamma(0.001,0.001)
-#     sigma <- 1 / sqrt(tau)
-# }"
+model <- "
+model{
+    for( i in 1 : N ) {
+        r[i] ~ dbin(p[i],n[i])
+        b[i] ~ dnorm(0.0,tau)
+        logit(p[i]) <- alpha0 + alpha1 * x1[i] + alpha2 * x2[i] +
+        alpha12 * x1[i] * x2[i] + b[i]
+    }
+    alpha0 ~ dnorm(0.0,1.0E-6)
+    alpha1 ~ dnorm(0.0,1.0E-6)
+    alpha2 ~ dnorm(0.0,1.0E-6)
+    alpha12 ~ dnorm(0.0,1.0E-6)
+    tau ~ dgamma(0.001,0.001)
+    sigma <- 1 / sqrt(tau)
+}"
 
-# model <- wrap_model_to_juliaBUGS(model_code = model)
-# bugs2juliaBUGS(bugs_code)
 
-n_iter = 2000
+n_iter = 1000
 n_warmup= floor(n_iter/2)
 n_discard = n_warmup
 n_thin = 1
-n_chain = 4
+n_chain = 2
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
                       model = model,
+                      sampler_name = "sampler_juliaBUGS",
                       params_to_save = params_to_save,
                       n_iter = n_iter,
                       n_warmup = n_warmup,
                       n_discard = n_discard,
-                      n_chain = n_chain,use_parallel = FALSE,
+                      n_chain = n_chain,use_parallel = TRUE,
                       n_thin = n_thin)
 
 library(bayesplot)

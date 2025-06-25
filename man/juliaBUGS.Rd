@@ -8,58 +8,90 @@ juliaBUGS(
   data,
   model,
   params_to_save,
+  sampler_name,
   n_iter = 2000,
   n_warmup = floor(n_iter/2),
   n_discard = n_warmup,
   n_thin = 1,
-  sampler_name = NULL,
-  control = NULL
+  n_chain = 1,
+  use_parallel = TRUE,
+  posterior_type = "array",
+  force_setup_juliaBUGS = FALSE,
+  control = NULL,
+  ...
 )
 }
 \arguments{
-\item{data}{A named list of data to be passed to the model. Each element must be numeric or integer. Names are required.}
+\item{data}{A named list containing the data to be passed to the model. All elements must be numeric (integer or double). Names are required.}
 
-\item{model}{A character string representing the Julia model definition. Must be a valid expression in Julia.}
+\item{model}{A character string with the model definition in a Julia-compatible format or in BUGS syntax to be converted.}
 
-\item{params_to_save}{Names of model parameters to extract from the Julia sampler. Must match identifiers in the `model` string.
-if NULL no parameters will be returned.}
+\item{params_to_save}{Character vector with the names of model parameters to extract from the sampler output. If `NULL`, no posterior samples will be returned.}
 
-\item{n_iter}{Integer. Number of total MCMC iterations. Default is 2000.}
+\item{sampler_name}{Character. A name for the sampler object to be created within Julia.}
+
+\item{n_iter}{Integer. Total number of MCMC iterations. Default is 2000.}
 
 \item{n_warmup}{Integer. Number of warm-up (adaptation) iterations. Default is `floor(n_iter / 2)`.}
 
 \item{n_discard}{Integer. Number of initial samples to discard. Default is `n_warmup`.}
 
-\item{n_thin}{Integer. Thinning interval for saving samples. Default is 1 (no thinning).}
+\item{n_thin}{Integer. Thinning interval for retained samples. Default is 1 (no thinning).}
 
-\item{control}{Optional list of control parameters. Currently supports:
-- `data_convert_int`: Logical. Whether to attempt converting numeric values to integers if they are whole numbers. Default is `TRUE`.}
+\item{n_chain}{Integer. Number of MCMC chains to run. Default is 1.}
+
+\item{use_parallel}{Logical. Whether to use multi-threaded sampling with `AbstractMCMC.MCMCThreads()`. Default is `TRUE`.}
+
+\item{posterior_type}{Character. Format of the posterior returned. One of `"array"`, `"rvar"`, `"mcmc"`, or `"draws"`. Default is `"array"`.}
+
+\item{control}{Optional list of control options. Supported entries:
+\describe{
+  \item{`data_convert_int`}{Logical. Whether to coerce numeric values in `data` to integers when possible. Default is `TRUE`.}
+  \item{`convert_var_name`}{Logical. Whether to rename variables in the model code. Default is `FALSE`.}
+  \item{`julia_model`}{Logical. If `TRUE`, skips BUGS-to-Julia translation. Default is `FALSE`.}
+}}
+
+\item{...}{Additional arguments passed to `setup_juliaBUGS()`.}
 }
 \value{
 An object of class `"rjuliabugs"` containing:
 \describe{
-  \item{params}{A named list of posterior samples for the selected parameters.}
-  \item{sampler}{The full Julia `Chains` object with all samples.}
+  \item{params}{Posterior samples for the selected parameters, in the format specified by `posterior_type`.}
+  \item{sampler_name}{Character string identifying the sampler object created in Julia.}
+  \item{sampler}{The full Julia sampler object as returned by `AbstractMCMC.sample`.}
+  \item{n_threads}{Number of Julia threads detected during execution.}
 }
 }
 \description{
-This function sets up and runs a Hamiltonian Monte Carlo (HMC) sampler from Julia using a user-defined probabilistic model.
-It handles data validation, automatic type conversion for Julia, and allows parameter selection for posterior sampling.
+This function sets up and runs a Hamiltonian Monte Carlo (HMC) sampler in Julia using a user-defined probabilistic model.
+It manages model compilation, data conversion, parallelization settings, and various posterior output formats.
 }
 \details{
-This function sets up and compiles the model in Julia, uses ReverseDiff for gradient calculations,
-and samples using `AdvancedHMC.NUTS`. It assumes the Julia environment has already been initialized with
-the necessary packages (`LogDensityProblems`, `AdvancedHMC`, `AbstractMCMC`, etc.).
+Internally, this function uses `LogDensityProblems`, `AdvancedHMC`, and `AbstractMCMC` from Julia.
+Gradient calculations are performed with `ReverseDiff`, and data is passed using a `JuliaNamedTuple`.
+The model code is compiled using `compile(...)` before sampling.
+
+The `posterior_type` argument determines the format of the returned posterior:
+- `"array"`: a 3D numeric array (samples × chains × parameters).
+- `"rvar"`: a `posterior::rvar` object.
+- `"mcmc"`: a `coda::mcmc` or `coda::mcmc.list`.
+- `"draws"`: a `posterior::draws_array` object.
 }
 \note{
-You must call `setup_juliaBUGS()` before using this function to initialize the Julia environment
-and load dependencies. This function assumes that the Julia environment and model are correctly configured.
+You must run `setup_juliaBUGS()` before using this function to initialize Julia and load the required packages.
+Ensure the Julia environment has all necessary dependencies installed.
+If parallel sampling is requested but only one Julia thread is available, a warning will be issued and serial sampling will be used instead.
 }
 \examples{
 \dontrun{
 model <- "model = @model ... end"
 data <- list(N = 10, x = rnorm(10))
-result <- juliaBUGS(data = data, model = model, params_to_save = c("mu"))
+result <- juliaBUGS(
+  data = data,
+  model = model,
+  params_to_save = c("mu"),
+  sampler_name = "my_sampler"
+)
 }
 
 }

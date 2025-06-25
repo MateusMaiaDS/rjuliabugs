@@ -4,12 +4,12 @@
 \alias{get_params}
 \title{Extract Parameter Samples from a Turing.jl MCMCChains Object}
 \usage{
-get_params(params, julia_sampler)
+get_params(params, sampler_name)
 }
 \arguments{
 \item{params}{A character vector of parameter names (as defined in the Julia model) to extract.}
 
-\item{julia_sampler}{A character string giving the name of the Julia object in the current Julia session,
+\item{sampler_name}{A character string giving the name of the Julia object in the current Julia session,
 which must be a `Chains` object (from the `MCMCChains.jl` package).}
 }
 \value{
