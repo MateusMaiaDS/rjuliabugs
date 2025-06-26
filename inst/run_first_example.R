@@ -54,7 +54,7 @@ params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
                       model = model,
-                      sampler_name = "sampler_juliaBUGS",
+                      sampler_name = "sampler2_juliaBUGS",
                       params_to_save = params_to_save,
                       n_iter = n_iter,
                       n_warmup = n_warmup,
@@ -84,3 +84,19 @@ posterior::summarise_draws(posterior$params)
 # Any other diagnostic is also available by
 help("diagnostics", "posterior")
 posterior::ess_basic(posterior$params)
+
+
+## Checking the second object for the posterior
+posterior2 <- juliaBUGS(data = data,
+                       model = model,
+                       sampler_name = "sampler_juliaBUGS",
+                       params_to_save = params_to_save,
+                       n_iter = n_iter/2,
+                       n_warmup = n_warmup/2,
+                       n_discard = n_discard/2,
+                       n_chain = n_chain,use_parallel = TRUE,
+                       n_thin = n_thin)
+
+get_params(sampler_name = "sampler_juliaBUGS",params = "alpha0") %>% nrow
+get_params(sampler_name = "sampler2_juliaBUGS",params = "alpha0") %>% nrow
+

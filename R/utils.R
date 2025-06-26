@@ -316,3 +316,23 @@ break_string_to_numeric <- function(input_string) {
   return(numeric_parts)
 }
 
+#' Delete an object from the Julia Main environment
+#'
+#' This function removes a variable or object from the Julia `Main` module using JuliaCall.
+#' It is useful for cleaning up or resetting objects defined in the Julia environment from R.
+#'
+#' @param obj_name A character string specifying the name of the Julia object to be deleted.
+#'   This should correspond to a variable or symbol previously defined in the Julia `Main` module.
+#'
+#'
+#' @examples
+#' \dontrun{
+#' JuliaCall::julia_command("x = 10")  # Define a Julia variable
+#' delete_julia_obj("x")               # Delete it
+#' }
+#'
+#' @export
+delete_julia_obj <- function(obj_name) {
+  JuliaCall::julia_eval(paste0("Base.delete_binding(Main, :", obj_name, ")"))
+  return(invisible(NULL))
+}
