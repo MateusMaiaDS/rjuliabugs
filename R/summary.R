@@ -32,22 +32,22 @@ summary.rjuliabugs <- function(object,
                                julia_summary_only = FALSE) {
 
   if(julia_summary_only){
-    JuliaCall::julia_eval(paste0("display(",object$sampler_name,")"),need_return = "Julia")
+    JuliaCall::julia_eval(paste0("display(",object$name,")"),need_return = "Julia")
     return(invisible(NULL))
   } else {
     JuliaCall::julia_eval("using DataFrames")
 
-    JuliaCall::julia_eval(paste0("df = DataFrame(MCMCChains.summarystats(",object$sampler_name,").nt)"),need_return = "Julia")
+    JuliaCall::julia_eval(paste0("df = DataFrame(MCMCChains.summarystats(",object$name,").nt)"),need_return = "Julia")
     JuliaCall::julia_eval(paste0("df.parameters = String.(df.parameters)"),need_return = "Julia")
     JuliaCall::julia_eval(paste0("df.ess_bulk = Float64.(df.ess_bulk)"),need_return = "Julia")
 
     ## Getting params names
-    str_params_name <- unlist(JuliaCall::julia_eval(paste0("String.(keys(get_params(",object$sampler_name,")))"),need_return = "R"))
+    str_params_name <- unlist(JuliaCall::julia_eval(paste0("String.(keys(get_params(",object$name,")))"),need_return = "R"))
     str_params_name <- str_params_name[1:(which(str_params_name == "lp") - 1)]
 
     ## Retrieving the MCMC settings
-    mcmc_settings <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("range(",object$sampler_name,")"),need_return = "Julia")))
-    mcmc_n_chains <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("size(",object$sampler_name,", 3)"),need_return = "Julia")))
+    mcmc_settings <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("range(",object$name,")"),need_return = "Julia")))
+    mcmc_n_chains <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("size(",object$name,", 3)"),need_return = "Julia")))
     cat("Summary of JuliaBUGS sampler:\n\n")
     cat(paste0("Iterations        = ",mcmc_settings[3],"\n"))
     cat(paste0("Number of chains = ",mcmc_n_chains,"\n"))
@@ -75,7 +75,7 @@ summary.rjuliabugs <- function(object,
     }
 
     if(get_quantiles){
-      JuliaCall::julia_eval(paste0("qt_df = DataFrame(MCMCChains.quantile(",object$sampler_name,").nt)"),need_return = "Julia")
+      JuliaCall::julia_eval(paste0("qt_df = DataFrame(MCMCChains.quantile(",object$name,").nt)"),need_return = "Julia")
       JuliaCall::julia_eval(paste0("qt_df.parameters = String.(qt_df.parameters)"),need_return = "Julia")
       quantile_obj <- JuliaCall::julia_eval("qt_df",need_return = "R")
       quantile_list <- list(quantiles = quantile_obj)

@@ -2,40 +2,34 @@
 % Please edit documentation in R/utils.R
 \name{get_params}
 \alias{get_params}
-\title{Extract Parameter Samples from a Turing.jl MCMCChains Object}
+\title{Extract and convert posterior parameters}
 \usage{
-get_params(params, sampler_name)
+get_params(rjuliabugs, params, posterior_type = "array")
 }
 \arguments{
-\item{params}{A character vector of parameter names (as defined in the Julia model) to extract.}
+\item{rjuliabugs}{An object containing posterior samples and a `name` attribute used to extract parameters.}
 
-\item{sampler_name}{A character string giving the name of the Julia object in the current Julia session,
-which must be a `Chains` object (from the `MCMCChains.jl` package).}
+\item{params}{A character vector specifying which parameters to extract. **(NOTE: This argument is unused in the current function body.)**}
+
+\item{posterior_type}{A character string specifying the desired output format. Options are: \code{"array"}, \code{"rvar"}, \code{"mcmc"}, \code{"draws"}.}
 }
 \value{
-A numeric matrix where rows represent samples and columns represent parameters.
+The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
+\itemize{
+  \item{\code{"array"}: }{A 3D array of posterior samples.}
+  \item{\code{"rvar"}: }{An object of class \code{rvar} from the \pkg{posterior} package.}
+  \item{\code{"mcmc"}: }{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
+  \item{\code{"draws"}: }{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
+}
 }
 \description{
-This function extracts posterior samples for specified parameters from a Julia
-`Chains` object (from the `Turing.jl` package) using `JuliaCall`.
+This function extracts parameters from an object created by `rjuliabugs` and converts them to a specified posterior format.
 }
 \details{
-It supports extracting one or more parameters and returns the result as a numeric matrix in R.
-
-
-This function builds a Julia expression of the form `Array(chains[:, [:param1, :param2], :])`
-to extract values for the specified parameters from the sampler object. The result is evaluated
-in Julia and returned to R as a numeric matrix.
-
-The function reshapes the output if only one parameter is extracted to ensure a consistent matrix format.
+The function assumes that `get_params_from_name()` and other referenced variables such as `params_to_save` and `n_chain` are available in the current environment.
 }
 \examples{
 \dontrun{
-JuliaCall::julia_setup()
-JuliaCall::julia_library("Turing")
-JuliaCall::julia_command("... define model and sample into 'chains' ...")
-samples <- get_params(c("alpha", "beta"), "chains")
-head(samples)
+get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "rvar")
 }
-
 }

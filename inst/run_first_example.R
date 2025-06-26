@@ -12,23 +12,6 @@ data <- list(
 )
 
 model <- "
-model = @bugs begin
-  for i in 1:N
-    r[i] ~ dbin(p[i], n[i])
-
-    b[i] ~ dnorm(0.0, tau)
-    p[i] = logistic(alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1[i] * x2[i] + b[i])
-  end
-  alpha0 ~ dnorm(0.0, 1.0E-6)
-  alpha1 ~ dnorm(0.0, 1.0E-6)
-  alpha2 ~ dnorm(0.0, 1.0E-6)
-  alpha12 ~ dnorm(0.0, 1.0E-6)
-  tau ~ dgamma(0.001, 0.001)
-  sigma = 1 / sqrt(tau)
-end
-"
-
-model <- "
 model{
     for( i in 1 : N ) {
         r[i] ~ dbin(p[i],n[i])
@@ -54,7 +37,6 @@ params_to_save <- c("alpha0","alpha1","alpha2","alpha12","sigma")
 
 posterior <- juliaBUGS(data = data,
                       model = model,
-                      sampler_name = "sampler2_juliaBUGS",
                       params_to_save = params_to_save,
                       n_iter = n_iter,
                       n_warmup = n_warmup,
@@ -70,7 +52,7 @@ mcmc_areas(posterior$params,
 
 
 alpha0_sigma_post <-get_params(params = c("alpha0","sigma"),
-                               sampler_name = posterior$sampler_name)
+                               name = posterior$name)
 mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
            n_warmup = 0,
            facet_args = list(nrow = 2))
@@ -89,14 +71,14 @@ posterior::ess_basic(posterior$params)
 ## Checking the second object for the posterior
 posterior2 <- juliaBUGS(data = data,
                        model = model,
-                       sampler_name = "sampler_juliaBUGS",
                        params_to_save = params_to_save,
                        n_iter = n_iter/2,
                        n_warmup = n_warmup/2,
                        n_discard = n_discard/2,
-                       n_chain = n_chain,use_parallel = TRUE,
-                       n_thin = n_thin)
+                       n_chain = 1,use_parallel = TRUE,
+                       n_thin = n_thin,posterior_type = "draws")
 
-get_params(sampler_name = "sampler_juliaBUGS",params = "alpha0") %>% nrow
-get_params(sampler_name = "sampler2_juliaBUGS",params = "alpha0") %>% nrow
+posterior2$params %>% class
+dim(get_params_from_name(name = "sampler_juliaBUGS",params = "alpha0"))
+dim(get_params_from_name(name = "sampler_juliaBUGS_q4_a8_j3",params = "alpha0"))
 

@@ -6,7 +6,7 @@
 #' @param data A named list containing the data to be passed to the model. All elements must be numeric (integer or double). Names are required.
 #' @param model A character string with the model definition in a Julia-compatible format or in BUGS syntax to be converted.
 #' @param params_to_save Character vector with the names of model parameters to extract from the sampler output. If `NULL`, no posterior samples will be returned.
-#' @param sampler_name Character. A name for the sampler object to be created within Julia.
+#' @param name Character. A name for the sampler object to be created within Julia.
 #' @param n_iter Integer. Total number of MCMC iterations. Default is 2000.
 #' @param n_warmup Integer. Number of warm-up (adaptation) iterations. Default is `floor(n_iter / 2)`.
 #' @param n_discard Integer. Number of initial samples to discard. Default is `n_warmup`.
@@ -25,7 +25,7 @@
 #' @return An object of class `"rjuliabugs"` containing:
 #' \describe{
 #'   \item{params}{Posterior samples for the selected parameters, in the format specified by `posterior_type`.}
-#'   \item{sampler_name}{Character string identifying the sampler object created in Julia.}
+#'   \item{name}{Character string identifying the sampler object created in Julia.}
 #'   \item{sampler}{The full Julia sampler object as returned by `AbstractMCMC.sample`.}
 #'   \item{n_threads}{Number of Julia threads detected during execution.}
 #' }
@@ -58,7 +58,7 @@
 #'   data = data,
 #'   model = model,
 #'   params_to_save = c("mu"),
-#'   sampler_name = "my_sampler"
+#'   name = "my_sampler"
 #' )
 #' }
 #'
@@ -66,7 +66,7 @@
 juliaBUGS <- function(data,
                       model,
                       params_to_save,
-                      sampler_name,
+                      name = "sampler_juliaBUGS",
                       n_iter = 2000,
                       n_warmup= floor(n_iter/2),
                       n_discard = n_warmup,
@@ -79,11 +79,18 @@ juliaBUGS <- function(data,
                       ...){
 
   # Verifying if the sampler name already exist
-  sampler_is_defined <- JuliaCall::julia_eval(paste0("isdefined(Main,:",sampler_name,")"),need_return = "R")
-  print(sampler_is_defined)
+  sampler_is_defined <- JuliaCall::julia_eval(paste0("isdefined(Main,:",name,")"),need_return = "R")
+  new_name <- FALSE
 
-  if(sampler_is_defined){
-    warning(paste0("The object '", sampler_name, "' was already defined in the Julia environment and has been overwritten."))
+  while(sampler_is_defined){
+    name_old <- name
+    name <- paste0(name,"_",sample(letters,1),sample(0:9,size = 1))
+    sampler_is_defined <- JuliaCall::julia_eval(paste0("isdefined(Main,:",name,")"),need_return = "R")
+    new_name <- TRUE
+  }
+
+  if(new_name){
+    warning(paste0("The object '", name_old, "' was already defined in the Julia environment. A the name have been overwritten as ",name,".\n"))
   }
 
   if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
@@ -91,8 +98,8 @@ juliaBUGS <- function(data,
   }
 
 
-  if(!is.character(sampler_name)){
-    stop("Insert a valid sampler_name.")
+  if(!is.character(name)){
+    stop("Insert a valid name.")
   }
 
   # Formatting the BUGS code to be used by juliaBUGS.jl
@@ -172,7 +179,7 @@ juliaBUGS <- function(data,
 
   cat("Initialising AbstractMCMC.sample()...")
 
-  JuliaCall::julia_eval(paste0(sampler_name," = AbstractMCMC.sample(ad_model,
+  JuliaCall::julia_eval(paste0(name," = AbstractMCMC.sample(ad_model,
                                                                      AdvancedHMC.NUTS(0.8),
                                                                      ",parallel_scheme,",
                                                                      n_iter,
@@ -185,10 +192,9 @@ juliaBUGS <- function(data,
   cat(" DONE!\n")
 
 
-
   params_raw <- if(!is.null(params_to_save)){
-    get_params(params = params_to_save,
-               sampler_name = sampler_name)
+    get_params_from_name(name = name,
+               params = params_to_save)
   }
 
   # Converting the posterior type
@@ -219,10 +225,12 @@ juliaBUGS <- function(data,
   }
 
 
+  ## Creating rjuliabugs obj
   rjuliabugs <- list(params = params,
-                     sampler_name = sampler_name,
-                     sampler = JuliaCall::julia_eval(sampler_name,need_return = "R"),
+                     name = name,
+                     sampler = JuliaCall::julia_eval(name,need_return = "R"),
                      n_threads = n_threads)
+
 
   class(rjuliabugs) <- "rjuliabugs"
 

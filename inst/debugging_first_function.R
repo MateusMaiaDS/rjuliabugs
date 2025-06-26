@@ -52,6 +52,6 @@ posterior_type = "array"
 
 params_to_save <- c("alpha0","alpha1","alpha2","alpha12","tau","sigma")
 control = NULL
-sampler_name = "x"
+name = "x"
 
 ## Setting

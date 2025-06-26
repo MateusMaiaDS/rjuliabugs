@@ -8,7 +8,7 @@ juliaBUGS(
   data,
   model,
   params_to_save,
-  sampler_name,
+  name = "sampler_juliaBUGS",
   n_iter = 2000,
   n_warmup = floor(n_iter/2),
   n_discard = n_warmup,
@@ -28,7 +28,7 @@ juliaBUGS(
 
 \item{params_to_save}{Character vector with the names of model parameters to extract from the sampler output. If `NULL`, no posterior samples will be returned.}
 
-\item{sampler_name}{Character. A name for the sampler object to be created within Julia.}
+\item{name}{Character. A name for the sampler object to be created within Julia.}
 
 \item{n_iter}{Integer. Total number of MCMC iterations. Default is 2000.}
 
@@ -57,7 +57,7 @@ juliaBUGS(
 An object of class `"rjuliabugs"` containing:
 \describe{
   \item{params}{Posterior samples for the selected parameters, in the format specified by `posterior_type`.}
-  \item{sampler_name}{Character string identifying the sampler object created in Julia.}
+  \item{name}{Character string identifying the sampler object created in Julia.}
   \item{sampler}{The full Julia sampler object as returned by `AbstractMCMC.sample`.}
   \item{n_threads}{Number of Julia threads detected during execution.}
 }
@@ -90,7 +90,7 @@ result <- juliaBUGS(
   data = data,
   model = model,
   params_to_save = c("mu"),
-  sampler_name = "my_sampler"
+  name = "my_sampler"
 )
 }
 
