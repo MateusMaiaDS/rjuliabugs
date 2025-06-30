@@ -86,6 +86,8 @@ load_rjuliaBUGS <- function(file){
   if(is.null(rjuliabugs_obj$name) || is.null(rjuliabugs_obj$chains_file)){
     stop("Both chain 'name' and 'chains_file' from  the rjuliasampler object must be defined.")
   } else {
+    # Checking and updating rjuliabugs_obj$name if needed
+    rjuliabugs_obj$name <- check_sampler_is_defined(name = rjuliabugs_obj$name)
     JuliaCall::julia_eval(paste0(rjuliabugs_obj$name,' = Serialization.deserialize("',rjuliabugs_obj$chains_file,'")'))
   }
 

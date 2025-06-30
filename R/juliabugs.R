@@ -83,20 +83,8 @@ juliaBUGS <- function(data,
                       control = NULL,
                       ...){
 
-  # Verifying if the sampler name already exist
-  sampler_is_defined <- JuliaCall::julia_eval(paste0("isdefined(Main,:",name,")"),need_return = "R")
-  new_name <- FALSE
-
-  while(sampler_is_defined){
-    name_old <- name
-    name <- paste0(name,"_",sample(letters,1),sample(0:9,size = 1))
-    sampler_is_defined <- JuliaCall::julia_eval(paste0("isdefined(Main,:",name,")"),need_return = "R")
-    new_name <- TRUE
-  }
-
-  if(new_name){
-    warning(paste0("The object '", name_old, "' was already defined in the Julia environment. A the name have been overwritten as ",name,".\n"))
-  }
+  # Checking if the name is defined, and generating a new one if is not the case
+  name <- check_sampler_is_defined(name = name)
 
   if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
     stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")

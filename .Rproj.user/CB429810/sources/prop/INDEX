@@ -8,5 +8,7 @@
 ~%2FDocuments%2Frjuliabugs%2Finst%2Frun_julia_model.R="4CB9C04F"
 ~%2Frjuliabugs%2F.gitignore="460D4755"
 ~%2Frjuliabugs%2FR%2Fjuliabugs.R="4906E031"
+~%2Frjuliabugs%2FR%2Fsave_load_rjuliabugs.R="E3FB4290"
 ~%2Frjuliabugs%2FR%2Fsummary.R="0D4BE16C"
+~%2Frjuliabugs%2FR%2Futils.R="68941487"
 ~%2Frjuliabugs%2Finst%2Frun_first_example.R="7FF947F0"

@@ -484,3 +484,46 @@ delete_julia_obj <- function(obj_name) {
   JuliaCall::julia_eval(paste0("Base.delete_binding(Main, :", obj_name, ")"))
   return(invisible(NULL))
 }
+
+#' Ensure Unique Name for Julia Sampler (Internal)
+#'
+#' Checks whether a Julia variable name is already defined in the `Main` module.
+#' If the name exists, appends random characters until a unique name is found.
+#'
+#' @param name A character string representing a Julia object name.
+#'
+#' @return A unique name not currently defined in Julia.
+#'
+#' @keywords internal
+check_sampler_is_defined <- function(name) {
+  if (!is.character(name) || length(name) != 1) {
+    stop("`name` must be a single character string.")
+  }
+
+  sampler_is_defined <- JuliaCall::julia_eval(
+    paste0("isdefined(Main, :", name, ")"),
+    need_return = "R"
+  )
+
+  new_name <- FALSE
+
+  while (isTRUE(sampler_is_defined)) {
+    name_old <- name
+    name <- paste0(name, "_", sample(letters, 1), sample(0:9, 1))
+    sampler_is_defined <- JuliaCall::julia_eval(
+      paste0("isdefined(Main, :", name, ")"),
+      need_return = "R"
+    )
+    new_name <- TRUE
+  }
+
+  if (new_name) {
+    warning(sprintf(
+      "The object '%s' was already defined in the Julia environment. The name has been changed to '%s'.",
+      name_old, name
+    ))
+  }
+
+  return(name)
+}
+
