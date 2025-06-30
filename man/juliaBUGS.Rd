@@ -2,7 +2,7 @@
 % Please edit documentation in R/juliabugs.R
 \name{juliaBUGS}
 \alias{juliaBUGS}
-\title{Run a Julia MCMC Sampler from R using a Custom BUGS-like Model}
+\title{Run a Julia HMC Sampler for a BUGS-like Probabilistic Model}
 \usage{
 juliaBUGS(
   data,
@@ -18,69 +18,79 @@ juliaBUGS(
   posterior_type = "array",
   force_setup_juliaBUGS = FALSE,
   control = NULL,
+  chains_file = NULL,
   ...
 )
 }
 \arguments{
-\item{data}{A named list containing the data to be passed to the model. All elements must be numeric (integer or double). Names are required.}
+\item{data}{A named list of numeric values (integer or double). All elements must be named.}
 
-\item{model}{A character string with the model definition in a Julia-compatible format or in BUGS syntax to be converted.}
+\item{model}{A character string with the model definition, either in Julia-compatible format or BUGS syntax.}
 
-\item{params_to_save}{Character vector with the names of model parameters to extract from the sampler output. If `NULL`, no posterior samples will be returned.}
+\item{params_to_save}{Character vector with the names of model parameters to extract from the sampler output.}
 
-\item{name}{Character. A name for the sampler object to be created within Julia.}
+\item{name}{Character. Name for the sampler object created in Julia (must be a valid Julia variable name).}
 
 \item{n_iter}{Integer. Total number of MCMC iterations. Default is 2000.}
 
-\item{n_warmup}{Integer. Number of warm-up (adaptation) iterations. Default is `floor(n_iter / 2)`.}
+\item{n_warmup}{Integer. Number of warm-up iterations. Default is `floor(n_iter / 2)`.}
 
 \item{n_discard}{Integer. Number of initial samples to discard. Default is `n_warmup`.}
 
-\item{n_thin}{Integer. Thinning interval for retained samples. Default is 1 (no thinning).}
+\item{n_thin}{Integer. Thinning interval. Default is 1 (no thinning).}
 
-\item{n_chain}{Integer. Number of MCMC chains to run. Default is 1.}
+\item{n_chain}{Integer. Number of MCMC chains. Default is 1.}
 
-\item{use_parallel}{Logical. Whether to use multi-threaded sampling with `AbstractMCMC.MCMCThreads()`. Default is `TRUE`.}
+\item{use_parallel}{Logical. Whether to use `AbstractMCMC.MCMCThreads()` for parallel sampling. Default is `TRUE`.}
 
-\item{posterior_type}{Character. Format of the posterior returned. One of `"array"`, `"rvar"`, `"mcmc"`, or `"draws"`. Default is `"array"`.}
+\item{posterior_type}{Character. Format of the posterior samples. One of `"array"`, `"rvar"`, `"mcmc"`, or `"draws"`. Default is `"array"`.}
 
-\item{control}{Optional list of control options. Supported entries:
+\item{force_setup_juliaBUGS}{Logical. If `TRUE`, forces reinitialization of the Julia environment via `setup_juliaBUGS()`. Default is `FALSE`.}
+
+\item{control}{Optional list of control parameters. Supported entries:
 \describe{
-  \item{`data_convert_int`}{Logical. Whether to coerce numeric values in `data` to integers when possible. Default is `TRUE`.}
-  \item{`convert_var_name`}{Logical. Whether to rename variables in the model code. Default is `FALSE`.}
-  \item{`julia_model`}{Logical. If `TRUE`, skips BUGS-to-Julia translation. Default is `FALSE`.}
+  \item{`data_convert_int`}{Logical. If `TRUE`, coerces numeric values to integers when possible. Default is `TRUE`.}
+  \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the BUGS model. Default is `FALSE`.}
+  \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format. Default is `FALSE`.}
 }}
+
+\item{chains_file}{Optional character string indicating where to store the Julia serialized chain file.}
 
 \item{...}{Additional arguments passed to `setup_juliaBUGS()`.}
 }
 \value{
 An object of class `"rjuliabugs"` containing:
 \describe{
-  \item{params}{Posterior samples for the selected parameters, in the format specified by `posterior_type`.}
-  \item{name}{Character string identifying the sampler object created in Julia.}
-  \item{sampler}{The full Julia sampler object as returned by `AbstractMCMC.sample`.}
-  \item{n_threads}{Number of Julia threads detected during execution.}
+  \item{params}{Posterior samples, in the format specified by `posterior_type`.}
+  \item{name}{Character string identifying the Julia sampler object.}
+  \item{sampler}{Sampler object returned by `AbstractMCMC.sample`.}
+  \item{n_threads}{Number of Julia threads detected.}
+  \item{mcmc}{List of MCMC configuration parameters.}
+  \item{control}{Control options used in the sampler setup.}
+  \item{chains_file}{Path to the Julia-serialized sampler, if applicable.}
 }
 }
 \description{
-This function sets up and runs a Hamiltonian Monte Carlo (HMC) sampler in Julia using a user-defined probabilistic model.
-It manages model compilation, data conversion, parallelization settings, and various posterior output formats.
+Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
+specified in Julia or in BUGS syntax. It compiles the model, converts data,
+sets sampler parameters, and returns posterior samples in various formats.
 }
 \details{
-Internally, this function uses `LogDensityProblems`, `AdvancedHMC`, and `AbstractMCMC` from Julia.
-Gradient calculations are performed with `ReverseDiff`, and data is passed using a `JuliaNamedTuple`.
-The model code is compiled using `compile(...)` before sampling.
+This function relies on Julia packages `LogDensityProblems`, `AdvancedHMC`, and `AbstractMCMC`.
+Gradients are computed via `ReverseDiff`. The model is compiled before sampling.
 
-The `posterior_type` argument determines the format of the returned posterior:
-- `"array"`: a 3D numeric array (samples × chains × parameters).
-- `"rvar"`: a `posterior::rvar` object.
-- `"mcmc"`: a `coda::mcmc` or `coda::mcmc.list`.
-- `"draws"`: a `posterior::draws_array` object.
+The `posterior_type` argument determines the return format:
+\itemize{
+  \item `"array"`: 3D numeric array (iterations × chains × parameters).
+  \item `"rvar"`: `posterior::rvar` object.
+  \item `"mcmc"`: `coda::mcmc` (single chain) or `mcmc.list` (multiple chains).
+  \item `"draws"`: `posterior::draws_array`.
+}
 }
 \note{
-You must run `setup_juliaBUGS()` before using this function to initialize Julia and load the required packages.
-Ensure the Julia environment has all necessary dependencies installed.
-If parallel sampling is requested but only one Julia thread is available, a warning will be issued and serial sampling will be used instead.
+You must call `setup_juliaBUGS()` at least once before using this function.
+If parallel sampling is requested but only one Julia thread is available,
+a warning is issued and sampling will run serially.
 }
 \examples{
 \dontrun{

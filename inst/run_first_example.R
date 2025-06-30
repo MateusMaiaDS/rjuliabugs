@@ -46,13 +46,23 @@ posterior <- juliaBUGS(data = data,
 
 library(bayesplot)
 
+save_rjuliaBUGS(rjuliabugs_model = posterior,
+                file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.rds",
+                chains_file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.jls")
+rm(posterior)
+posterior <- load_rjuliaBUGS(file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.rds")
+
 mcmc_areas(posterior$params,
            pars = params_to_save,
            prob = 0.8)
 
 
-alpha0_sigma_post <-get_params(params = c("alpha0","sigma"),
+alpha0_sigma_post <- get_params_from_name(params = c("alpha0","sigma"),
                                name = posterior$name)
+
+alpha0_sigma_post_alternative <- get_params(rjuliabugs = posterior,posterior_type = "rvar")
+alpha0_sigma_post_alternative
+
 mcmc_trace(x = posterior$params,pars =  c("alpha0","sigma"),
            n_warmup = 0,
            facet_args = list(nrow = 2))
@@ -78,7 +88,7 @@ posterior2 <- juliaBUGS(data = data,
                        n_chain = 1,use_parallel = TRUE,
                        n_thin = n_thin,posterior_type = "draws")
 
-posterior2$params %>% class
+class(posterior2$params)
 dim(get_params_from_name(name = "sampler_juliaBUGS",params = "alpha0"))
 dim(get_params_from_name(name = "sampler_juliaBUGS_q4_a8_j3",params = "alpha0"))
 
