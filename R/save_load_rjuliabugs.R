@@ -65,18 +65,29 @@ save_rjuliaBUGS <- function(rjuliabugs_model,
 #' Load an `rjuliabugs` Object and Restore the Julia State
 #'
 #' Loads an object of class `rjuliabugs` from an `.rds` file and restores the
-#' associated Julia object using Julia’s `Serialization.deserialize`. Both
-#' `name` and `chains_file` fields must be present in the stored object.
+#' corresponding Julia sampler object using Julia’s `Serialization.deserialize`.
+#'
+#' If the original sampler name (`name`) already exists in the active Julia session,
+#' a new unique name is generated to avoid overwriting it. A warning will be issued
+#' to indicate that the name has changed.
 #'
 #' @param file A character string giving the path to the `.rds` file.
 #'
-#' @return An object of class `rjuliabugs`, with its Julia object restored in
-#'   the current Julia session.
+#' @return An object of class `rjuliabugs`, with the Julia sampler object loaded into the current session.
+#'   If the name was changed to avoid conflict, the returned object reflects the updated name.
+#'
+#' @details
+#' The `.rds` file must contain a valid `rjuliabugs` object with both the `name` and `chains_file` fields defined.
+#' The function checks if the sampler name is already defined in Julia. If so, a unique name is generated
+#' using \code{\link{check_sampler_is_defined}}, and the Julia object is loaded under that name.
 #'
 #' @examples
 #' \dontrun{
 #' model <- load_rjuliaBUGS("my_model.rds")
+#' # model$name now contains the (possibly updated) name used in Julia
 #' }
+#'
+#' @seealso \code{\link{check_sampler_is_defined}}
 #'
 #' @export
 load_rjuliaBUGS <- function(file){

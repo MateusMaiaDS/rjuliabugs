@@ -18,7 +18,6 @@ juliaBUGS(
   posterior_type = "array",
   force_setup_juliaBUGS = FALSE,
   control = NULL,
-  chains_file = NULL,
   ...
 )
 }
@@ -54,8 +53,6 @@ juliaBUGS(
   \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format. Default is `FALSE`.}
 }}
 
-\item{chains_file}{Optional character string indicating where to store the Julia serialized chain file.}
-
 \item{...}{Additional arguments passed to `setup_juliaBUGS()`.}
 }
 \value{
@@ -67,7 +64,6 @@ An object of class `"rjuliabugs"` containing:
   \item{n_threads}{Number of Julia threads detected.}
   \item{mcmc}{List of MCMC configuration parameters.}
   \item{control}{Control options used in the sampler setup.}
-  \item{chains_file}{Path to the Julia-serialized sampler, if applicable.}
 }
 }
 \description{

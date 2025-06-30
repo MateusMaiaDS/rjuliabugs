@@ -47,10 +47,10 @@ posterior <- juliaBUGS(data = data,
 library(bayesplot)
 
 save_rjuliaBUGS(rjuliabugs_model = posterior,
-                file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.rds",
-                chains_file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.jls")
+                file = "inst/posterior_test.rds",
+                chains_file = "inst/posterior_test.jls")
 rm(posterior)
-posterior <- load_rjuliaBUGS(file = "C:/Users/mm538r/rjuliabugs/inst/posterior_test.rds")
+posterior <- load_rjuliaBUGS(file = "inst/posterior_test.rds")
 
 mcmc_areas(posterior$params,
            pars = params_to_save,
