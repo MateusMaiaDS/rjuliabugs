@@ -1,16 +1,16 @@
 rjuliabugs
 ================
 
+# rjuliabugs <img src="man/figures/logo.png" align="right" />
+
 <!-- badges: start -->
 
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![R build
 status](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions)
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/rjuliabugs)](https://CRAN.R-project.org/package=rjuliabugs) -->
+[![R-CMD-check](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
-
-# rjuliabugs
 
 **rjuliabugs** is an R package that provides a bridge between R and
 [JuliaBUGS](https://turing.ml/dev/), the BUGS-style Bayesian modeling
@@ -33,7 +33,22 @@ You can install the development version of **rjuliabugs** from
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
 
-# Troubleshooting and `JuliaCall` setup
+## Troubleshooting and `JuliaCall` Setup
+
+The `rjuliabugs` package relies heavily on the
+[`JuliaCall`](https://github.com/JuliaInterop/JuliaCall) package, which
+can occasionally cause issues if it is not installed or configured
+correctly.
+
+Many of the most common installation problems related to `JuliaCall` are
+well documented in the [Troubleshooting and Ways to Get
+Help](https://github.com/JuliaInterop/JuliaCall#troubleshooting-and-ways-to-get-help)
+section of the `JuliaCall` GitHub page.
+
+If you encounter any issues while setting up `rjuliabugs` on your system
+that are not covered there, feel free to open an
+[issue](https://github.com/MateusMaiaDS/rjuliabugs/issues) on this
+repository. We’re happy to help!
 
 ## Contributing
 
