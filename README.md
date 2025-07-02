@@ -22,13 +22,14 @@ programs that run efficiently with advanced inference engines such as
 Hamiltonian Monte Carlo (HMC), Variational Inference, and particle
 methods — all accessible via Turing.jl.
 
-By exposing JuliaBUGS to R, **rjuliabugs** empowers R users to write or
-reuse BUGS code and execute it using Julia’s state-of-the-art inference
-backends. This not only provides a seamless path to adopt faster and
-more flexible sampling methods but also allows integration with R’s
-extensive post-processing ecosystem (e.g., `bayesplot`, `posterior`,
-`coda`). It lowers the barrier for existing BUGS users to adopt modern
-Bayesian tools without abandoning their existing model codebase.
+With `rjuliabugs`, R users can run BUGS models/code through JuliaBUGS
+and take advantage of the inference algorithms available in Turing.jl,
+without leaving the R environment. This not only provides a seamless
+path to adopt faster and more flexible sampling methods but also allows
+integration with R’s extensive post-processing ecosystem (e.g.,
+`bayesplot`, `posterior`, `coda`). It lowers the barrier for existing
+BUGS users to adopt modern Bayesian tools without abandoning their
+existing model codebase.
 
 ## Installation
 
