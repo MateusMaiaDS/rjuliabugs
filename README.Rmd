@@ -13,7 +13,10 @@ output: github_document
 
 **rjuliabugs** is an R package that provides a bridge between R and [JuliaBUGS](https://turing.ml/dev/), the BUGS-style Bayesian modeling interface developed in Julia as part of the [Turing.jl](https://turing.ml/dev/) probabilistic programming ecosystem.
 
-This interface enables R users to access and run JuliaBUGS models from within R, leveraging modern Bayesian methods such as Hamiltonian Monte Carlo (HMC) and Automatic Differentiation (AD) while maintaining compatibility with R’s robust ecosystem for diagnostics and visualization.
+**JuliaBUGS** allows users to define models using the familiar BUGS syntax while leveraging the speed and flexibility of the Julia language. It enables automatic translation of BUGS code into modern probabilistic programs that run efficiently with advanced inference engines such as Hamiltonian Monte Carlo (HMC), Variational Inference, and particle methods — all accessible via Turing.jl.
+
+By exposing JuliaBUGS to R, **rjuliabugs** empowers R users to write or reuse BUGS code and execute it using Julia's state-of-the-art inference backends. This not only provides a seamless path to adopt faster and more flexible sampling methods but also allows integration with R’s extensive post-processing ecosystem (e.g., `bayesplot`, `posterior`, `coda`). It lowers the barrier for existing BUGS users to adopt modern Bayesian tools without abandoning their existing model codebase.
+
 
 ## Installation
 
@@ -33,6 +36,7 @@ Help](https://github.com/JuliaInterop/JuliaCall#troubleshooting-and-ways-to-get-
 
 If you encounter any issues while setting up `rjuliabugs` on your system that are not covered there, feel free to open an [issue](https://github.com/MateusMaiaDS/rjuliabugs/issues) on this repository. We're happy to help!
 
+## Setting parallel
 
 
 ## Contributing
