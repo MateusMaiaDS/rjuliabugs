@@ -1,9 +1,8 @@
 ---
-title: "rjuliabugs"
 output: github_document
 ---
 
-# rjuliabugs <img src="man/figures/logo.png" align="right" height="120" alt="" />
+# rjuliabugs <img src="man/figures/logo.png" align="right" alt="" />
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)

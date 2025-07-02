@@ -1,7 +1,5 @@
-rjuliabugs
-================
 
-# rjuliabugs <img src="man/figures/logo.png" align="right" height="120" alt="" />
+# rjuliabugs <img src="man/figures/logo.png" align="right" alt="" />
 
 <!-- badges: start -->
 
