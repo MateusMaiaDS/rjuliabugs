@@ -7,12 +7,15 @@
 setup_juliaBUGS(
   extra_packages = NULL,
   verify_package = TRUE,
-  install_from_dev = FALSE
+  install_from_dev = FALSE,
+  ...
 )
 }
 \arguments{
 \item{extra_packages}{A character vector of additional Julia packages to install and load.
 Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.}
+
+\item{...}{Additional arguments passed to `JuliaCall::julia_setup()`, such as `installJulia = TRUE`.}
 }
 \value{
 This function is called for its side effects (installing and loading Julia packages). It returns `NULL` invisibly.

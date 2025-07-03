@@ -345,6 +345,7 @@ bugs2juliaBUGS <- function(model_code,
 #'
 #' @param extra_packages A character vector of additional Julia packages to install and load.
 #'   Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.
+#' @param ... Additional arguments passed to `JuliaCall::julia_setup()`, such as `installJulia = TRUE`.
 #'
 #' @details
 #' The function uses `JuliaCall::julia_install_package_if_needed()` to install core Julia packages:
@@ -376,11 +377,12 @@ bugs2juliaBUGS <- function(model_code,
 #' @export
 setup_juliaBUGS <- function(extra_packages = NULL,
                             verify_package = TRUE,
-                            install_from_dev = FALSE){
+                            install_from_dev = FALSE,
+                            ...){
 
 
   cat("Preparing JuliaBUGS setup... ")
-  julia <- JuliaCall::julia_setup(installJulia=TRUE)
+  julia <- JuliaCall::julia_setup(...)
 
   # Install all dependencies if needed
   if(verify_package){

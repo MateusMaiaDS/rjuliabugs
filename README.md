@@ -42,6 +42,15 @@ You can install the development version of **rjuliabugs** from
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
 
+⚠️ **Loading the package**:  
+When loading the package using `library(rjuliabugs)` for the first time
+in an R session, it may take longer than most R packages because it
+needs to initialize the Julia environment through
+`JuliaCall::julia_setup()`, which can be time-consuming. Using the
+package for the first time may also involve installing all the required
+Julia libraries for `JuliaBUGS`—such as `AbstractMCMC` and others—if
+they are not already installed.
+
 ## Using `rjuliabugs`: Setup, Troubleshooting, Parallelization Settings,and Contribution
 
 For further guidance, the rest of this README summarises most of the FAQ
@@ -76,12 +85,11 @@ Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/).
 We recommend installing Julia using
 [`juliaup`](https://github.com/JuliaLang/juliaup), the **official Julia
 version manager**. It provides a reliable and maintainable way to
-install, update, and manage Julia versions across platforms.
-
-Using `juliaup` is preferred over downloading Julia manually because: -
-It makes upgrading Julia seamless and safe. - It supports managing
-multiple versions. - It ensures compatibility with R-Julia integration
-tools like `JuliaCall`.
+install, update, and manage Julia versions across platforms. Using
+`juliaup` is preferred over downloading Julia manually because it makes
+upgrading Julia seamless and safe, supports managing multiple versions,
+and ensures compatibility with R-Julia integration tools like
+`JuliaCall`. To install, follow the instructions:
 
 ### Windows (via PowerShell)
 
