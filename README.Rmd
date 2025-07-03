@@ -6,8 +6,8 @@ output: github_document
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![R build status](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions)
-[![R-CMD-check](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml)
+<!-- [![R build status](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions) -->
+<!-- [![R-CMD-check](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MateusMaiaDS/rjuliabugs/actions/workflows/R-CMD-check.yaml) -->
 <!-- badges: end -->
 
 
@@ -27,9 +27,185 @@ You can install the development version of **rjuliabugs** from [GitHub](https://
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
 
+## Installing `Julia`
+
+We recommend installing Julia using [`juliaup`](https://github.com/JuliaLang/juliaup), the **official Julia version manager**. It provides a reliable and maintainable way to install, update, and manage Julia versions across platforms.
+
+Using `juliaup` is preferred over downloading Julia manually because:
+- It makes upgrading Julia seamless and safe.
+- It supports managing multiple versions.
+- It ensures compatibility with R-Julia integration tools like `JuliaCall`.
+
+### Windows (via PowerShell)
+
+Open PowerShell (as Administrator) and run:
+
+```powershell
+winget install --id=JuliaLang.Julia -e
+```
+
+> Requires Windows 10/11 with [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) available.
+
+### macOS (via Homebrew)
+
+If you use [Homebrew](https://brew.sh), run:
+
+```sh
+brew install juliaup
+juliaup add release
+```
+
+This installs `juliaup` and sets the latest stable Julia version as default.
+
+### Ubuntu (via APT)
+
+On recent Ubuntu versions, you can install via APT:
+
+```sh
+sudo apt update
+sudo apt install juliaup
+juliaup add release
+```
+
+If `juliaup` is not available via APT on your system, follow manual installation instructions at the [Juliaup GitHub page](https://github.com/JuliaLang/juliaup#installation).
+
+#### Verify Installation
+
+After installation, open a terminal and run:
+
+```sh
+julia
+```
+
+This should start the Julia REPL with the installed version. You are now ready to use Julia with `rjuliabugs`.
+
+
 ## Troubleshooting and `JuliaCall` Setup
 
-The `rjuliabugs` package relies heavily on the [`JuliaCall`](https://github.com/JuliaInterop/JuliaCall) package, which can occasionally cause issues if it is not installed or configured correctly.
+The `rjuliabugs` package relies on the [`JuliaCall`](https://github.com/JuliaInterop/JuliaCall) package to communicate with Julia from R. Errors may occur if Julia is not properly installed or if `JuliaCall` cannot locate the Julia binary.
+
+### Defining the Julia Path
+
+After confirming that Julia is installed and accessible from your terminal, you must ensure that R can also find the Julia binary.
+
+To check whether `JuliaCall` can detect Julia, run the following in your R console:
+
+```r
+Sys.getenv("JULIA_HOME")
+```
+
+If this returns an empty string (`""`), it means that `JuliaCall` cannot find Julia on your system's `PATH`. You will need to manually set the path to the Julia binary.
+
+If you installed Julia using `juliaup`, the binary is typically located in:
+
+```
+~/.juliaup/bin
+```
+
+To make this available to your R session, run:
+
+```r
+Sys.setenv(JULIA_HOME = "~/.juliaup/bin")
+```
+
+Replace the path with the correct location if your installation differs (e.g., if you're on Windows, it might be something like `"C:/Users/YourName/AppData/Local/Programs/Julia-1.x.x/bin"`).
+
+Once this is set, try initializing Julia in R:
+
+```r
+library(JuliaCall)
+julia_setup()
+```
+
+If successful, you’re ready to use `rjuliabugs`.
+
+> Tip: You can add the `Sys.setenv()` command to your `.Rprofile` file to make the configuration persistent across R sessions.
+
+## Making the change persistent (macOS and Ubuntu)
+
+Alternatively, you can set the environment variable permanently by editing your R environment file `.Renviron`. From the terminal, open the file with a text editor such as nano:
+
+```sh
+nano ~/.Renviron
+```
+
+Add the following line to the file:
+
+```
+JULIA_HOME=~/.juliaup/bin
+```
+
+Save and exit. This will ensure that JULIA_HOME is set automatically every time you start R.
+
+After this, verify in an R session:
+
+```r
+Sys.getenv("JULIA_HOME")
+```
+
+### Setting R_HOME for rjuliabugs (Windows, macOS, Ubuntu)
+
+To ensure rjuliabugs works correctly, set the `R_HOME` environment variable so Julia can locate your R installation.
+
+1. Open your terminal or command prompt.
+2. Check if `R_HOME` is set by running:
+
+```bash
+echo $R_HOME
+```
+
+(on Windows PowerShell use `echo $Env:R_HOME`)
+
+3. If empty, open R and run:
+```r
+R.home()
+```
+
+4. Copy the printed R installation path.
+5. Set the environment variable in your terminal session with:
+
+```
+export R_HOME="PASTE_YOUR_PATH_HERE"
+```
+(On Windows PowerShell, use: `$Env:R_HOME="PASTE_YOUR_PATH_HERE"`)
+
+6. **To make this setting permanent (applies every time you open a terminal or run R):**
+
+   - **On macOS/Linux:**  
+     Open your shell configuration file with a text editor (e.g., nano):  
+     ```bash
+     nano ~/.bashrc
+     ```  
+     or if you use zsh:  
+     ```bash
+     nano ~/.zshrc
+     ```  
+     Add the line:  
+     ```bash
+     export R_HOME="PASTE_YOUR_PATH_HERE"
+     ```  
+     Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).  
+     Then reload your shell configuration or restart your terminal:  
+     ```bash
+     source ~/.bashrc
+     ```  
+     *(or `source ~/.zshrc` if using zsh)*
+
+   - **On Windows:**  
+     1. Search for "Environment Variables" in the Start menu and open "Edit the system environment variables."  
+     2. Click "Environment Variables."  
+     3. Under "User variables" or "System variables," click "New..."  
+     4. Set the variable name as `R_HOME` and the value as the full R path you copied.  
+     5. Click OK to save all dialogs.  
+     6. Restart your terminal or R session for changes to take effect.
+
+
+7. Verify by reopening the terminal and running the echo command from step 2.
+
+This ensures Julia, when called from R via JuliaCall, can find your R installation and prevents initialization errors in rjuliabugs.
+
+
+### Other installations issues
 
 Many of the most common installation problems related to `JuliaCall` are well documented in the [Troubleshooting and Ways to Get 
 Help](https://github.com/JuliaInterop/JuliaCall#troubleshooting-and-ways-to-get-help) section of the `JuliaCall` GitHub page.
