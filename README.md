@@ -10,8 +10,9 @@ MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/
 <!-- badges: end -->
 
 **rjuliabugs** is an R package that provides a bridge between R and
-[JuliaBUGS](https://turing.ml/dev/), the BUGS-style Bayesian modeling
-interface developed in Julia as part of the
+[JuliaBUGS](https://github.com/TuringLang/JuliaBUGS.jl?tab=readme-ov-file),
+the [BUGS](https://en.wikipedia.org/wiki/WinBUGS)-style Bayesian
+modeling interface developed in Julia as part of the
 [Turing.jl](https://turing.ml/dev/) probabilistic programming ecosystem.
 
 **JuliaBUGS** allows users to define models using the familiar BUGS
@@ -39,6 +40,31 @@ You can install the development version of **rjuliabugs** from
 # install.packages("remotes")
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
+
+For further guidance, the rest of this README summarise most of the FAQ
+and additional instructions for installing julia, most common
+troubleshooting, and defining instruction to run `rjuliabugs` in
+parallel. We recommended the readinig of the subsequent sections
+although not strictly necessary: - [Installing
+`Julia`](##%20Installing%20%60Julia%60) - [Troubleshooting `JuliaCall`
+setup](##%20Troubleshooting%20%60JuliaCall%60%20setup) - [`Julia` Not
+Found](###%20Error%20type: "`Julia` Not Found") - [`R_HOME` not
+found](###%20Error%20type: "`R_HOME` not found") - [Other installations
+issues](###%20Other%20installations%20issues) - [Using `rjuliabugs` in
+parallel](##%20Using%20%60rjuliabugs%60%20in%20parallel)
+
+As this is an open-source project collaboration is welcome and further
+details are found - [Contributing](##%20Contributing) -
+[Licensing](##%20Licensing) - [Acknowledgements](##%20Acknowledgements)
+
+Last, for a complete documentation with working examples, and further
+detail of package functionalities follow the
+[link](https://turinglang.org/JuliaBUGS.jl/stable/example/)
+
+See also,
+[JuliaBUGS](https://turinglang.org/JuliaBUGS.jl/stable/example/),
+[JAGS](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/),
+\[BUGS\]
 
 ## Installing `Julia`
 
@@ -101,80 +127,102 @@ julia
 This should start the Julia REPL with the installed version. You are now
 ready to use Julia with `rjuliabugs`.
 
-## Troubleshooting and `JuliaCall` Setup
+## Troubleshooting `JuliaCall` setup
 
 The `rjuliabugs` package relies on the
 [`JuliaCall`](https://github.com/JuliaInterop/JuliaCall) package to
 communicate with Julia from R. Errors may occur if Julia is not properly
-installed or if `JuliaCall` cannot locate the Julia binary.
+installed or if `JuliaCall` cannot locate the Julia binary. The most
+common errors include:
 
-### Defining the Julia Path
+### Error type: “`Julia` Not Found”
 
-After confirming that Julia is installed and accessible from your
-terminal, you must ensure that R can also find the Julia binary.
+The `JULIA_HOME` environment variable tells R where to find Julia. If
+it’s not set correctly, `rjuliabugs` will not be able to communicate
+with Julia via `JuliaCall`.
 
-To check whether `JuliaCall` can detect Julia, run the following in your
-R console:
+1.  Open your terminal or command prompt.  
+2.  Check if `JULIA_HOME` is set by running:
 
-``` r
-Sys.getenv("JULIA_HOME")
-```
+<!-- -->
 
-If this returns an empty string (`""`), it means that `JuliaCall` cannot
-find Julia on your system’s `PATH`. You will need to manually set the
-path to the Julia binary.
+    echo $JULIA_HOME
 
-If you installed Julia using `juliaup`, the binary is typically located
-in:
+> (On Windows PowerShell use: `echo $Env:JULIA_HOME`)
+
+3.  If empty or incorrect, and you installed Julia using `juliaup`, the
+    Julia binary is typically located at:
+
+<!-- -->
 
     ~/.juliaup/bin
 
-To make this available to your R session, run:
+You can set the environment variable for the current session with:
 
-``` r
-Sys.setenv(JULIA_HOME = "~/.juliaup/bin")
-```
+    export JULIA_HOME="$HOME/.juliaup/bin"
+
+> (On Windows PowerShell use: `$Env:JULIA_HOME="$HOME/.juliaup/bin`“)
 
 Replace the path with the correct location if your installation differs
 (e.g., if you’re on Windows, it might be something like
 `"C:/Users/YourName/AppData/Local/Programs/Julia-1.x.x/bin"`).
 
-Once this is set, try initializing Julia in R:
+4.  **To make this setting permanent (so you don’t need to set it every
+    time):**
 
-``` r
-library(JuliaCall)
-julia_setup()
+    - **On macOS/Linux:**  
+      Open your shell configuration file (e.g., `.bashrc`, `.zshrc`)
+      with a text editor:
+
+      ``` bash
+      nano ~/.bashrc
+      ```
+
+      or
+
+      ``` bash
+      nano ~/.zshrc  
+      ```
+
+      Add the following line at the end of the file:
+
+      ``` bash
+      export JULIA_HOME="$HOME/.juliaup/bin"  
+      ```
+
+      Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).  
+      Then reload your shell configuration or restart your terminal:
+
+      ``` bash
+      source ~/.bashrc
+      ```
+
+      *(or `source ~/.zshrc` if using zsh)*
+
+    - **On Windows:**
+
+      1.  Search for “Environment Variables” in the Start menu and open
+          “Edit the system environment variables.”  
+      2.  Click “Environment Variables.”  
+      3.  Under “User variables” or “System variables,” click “New…”  
+      4.  Set the variable name as `JULIA_HOME` and the value as the
+          path to Julia’s binary installed by juliaup (e.g.,
+          `C:\Users\your_user\AppData\Local\Microsoft\WindowsApps`).  
+      5.  Click OK to save all dialogs.  
+      6.  Restart your terminal or R session for changes to take effect.
+
+5.  Verify it is set correctly by re-running:
+
+``` bash
+echo $JULIA_HOME  
 ```
 
-If successful, you’re ready to use `rjuliabugs`.
+> (or in R use: `Sys.getenv("JULIA_HOME")`)
 
-> Tip: You can add the `Sys.setenv()` command to your `.Rprofile` file
-> to make the configuration persistent across R sessions.
+Setting `JULIA_HOME` correctly ensures that `JuliaCall` can launch
+Julia, which is required for `rjuliabugs` to function.
 
-## Making the change persistent (macOS and Ubuntu)
-
-Alternatively, you can set the environment variable permanently by
-editing your R environment file `.Renviron`. From the terminal, open the
-file with a text editor such as nano:
-
-``` sh
-nano ~/.Renviron
-```
-
-Add the following line to the file:
-
-    JULIA_HOME=~/.juliaup/bin
-
-Save and exit. This will ensure that JULIA_HOME is set automatically
-every time you start R.
-
-After this, verify in an R session:
-
-``` r
-Sys.getenv("JULIA_HOME")
-```
-
-### Setting R_HOME for rjuliabugs (Windows, macOS, Ubuntu)
+### Error type: “`R_HOME` not found”
 
 To ensure rjuliabugs works correctly, set the `R_HOME` environment
 variable so Julia can locate your R installation.
@@ -264,7 +312,89 @@ that are not covered there, feel free to open an
 [issue](https://github.com/MateusMaiaDS/rjuliabugs/issues) on this
 repository. We’re happy to help!
 
-## Setting parallel
+## Using `rjuliabugs` in parallel
+
+The `JuliaBUGS` library in `julia` provide support to parallel sampling
+with `AbstractMCMC`. However, to be able to perform multi-threaded
+sampling of multiple chains, while originally this is is easely done in
+Julia only by initilazing a session with the `-t <n_threads>` argument,
+in order to be able to do it through `rjuliabugs` some prior steps are
+needed. The easiest way of doing it is to define the enviroment variable
+`JULIA_NUM_THREADS=n_threads` with `n_threads` being the number of cores
+we want to run your code in parallel.
+
+To ensure `rjuliabugs` can utilize multithreading correctly through
+Julia, you may need to explicitly set the `JULIA_NUM_THREADS`
+environment variable.
+
+1.  Open your terminal or command prompt.  
+2.  Check what is set as `JULIA_NUM_THREADS` is set by running:
+
+``` bash
+echo $JULIA_NUM_THREADS
+```
+
+> (On Windows PowerShell use: `echo $Env:JULIA_NUM_THREADS`)
+
+3.  If empty or incorrectly set, decide how many threads you want Julia
+    to use (e.g., 4), then set the environment variable in your terminal
+    session:
+
+``` bash
+export JULIA_NUM_THREADS=4
+```
+
+> (On Windows PowerShell use: `$Env:JULIA_NUM_THREADS="4"`)
+
+4.  **To make this setting permanent (applies every time you open R and
+    Julia):**
+
+    - **On macOS/Linux:**  
+      Open your shell configuration file (e.g., `.bashrc`, `.zshrc`)
+      with a text editor:
+
+      ``` bash
+      nano ~/.bashrc
+      ```
+
+      or
+
+      ``` bash
+      nano ~/.zshrc  
+      ```
+
+      Add the following line at the end of the file:
+
+      ``` bash
+      export JULIA_NUM_THREADS=4  
+      ```
+
+      Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).  
+      Then reload the configuration:  
+      source ~/.bashrc  
+      (or `source ~/.zshrc`)
+
+    - **On Windows:**
+
+      1.  Search for “Environment Variables” in the Start menu and open
+          “Edit the system environment variables.”  
+      2.  Click “Environment Variables.”  
+      3.  Under “User variables” or “System variables,” click “New…”  
+      4.  Set the variable name as `JULIA_NUM_THREADS` and the value as
+          the number of threads (e.g., `4`).  
+      5.  Click OK to save all dialogs.  
+      6.  Restart your terminal or R session for changes to take effect.
+
+5.  Verify it is set correctly by re-running:
+
+``` bash
+echo $JULIA_NUM_THREADS  
+```
+
+> (or in R use: `Sys.getenv("JULIA_NUM_THREADS")`)
+
+Setting `JULIA_NUM_THREADS` ensures Julia can execute in parallel where
+possible when running models through `rjuliabugs`.
 
 ## Contributing
 
