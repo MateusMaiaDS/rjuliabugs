@@ -25,11 +25,12 @@ methods — all accessible via Turing.jl.
 With `rjuliabugs`, R users can run BUGS models/code through JuliaBUGS
 and take advantage of the inference algorithms available in Turing.jl,
 without leaving the R environment. This not only provides a seamless
-path to adopt faster and more flexible sampling methods but also allows
-integration with R’s extensive post-processing ecosystem (e.g.,
-`bayesplot`, `posterior`, `coda`). It lowers the barrier for existing
-BUGS users to adopt modern Bayesian tools without abandoning their
-existing model codebase.
+path to adopt faster (including
+[parallelization](#using-rjuliabugs-in-parallel)) and more flexible
+sampling methods but also allows integration with R’s extensive
+post-processing ecosystem (e.g., `bayesplot`, `posterior`, `coda`). It
+lowers the barrier for existing BUGS users to adopt modern Bayesian
+tools without abandoning their existing model codebase.
 
 ## Installation
 
@@ -41,10 +42,12 @@ You can install the development version of **rjuliabugs** from
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
 
+## Using `rjuliabugs`: Setup, Troubleshooting, Parallelization Settings,and Contribution
+
 For further guidance, the rest of this README summarises most of the FAQ
-and additional instructions for installing Julia, troubleshooting, and
-running `rjuliabugs` in parallel. We recommend reading the following
-sections:
+and additional instructions for installing Julia and setting
+`rjuliabugs`, troubleshooting, and running `rjuliabugs` in parallel. We
+recommend reading the following sections:
 
 - [Installing Julia](#installing-julia)
 - [Troubleshooting JuliaCall setup:](#troubleshooting-juliacall-setup)
