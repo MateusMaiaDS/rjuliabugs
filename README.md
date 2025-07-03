@@ -41,30 +41,31 @@ You can install the development version of **rjuliabugs** from
 remotes::install_github("MateusMaiaDS/rjuliabugs")
 ```
 
-For further guidance, the rest of this README summarise most of the FAQ
-and additional instructions for installing julia, most common
-troubleshooting, and defining instruction to run `rjuliabugs` in
-parallel. We recommended the readinig of the subsequent sections
-although not strictly necessary: - [Installing
-`Julia`](##%20Installing%20%60Julia%60) - [Troubleshooting `JuliaCall`
-setup](##%20Troubleshooting%20%60JuliaCall%60%20setup) - [`Julia` Not
-Found](###%20Error%20type: "`Julia` Not Found") - [`R_HOME` not
-found](###%20Error%20type: "`R_HOME` not found") - [Other installations
-issues](###%20Other%20installations%20issues) - [Using `rjuliabugs` in
-parallel](##%20Using%20%60rjuliabugs%60%20in%20parallel)
+For further guidance, the rest of this README summarises most of the FAQ
+and additional instructions for installing Julia, troubleshooting, and
+running `rjuliabugs` in parallel. We recommend reading the following
+sections:
 
-As this is an open-source project collaboration is welcome and further
-details are found - [Contributing](##%20Contributing) -
-[Licensing](##%20Licensing) - [Acknowledgements](##%20Acknowledgements)
+- [Installing Julia](#installing-julia)
+- [Troubleshooting JuliaCall setup](#troubleshooting-juliacall-setup)
+  - [Julia not found](#error-type-julia-not-found)
+  - [R_HOME not found](#error-type-r_home-not-found)
+  - [Other installation issues](#other-installation-issues)
+- [Using rjuliabugs in parallel](#using-rjuliabugs-in-parallel)
 
-Last, for a complete documentation with working examples, and further
-detail of package functionalities follow the
-[link](https://turinglang.org/JuliaBUGS.jl/stable/example/)
+As this is an open-source project, collaboration is welcome. Further
+details can be found at: - [Contributing](#contributing) -
+[License](#license) - [Acknowledgements](#acknowledgements)
 
-See also,
-[JuliaBUGS](https://turinglang.org/JuliaBUGS.jl/stable/example/),
-[JAGS](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/),
-\[BUGS\]
+Last, for complete documentation with working examples and more details
+on `rjuliabugs` functionalities, see the [rjuliabugs
+vignette](https://turinglang.org/JuliaBUGS.jl/stable/example/).
+
+See also:  
+- [JuliaBUGS
+Documentation](https://turinglang.org/JuliaBUGS.jl/stable/)  
+- [JAGS Source
+Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/)
 
 ## Installing `Julia`
 
@@ -314,18 +315,18 @@ repository. We’re happy to help!
 
 ## Using `rjuliabugs` in parallel
 
-The `JuliaBUGS` library in `julia` provide support to parallel sampling
-with `AbstractMCMC`. However, to be able to perform multi-threaded
-sampling of multiple chains, while originally this is is easely done in
-Julia only by initilazing a session with the `-t <n_threads>` argument,
-in order to be able to do it through `rjuliabugs` some prior steps are
-needed. The easiest way of doing it is to define the enviroment variable
-`JULIA_NUM_THREADS=n_threads` with `n_threads` being the number of cores
-we want to run your code in parallel.
-
-To ensure `rjuliabugs` can utilize multithreading correctly through
-Julia, you may need to explicitly set the `JULIA_NUM_THREADS`
-environment variable.
+The `JuliaBUGS` library in Julia supports parallel sampling through
+`AbstractMCMC`. While in a native Julia session this can be easily
+enabled by launching Julia with the `-t <n_threads>` flag, using
+multithreaded sampling via `rjuliabugs` requires additional setup.
+Specifically, you must define the environment variable
+`JULIA_NUM_THREADS=n_threads`, where `n_threads` is the number of
+threads (or CPU cores) you wish to use for parallel computation. This
+ensures that `rjuliabugs` can properly initialize Julia with
+multithreading support when running multiple chains in parallel from
+within an R session. The instructions on how to configure
+`JULIA_NUM_THREADS` and enable multithreading in your environment, are
+the following:
 
 1.  Open your terminal or command prompt.  
 2.  Check what is set as `JULIA_NUM_THREADS` is set by running:
@@ -370,9 +371,13 @@ export JULIA_NUM_THREADS=4
       ```
 
       Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).  
-      Then reload the configuration:  
-      source ~/.bashrc  
-      (or `source ~/.zshrc`)
+      Then reload your shell configuration or restart your terminal:
+
+      ``` bash
+      source ~/.bashrc
+      ```
+
+      *(or `source ~/.zshrc` if using zsh)*
 
     - **On Windows:**
 
