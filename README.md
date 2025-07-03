@@ -47,25 +47,26 @@ running `rjuliabugs` in parallel. We recommend reading the following
 sections:
 
 - [Installing Julia](#installing-julia)
-- [Troubleshooting JuliaCall setup](#troubleshooting-juliacall-setup)
+- [Troubleshooting JuliaCall setup:](#troubleshooting-juliacall-setup)
   - [Julia not found](#error-type-julia-not-found)
-  - [R_HOME not found](#error-type-r_home-not-found)
+  - [R not found](#error-type-r_home-not-found)
   - [Other installation issues](#other-installation-issues)
-- [Using rjuliabugs in parallel](#using-rjuliabugs-in-parallel)
+- [Using `rjuliabugs` in parallel](#using-rjuliabugs-in-parallel)
 
 As this is an open-source project, collaboration is welcome. Further
-details can be found at: - [Contributing](#contributing) -
-[License](#license) - [Acknowledgements](#acknowledgements)
+details can be found at:
+
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
 
 Last, for complete documentation with working examples and more details
-on `rjuliabugs` functionalities, see the [rjuliabugs
-vignette](https://turinglang.org/JuliaBUGS.jl/stable/example/).
+on `rjuliabugs` functionalities, see the
+[vignette](https://turinglang.org/JuliaBUGS.jl/stable/example/).
 
-See also:  
-- [JuliaBUGS
-Documentation](https://turinglang.org/JuliaBUGS.jl/stable/)  
-- [JAGS Source
-Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/)
+See also, [JuliaBUGS
+Documentation](https://turinglang.org/JuliaBUGS.jl/stable/),[JAGS Source
+Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/).
 
 ## Installing `Julia`
 
@@ -225,7 +226,7 @@ Julia, which is required for `rjuliabugs` to function.
 
 ### Error type: “`R_HOME` not found”
 
-To ensure rjuliabugs works correctly, set the `R_HOME` environment
+To ensure `rjuliabugs` works correctly, set the `R_HOME` environment
 variable so Julia can locate your R installation.
 
 1.  Open your terminal or command prompt.
@@ -299,7 +300,7 @@ R.home()
     step 2.
 
 This ensures Julia, when called from R via JuliaCall, can find your R
-installation and prevents initialization errors in rjuliabugs.
+installation and prevents initialization errors in `rjuliabugs`.
 
 ### Other installations issues
 
