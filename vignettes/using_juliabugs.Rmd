@@ -10,15 +10,16 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warning=FALSE,message=FALSE,
   comment = "#>"
 )
 ```
 
 This document provides a complete walkthrough for fitting a simple logistic regression model with random effects using the `rjuliabugs` package. Rather than focusing on deep statistical analysis, the main goal of this guide is to demonstrate how to use the functionality offered by `rjuliabugs` to fit BUGS models from R by leveraging modern probabilistic programming tools available in Julia.
 
-In particular, `rjuliabugs` allows users to fit models using advanced samplers such as Hamiltonian Monte Carlo (HMC) and automatic differentiation, as implemented in `JuliaBUGS`. This integration brings the power and flexibility of modern Bayesian computation into the R ecosystem with full compatibility of well know packages as `BayesPlot`, `coda`, `posterior` which provide nice and neat visualizations and diagnosticis for a full Bayesian workflow.
+In particular, `rjuliabugs` allows users to fit models using advanced samplers such as Hamiltonian Monte Carlo (HMC) and automatic differentiation, as implemented in `JuliaBUGS`. This integration brings the power and flexibility of modern Bayesian computation into the R ecosystem with full compatibility of well know packages as `bayesplot`, `coda`, `posterior` which provide nice and neat visualizations and diagnosticis for a full Bayesian workflow.
 
-For more technical details about `JuliaBUGS`, please refer to [this link](https://github.com/TuringLang/JuliaBUGS.jl). To learn more about probabilistic programming in Julia, we also recommend the [Turing.jl project](https://turinglang.org/).
+For more technical details about `JuliaBUGS`, please refer to [this link](https://github.com/TuringLang/JuliaBUGS.jl). To learn more about probabilistic programming in Julia, we also recommend the [Turing.jl](https://turinglang.org/) project.
 
 ## Prerequisites
 
@@ -98,14 +99,118 @@ We also remind users that they should be familiar with the `BUGS` syntax, as syn
 
 For example, writing `1.0E-6.0` instead of `1.0E-6` is a syntax error in BUGS, even though the numerical meaning is equivalent. These types of issues can be subtle but will cause the model to fail during parsing, so attention to detail when writing BUGS code is important.
 
-## Inference/Running the sampler
+## Inference / Running the Sampler
 
-Once the the data is defined and the model is setup we can use the sampler to get use the sampler to perform inference. we call it through the main function named as `juliaBUGS`. For instance,
+Once the data is defined and the model is set up, we can run the sampler to perform inference. The setup
+for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
+$(\delta=0.8)$ for step size adaptation. This is done using the main function, `juliaBUGS`. For example:
 
 ```{r fitting_the_sampler}
+library(rjuliabugs)
 
+posterior <- juliaBUGS(
+  data = data,
+  model = model,
+  params_to_save = c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
+  n_iter = 2000,
+  n_warmup = 1000,
+  n_discard = 1000,
+  n_chain = 4,
+  use_parallel = TRUE,
+  n_thin = 1
+)
 ```
 
-```{r setup}
-library(rjuliabugs)
+This will return the MCMC chains, and a brief inspection can be done through `summary` function
+
+```{r summary}
+# Generating the summary of the code
+summary(posterior,get_summary = FALSE,get_quantiles = FALSE)
+```
+
+If we wish to obtain the summary statistics for each saved parameter, we can set the argument `get_summary = TRUE` when calling `summary()`. Additionally, to include the quantiles associated with the posterior distributions, set `get_quantiles = TRUE`. To inspect only the summary output in the same format as displayed in `JuliaBUGS`, set `julia_summary_only = TRUE`. This will return the native Julia-style summary.
+
+For further details, see the documentation by running `?summary.rjuliabugs`.
+
+
+## Inspecting the Posterior Samples
+
+Once sampling is done, the `juliaBUGS` function returns an object of class `rjuliabugs`. This object contains:
+
+- `params`  
+  Posterior samples, in the format specified by `posterior_type`. These are the parameters defined to be saved in the argument `params_to_save`. The format of this object depends on the prior definition of the argument `posterior_type` when calling `juliaBUGS`. The default is `"array"`, which is compatible with most R libraries that work with posterior samples, and returns a 3D numeric array (iterations × chains × parameters). Other available types are `"rvar"`, `"mcmc"`, and `"draws"`. See `?juliaBUGS` for more details.
+
+- `name`  
+  Character string identifying the Julia sampler object. As mentioned before, `rjuliabugs` relies heavily on `JuliaCall` to integrate the R interface with Julia. While using the package, a Julia session runs in the background and generates the `Chains` object containing all posterior samples, which can be accessed through the `name` argument. This name can be defined when calling `juliaBUGS` through the `name` parameter and serves as the key to retrieve the fitted sampler. If `juliaBUGS` is called multiple times with the same name, `rjuliabugs` automatically generates a new unique name to avoid overwriting. To delete a fitted model object from the Julia environment, call `delete_julia_obj()` with the corresponding name. See `?delete_julia_obj` for more details.
+
+- `sampler`  
+  Sampler object returned by `AbstractMCMC.sample`. This is a Julia object of type `"JuliaObject"`. For more details, see the documentation of `julia_call()` in the `JuliaCall` package.
+
+- `n_threads`  
+  Number of Julia threads detected. This is important to verify whether Julia properly recognized the available threads and if the sampler ran in parallel correctly. If you set `parallel = TRUE` when calling `juliaBUGS` but this value is one, the sampler actually ran sequentially.
+
+- `mcmc`  
+  List of MCMC configuration parameters. It includes all MCMC-related arguments passed when calling `juliaBUGS`.
+
+- `control`  
+  Control options used in the sampler setup. For more details, see the documentation of `?juliaBUGS`.
+
+
+## Visualizing Posteriors
+
+Once the posterior samples are obtained, further diagnostic and visualization tools are easily accessible through well-known packages such as `bayesplot` and `posterior`. For a full walkthrough of visualizations and diagnostics, check the other vignette (currently in progress).
+
+For a quick illustration, let's observe the density plot of the posteriors and their traceplots.
+
+```{r bayes_plotposterior, fig.align='center', fig.width=4, fig.height=3, dpi=150}
+library(bayesplot)
+
+# Plotting the posterior density for the saved parameters
+bayesplot::mcmc_areas(
+  posterior$params,
+  pars =  c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
+  prob = 0.8
+)
+```
+
+For the traceplots, we subset only the $\alpha_{0}$ and the $\sigma$ parameters:
+
+```{r bayes_traceplot, fig.align='center', fig.width=4, fig.height=3, dpi=150}
+
+# Plotting traceplots for alpha0 and sigma
+bayesplot::mcmc_trace(
+  x = posterior$params,
+  pars = c("alpha0", "sigma"),
+  n_warmup = 0,
+  facet_args = list(nrow = 2)
+)
+```
+
+Similarly, diagnostics are also available from the posterior package:
+
+```{r diagnostics}
+library(posterior)
+
+# For other diagnostics, see the help page
+help("diagnostics", "posterior")
+
+# Example: effective sample size
+posterior::ess_basic(posterior$params)
+```
+
+## Saving and loading the `rjuliabugs` model
+
+Lastly, it is important to be able to save and load a `rjuliabugs` model. To do it so we will use the `save_rjuliabugs()` 
+to save the `posterior` object
+
+```{r save,eval=FALSE}
+save_rjuliabugs(rjuliabugs_model = posterior,
+                file = "rjuliabugs_model.rds",
+                chains_file = "rjuliabugs_chains.jls")
+```
+
+and, to load we use `load_rjuliabugs()`
+
+```{r load, eval = FALSE}
+posterior <- load_rjuliabugs(file = "rjuliabugs_model.rds")
 ```

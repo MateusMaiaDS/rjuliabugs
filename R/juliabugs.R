@@ -2,15 +2,17 @@
 #'
 #' Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
 #' specified in Julia or in BUGS syntax. It compiles the model, converts data,
-#' sets sampler parameters, and returns posterior samples in various formats.
+#' sets sampler parameters, and returns posterior samples in various formats. The setup
+#' for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
+#' (\eqn{\delta}=0.8) for step size adaptation.
 #'
 #' @param data A named list of numeric values (integer or double). All elements must be named.
 #' @param model A character string with the model definition, either in Julia-compatible format or BUGS syntax.
 #' @param params_to_save Character vector with the names of model parameters to extract from the sampler output.
 #' @param name Character. Name for the sampler object created in Julia (must be a valid Julia variable name).
 #' @param n_iter Integer. Total number of MCMC iterations. Default is 2000.
-#' @param n_warmup Integer. Number of warm-up iterations. Default is `floor(n_iter / 2)`.
-#' @param n_discard Integer. Number of initial samples to discard. Default is `n_warmup`.
+#' @param n_warmup Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is `floor(n_iter / 2)`.
+#' @param n_discard Integer. Number of initial samples to be completely discarded. Default is `n_warmup`, i.e: discard all the iterations used as adaptation steps.
 #' @param n_thin Integer. Thinning interval. Default is 1 (no thinning).
 #' @param n_chain Integer. Number of MCMC chains. Default is 1.
 #' @param use_parallel Logical. Whether to use `AbstractMCMC.MCMCThreads()` for parallel sampling. Default is `TRUE`.

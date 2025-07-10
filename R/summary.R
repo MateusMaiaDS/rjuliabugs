@@ -13,7 +13,7 @@
 #' @return If `julia_summary_only = TRUE`, returns invisibly `NULL` after displaying the Julia object.
 #'         Otherwise, returns a list possibly containing elements:
 #' \describe{
-#'   \item{summary}{A data frame of summary statistics from Julia.}
+#'   \item{summary}{A data frame of summary statistics from Julia. If `get_summary = TRUE.`}
 #'   \item{quantiles}{A data frame of quantiles if `get_quantiles = TRUE`.}
 #' }
 #'
@@ -27,8 +27,8 @@
 #' @export
 summary.rjuliabugs <- function(object,
                                digits = 4, n_display = 10,
-                               get_summary = TRUE,
-                               get_quantiles = TRUE,
+                               get_summary = FALSE,
+                               get_quantiles = FALSE,
                                julia_summary_only = FALSE) {
 
   if(julia_summary_only){
@@ -83,7 +83,12 @@ summary.rjuliabugs <- function(object,
       quantile_list <- NULL
     }
 
-    return(append(summary_list,quantile_list))
+    if(all(c( is.null(summary_list) , is.null(quantile_list) ))){
+      return(invisible(NULL))
+    } else {
+      return(append(summary_list,quantile_list))
+    }
+
 
   }
 

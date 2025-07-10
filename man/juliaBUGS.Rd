@@ -32,9 +32,9 @@ juliaBUGS(
 
 \item{n_iter}{Integer. Total number of MCMC iterations. Default is 2000.}
 
-\item{n_warmup}{Integer. Number of warm-up iterations. Default is `floor(n_iter / 2)`.}
+\item{n_warmup}{Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is `floor(n_iter / 2)`.}
 
-\item{n_discard}{Integer. Number of initial samples to discard. Default is `n_warmup`.}
+\item{n_discard}{Integer. Number of initial samples to be completely discarded. Default is `n_warmup`, i.e: discard all the iterations used as adaptation steps.}
 
 \item{n_thin}{Integer. Thinning interval. Default is 1 (no thinning).}
 
@@ -69,7 +69,9 @@ An object of class `"rjuliabugs"` containing:
 \description{
 Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
 specified in Julia or in BUGS syntax. It compiles the model, converts data,
-sets sampler parameters, and returns posterior samples in various formats.
+sets sampler parameters, and returns posterior samples in various formats. The setup
+for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
+(\eqn{\delta}=0.8) for step size adaptation.
 }
 \details{
 This function relies on Julia packages `LogDensityProblems`, `AdvancedHMC`, and `AbstractMCMC`.

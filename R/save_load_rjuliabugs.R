@@ -10,19 +10,19 @@
 #' @param file A character string giving the base name or path for saving the `.rds` file.
 #'   If the extension `.rds` is missing, it will be appended automatically.
 #' @param chains_file Optional character string giving the path where the Julia
-#'   object should be serialized. If `NULL`, uses the `chains_file` field from
-#'   `rjuliabugs_model`.
+#'   object should be serialized. The file name should have the `.jls` extension.
+#'    If `NULL`, uses the `chains_file` field from `rjuliabugs_model`.
 #'
-#' @return Returns `invisible(NULL)`. Used for its side effects: saving both the
+#' @return Returns `invisible(NULL)`. Used saving both the
 #'   Julia object and the R `rjuliabugs` object to disk.
 #'
 #' @examples
 #' \dontrun{
-#' save_rjuliaBUGS(my_model, file = "my_model", chains_file = "chains.jls")
+#' save_rjuliabugs(my_model, file = "my_model", chains_file = "chains.jls")
 #' }
 #'
 #' @export
-save_rjuliaBUGS <- function(rjuliabugs_model,
+save_rjuliabugs <- function(rjuliabugs_model,
                             file,
                             chains_file = NULL){
 
@@ -66,6 +66,8 @@ save_rjuliaBUGS <- function(rjuliabugs_model,
 #'
 #' Loads an object of class `rjuliabugs` from an `.rds` file and restores the
 #' corresponding Julia sampler object using Julia’s `Serialization.deserialize`.
+#' The path linking the `Chains` object from `Julia` is defined in the when the
+#' function `save_rjuliabugs()` is called.
 #'
 #' If the original sampler name (`name`) already exists in the active Julia session,
 #' a new unique name is generated to avoid overwriting it. A warning will be issued
@@ -83,14 +85,14 @@ save_rjuliaBUGS <- function(rjuliabugs_model,
 #'
 #' @examples
 #' \dontrun{
-#' model <- load_rjuliaBUGS("my_model.rds")
+#' model <- load_rjuliabugs("my_model.rds")
 #' # model$name now contains the (possibly updated) name used in Julia
 #' }
 #'
 #' @seealso \code{\link{check_sampler_is_defined}}
 #'
 #' @export
-load_rjuliaBUGS <- function(file){
+load_rjuliabugs <- function(file){
 
   rjuliabugs_obj <- readRDS(file = file)
 
