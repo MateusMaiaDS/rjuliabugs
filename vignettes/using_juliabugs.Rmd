@@ -1,0 +1,111 @@
+---
+title: "Using `rjuliabugs`: A walkthrough through a Logistic Regression with Random Effects example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{walkthrough_example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This document provides a complete walkthrough for fitting a simple logistic regression model with random effects using the `rjuliabugs` package. Rather than focusing on deep statistical analysis, the main goal of this guide is to demonstrate how to use the functionality offered by `rjuliabugs` to fit BUGS models from R by leveraging modern probabilistic programming tools available in Julia.
+
+In particular, `rjuliabugs` allows users to fit models using advanced samplers such as Hamiltonian Monte Carlo (HMC) and automatic differentiation, as implemented in `JuliaBUGS`. This integration brings the power and flexibility of modern Bayesian computation into the R ecosystem with full compatibility of well know packages as `BayesPlot`, `coda`, `posterior` which provide nice and neat visualizations and diagnosticis for a full Bayesian workflow.
+
+For more technical details about `JuliaBUGS`, please refer to [this link](https://github.com/TuringLang/JuliaBUGS.jl). To learn more about probabilistic programming in Julia, we also recommend the [Turing.jl project](https://turinglang.org/).
+
+## Prerequisites
+
+This vignette assumes that `rjuliabugs` has already been correctly installed and set up. The goal here is to provide a working example under the assumption that your installation is functional.
+
+For detailed installation instructions and troubleshooting information, please refer to the [README](https://github.com/MateusMaiaDS/rjuliabugs/). The installation guide includes the following sections:
+
+- [Installing Julia](#installing-julia)
+- [Troubleshooting JuliaCall setup](#troubleshooting-juliacall-setup)
+  - [Julia not found](#error-type-julia-not-found)
+  - [R not found](#error-type-r_home-not-found)
+  - [Other installation issues](#other-installation-issues)
+- [Using `rjuliabugs` in parallel](#using-rjuliabugs-in-parallel)
+
+
+## Data Preparation
+
+To demonstrate a first example, we will use the same dataset presented in the official `JuliaBUGS` illustration. The case concerns the proportion of seeds that germinated on each of 21 plates. To work with this data, we need to create a named list in R that contains all the variables required by the model.
+
+
+```{r data_list}
+data <- list(
+    r = c(10, 23, 23, 26, 17, 5, 53, 55, 32, 46, 10, 8, 10, 8, 23, 0, 3, 22, 15, 32, 3),
+    n = c(39, 62, 81, 51, 39, 6, 74, 72, 51, 79, 13, 16, 30, 28, 45, 4, 12, 41, 30, 51, 7),
+    x1 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    x2 = c(0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    N = 21
+)
+```
+
+
+Users already familiar with fitting models using `JAGS` or `Stan` will recognize the structure of passing a named list as the data input for the model. Here, we follow the same convention.
+
+One important disclaimer concerns the definition and use of numeric values, particularly integers. When specifying an integer in the data list, make sure it is not written with a decimal point. For example, if a variable like `N` (e.g., the total number of plates) is defined as `21.0` instead of `21`, `JuliaCall` will automatically convert it as a `Float`, which may lead to an error if the model expects an `Integer`. Always use strict integer values when required by the model.
+
+Inspecting closely each element we have `r[i]` as the number of germinated seeds and `n[i]` as the total number of seeds on the $i$-th plate. Let $p_{i}$ be the probability of germination on the $i$-th plate. Then, the model is defined by:
+
+
+$$
+\begin{aligned}
+\text{logit}(p_i) &= \alpha_0 + \alpha_1 x_{1i} + \alpha_2 x_{2i} + \alpha_{12} x_{1i} x_{2i} + b_i \\
+b_i &\sim \mathcal{N}(0, \tau) \\
+r_i &\sim \text{Binomial}(p_i, n_i)
+\end{aligned}
+$$
+
+where $x_{1i}$ and $x_{2i}$ are the seed type and root extract of the $i$-th plate. 
+
+## BUGS model
+
+Once we have our data prepared, we can define the model using the original BUGS syntax. In `rjuliabugs`, we write the model as a string in R, following the same structure used in other R packages that interface with BUGS-like tools:
+
+```{r juliabugs_code}
+model <- "
+model {
+    for (i in 1:N) {
+        r[i] ~ dbin(p[i], n[i])
+        b[i] ~ dnorm(0.0, tau)
+        logit(p[i]) <- alpha0 + alpha1 * x1[i] + alpha2 * x2[i] +
+                       alpha12 * x1[i] * x2[i] + b[i]
+    }
+    alpha0 ~ dnorm(0.0, 1.0E-6)
+    alpha1 ~ dnorm(0.0, 1.0E-6)
+    alpha2 ~ dnorm(0.0, 1.0E-6)
+    alpha12 ~ dnorm(0.0, 1.0E-6)
+    tau ~ dgamma(0.001, 0.001)
+    sigma <- 1 / sqrt(tau)
+}
+"
+```
+
+Users familiar with R packages like `R2jags`, `rjags`, or `R2WinBUGS` will recognize this approach: the model is defined as a string using the BUGS modeling language. For users coming from Stan (e.g., via `rstan` or `cmdstanr`), the idea is similar: the model is written as a probabilistic program inside a string object, then compiled and executed by the backend.
+
+This syntactic similarity is not accidental. It is a design choice of `rjuliabugs`, which aims to allow users to reuse models originally written for `JAGS` or `WinBUGS`, while taking advantage of modern features available in Julia—such as Hamiltonian Monte Carlo and automatic differentiation—via `JuliaBUGS`.
+
+We also remind users that they should be familiar with the `BUGS` syntax, as syntax-related mistakes will lead to errors during model compilation. For additional guidance, see the [Miscellaneous Notes on BUGS](https://turinglang.org/JuliaBUGS.jl/v0.9/BUGS_notes/) from the JuliaBUGS documentation, as well as the [BUGS Developer Manual](https://turinglang.org/JuliaBUGS.jl/v0.9/BUGS_notes/).
+
+For example, writing `1.0E-6.0` instead of `1.0E-6` is a syntax error in BUGS, even though the numerical meaning is equivalent. These types of issues can be subtle but will cause the model to fail during parsing, so attention to detail when writing BUGS code is important.
+
+## Inference/Running the sampler
+
+Once the the data is defined and the model is setup we can use the sampler to get use the sampler to perform inference. we call it through the main function named as `juliaBUGS`. For instance,
+
+```{r fitting_the_sampler}
+
+```
+
+```{r setup}
+library(rjuliabugs)
+```

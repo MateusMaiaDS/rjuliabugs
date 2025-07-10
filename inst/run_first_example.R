@@ -20,7 +20,7 @@ model{
         alpha12 * x1[i] * x2[i] + b[i]
     }
     alpha0 ~ dnorm(0.0,1.0E-6)
-    alpha1 ~ dnorm(0.0,1.0E-6)
+    alpha1 ~ dnorm(0.0,1.0E-6.0)
     alpha2 ~ dnorm(0.0,1.0E-6)
     alpha12 ~ dnorm(0.0,1.0E-6)
     tau ~ dgamma(0.001,0.001)
