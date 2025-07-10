@@ -19,8 +19,7 @@ modeling interface developed in Julia as part of the
 syntax while leveraging the speed and flexibility of the Julia language.
 It enables automatic translation of BUGS code into modern probabilistic
 programs that run efficiently with advanced inference engines such as
-Hamiltonian Monte Carlo (HMC), Variational Inference, and particle
-methods — all accessible via Turing.jl.
+Hamiltonian Monte Carlo (HMC) — all accessible via Turing.jl.
 
 With `rjuliabugs`, R users can run BUGS models/code through JuliaBUGS
 and take advantage of the inference algorithms available in Turing.jl,
