@@ -1,5 +1,5 @@
 ---
-title: "Using `rjuliabugs`: A walkthrough through a Logistic Regression with Random Effects example"
+title: "Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{walkthrough_example}
