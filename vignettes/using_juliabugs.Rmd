@@ -195,7 +195,7 @@ library(posterior)
 help("diagnostics", "posterior")
 
 # Example: effective sample size
-posterior::ess_basic(posterior$params)
+posterior::ess_basic(posterior$params[,,"alpha0"])
 ```
 
 ## Saving and loading the `rjuliabugs` model
