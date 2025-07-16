@@ -7,7 +7,7 @@ Maintainer: Mateus Maia <mateus.maiamarques@glasgow.ac.ukt>
 Description: Provides an interface for using JuliaBUGS.jl from R. Supports visualization usingpackages as bayesplot and posterior.
 License: MIT + file LICENSE
 Encoding: UTF-8
-SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl, AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl
+SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl, AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl, RCall.jl, Suppressor.jl
 LazyData: true
 Imports: 
     coda,
