@@ -154,7 +154,6 @@ juliaBUGS <- function(data,
   # Converting the data object into a JuliaNamedTuple
   class(data) <- "JuliaNamedTuple"
   JuliaCall::julia_assign(x = "data", data)
-  JuliaCall::julia_eval(model)
   JuliaCall::julia_eval("model = compile(model,data)")
 
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
