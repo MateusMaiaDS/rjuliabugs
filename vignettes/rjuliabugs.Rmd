@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
-knitr::knit_exit()
 
 ```
 
@@ -92,6 +91,9 @@ model {
     sigma <- 1 / sqrt(tau)
 }
 "
+
+knitr::knit_exit()
+
 ```
 
 Users familiar with R packages like `R2jags`, `rjags`, or `R2WinBUGS` will recognize this approach: the model is defined as a string using the BUGS modeling language. For users coming from Stan (e.g., via `rstan` or `cmdstanr`), the idea is similar: the model is written as a probabilistic program inside a string object, then compiled and executed by the backend.
