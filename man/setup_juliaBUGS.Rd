@@ -12,40 +12,45 @@ setup_juliaBUGS(
 )
 }
 \arguments{
-\item{extra_packages}{A character vector of additional Julia packages to install and load.
-Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.}
+\item{extra_packages}{Character vector of additional Julia packages to install and load.
+Defaults to \code{NULL}, meaning only the core packages are handled.}
 
-\item{verify_package}{Logical. Whether to verify that the Julia packages were installed correctly.}
+\item{verify_package}{Logical; if \code{TRUE}, verifies and installs missing core packages. Default is \code{TRUE}.}
 
-\item{install_from_dev}{Logical. Whether to install development versions of Julia packages.}
+\item{install_from_dev}{Logical; if \code{TRUE}, installs \code{JuliaBUGS} from its development repository. Default is \code{FALSE}.}
 
-\item{...}{Additional arguments passed to `JuliaCall::julia_setup()`, such as `installJulia = TRUE`.}
+\item{...}{Additional arguments passed to \code{JuliaCall::julia_setup()}, such as \code{installJulia = TRUE}.}
 }
 \value{
-This function is called for its side effects (installing and loading Julia packages). It returns `NULL` invisibly.
+Invisibly returns \code{NULL}. The function is called for its side effects.
 }
 \description{
-Installs and loads required Julia packages for using JuliaBUGS with R via JuliaCall.
+Installs and loads the required Julia packages to use JuliaBUGS via JuliaCall in R.
 }
 \details{
-This function checks for the required Julia packages for running `JuliaBUGS` and installs them if they are not already installed.
-It also loads these packages into the current Julia session. Optionally, users can provide additional Julia packages to install and load.
+This function checks whether the core Julia packages needed for running \code{JuliaBUGS} are installed,
+installs any missing ones, and loads them into the current Julia session.
+Optionally, additional Julia packages can be installed and loaded by specifying them via \code{extra_packages}.
 
+The core Julia packages installed (if needed) are:
+\itemize{
+\item Serialization
+\item LogDensityProblemsAD
+\item ReverseDiff
+\item AdvancedHMC
+\item AbstractMCMC
+\item LogDensityProblems
+\item MCMCChains
+\item DataFrames
+\item JuliaBUGS
+}
 
-The function uses `JuliaCall::julia_install_package_if_needed()` to install core Julia packages:
-\item{LogDensityProblemsAD}{}
-\item{ReverseDiff}{}
-\item{AdvancedHMC}{}
-\item{AbstractMCMC}{}
-\item{LogDensityProblems}{}
-\item{MCMCChains}{}
-\item{JuliaBUGS}{}
-After installation, these packages are loaded in the Julia session with the `using` statement.
-Any additional packages specified in `extra_packages` will also be installed and loaded.
+After installation, all these packages are loaded in the Julia session using \code{using}.
+Any additional packages provided via \code{extra_packages} are also installed and loaded.
 }
 \examples{
 \dontrun{
-# Setup Julia with default required packages
+# Setup Julia with core packages only
 setup_juliaBUGS()
 
 # Setup Julia with additional packages
@@ -54,5 +59,5 @@ setup_juliaBUGS(extra_packages = c("Distributions", "Turing"))
 
 }
 \seealso{
-[JuliaCall::julia_install_package_if_needed()], [JuliaCall::julia_eval()]
+\code{\link[JuliaCall]{julia_install_package_if_needed}}, \code{\link[JuliaCall]{julia_eval}}
 }

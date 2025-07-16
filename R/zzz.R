@@ -1,9 +1,5 @@
 #' @keywords internal
 .onAttach <- function(libname, pkgname) {
-  rjuliabugs::setup_juliaBUGS()
+  packageStartupMessage("You may need to run setup_juliaBUGS() to initialize the Julia environment.")
 }
 
-#' @keywords internal
-.onLoad <- function(libname, pkgname) {
-  packageStartupMessage("Calling setup_juliaBUGS() to use rjuliabugs package \n")
-}

@@ -4,34 +4,26 @@
 \alias{summary.rjuliabugs}
 \title{Summary Method for JuliaBUGS Sampler Output}
 \usage{
-\method{summary}{rjuliabugs}(
-  object,
-  digits = 4,
-  n_display = 10,
-  get_summary = FALSE,
-  get_quantiles = FALSE,
-  julia_summary_only = FALSE
-)
+\method{summary}{rjuliabugs}(object, ...)
 }
 \arguments{
-\item{object}{An object of class `rjuliabugs` containing a reference to a Julia MCMC sampler.}
+\item{object}{An object of class \code{rjuliabugs} containing a reference to a Julia MCMC sampler.}
 
-\item{digits}{Integer. Number of significant digits to display in printed summary statistics.}
-
-\item{n_display}{Integer. Maximum number of rows of summary statistics to display.}
-
-\item{get_summary}{Logical. If `TRUE`, returns the summary statistics as part of the result.}
-
-\item{get_quantiles}{Logical. If `TRUE`, includes quantile statistics in the result.}
-
-\item{julia_summary_only}{Logical. If `TRUE`, displays the Julia summary object directly in Julia, skipping R summary output.}
+\item{...}{Additional optional arguments. Supported options:
+\itemize{
+\item \code{digits}: Integer. Number of significant digits to display. Default: 4.
+\item \code{n_display}: Integer. Number of rows of summary statistics to show. Default: 10.
+\item \code{get_summary}: Logical. If \code{TRUE}, returns summary statistics in the output list. Default: \code{FALSE}.
+\item \code{get_quantiles}: Logical. If \code{TRUE}, returns quantiles in the output list. Default: \code{FALSE}.
+\item \code{julia_summary_only}: Logical. If \code{TRUE}, displays the Julia summary directly and returns \code{NULL} invisibly. Default: \code{FALSE}.
+}}
 }
 \value{
-If `julia_summary_only = TRUE`, returns invisibly `NULL` after displaying the Julia object.
-        Otherwise, returns a list possibly containing elements:
-\describe{
-  \item{summary}{A data frame of summary statistics from Julia. If `get_summary = TRUE.`}
-  \item{quantiles}{A data frame of quantiles if `get_quantiles = TRUE`.}
+If \code{julia_summary_only = TRUE}, returns \code{NULL} invisibly.
+Otherwise, returns a list possibly containing:
+\itemize{
+\item \code{summary}: Data frame of summary statistics (if \code{get_summary = TRUE}).
+\item \code{quantiles}: Data frame of quantiles (if \code{get_quantiles = TRUE}).
 }
 }
 \description{
@@ -39,7 +31,7 @@ Provides a summary of the results from a JuliaBUGS sampler object, including MCM
 summary statistics, and optionally quantiles.
 }
 \details{
-This method wraps Julia's `MCMCChains.summarystats` and `MCMCChains.quantile` to extract and display
-results in R using the `JuliaCall` interface. It also extracts key MCMC settings like number of chains,
-iterations, and samples per chain. The printed summary is truncated to `n_display` rows.
+This method wraps Julia's \code{MCMCChains.summarystats} and \code{MCMCChains.quantile} to extract and display
+results in R using the \code{JuliaCall} interface. It also extracts key MCMC settings like number of chains,
+iterations, and samples per chain. The printed summary is truncated to \code{n_display} rows.
 }

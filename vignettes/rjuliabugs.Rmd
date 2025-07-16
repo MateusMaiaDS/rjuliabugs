@@ -166,7 +166,7 @@ For a quick illustration, let's observe the density plot of the posteriors and t
 library(bayesplot)
 
 # Plotting the posterior density for the saved parameters
-bayesplot::mcmc_areas(
+mcmc_areas(
   posterior$params,
   pars =  c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
   prob = 0.8
@@ -178,7 +178,7 @@ For the traceplots, we subset only the $\alpha_{0}$ and the $\sigma$ parameters:
 ```{r bayes_traceplot, fig.align='center', fig.width=4, fig.height=3, dpi=150}
 
 # Plotting traceplots for alpha0 and sigma
-bayesplot::mcmc_trace(
+mcmc_trace(
   x = posterior$params,
   pars = c("alpha0", "sigma"),
   n_warmup = 0,
