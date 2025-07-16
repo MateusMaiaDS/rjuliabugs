@@ -15,6 +15,10 @@ setup_juliaBUGS(
 \item{extra_packages}{A character vector of additional Julia packages to install and load.
 Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.}
 
+\item{verify_package}{Logical. Whether to verify that the Julia packages were installed correctly.}
+
+\item{install_from_dev}{Logical. Whether to install development versions of Julia packages.}
+
 \item{...}{Additional arguments passed to `JuliaCall::julia_setup()`, such as `installJulia = TRUE`.}
 }
 \value{
@@ -29,15 +33,13 @@ It also loads these packages into the current Julia session. Optionally, users c
 
 
 The function uses `JuliaCall::julia_install_package_if_needed()` to install core Julia packages:
-\itemize{
-  \item LogDensityProblemsAD
-  \item ReverseDiff
-  \item AdvancedHMC
-  \item AbstractMCMC
-  \item LogDensityProblems
-  \item MCMCChains
-  \item JuliaBUGS
-}
+\item{LogDensityProblemsAD}{}
+\item{ReverseDiff}{}
+\item{AdvancedHMC}{}
+\item{AbstractMCMC}{}
+\item{LogDensityProblems}{}
+\item{MCMCChains}{}
+\item{JuliaBUGS}{}
 After installation, these packages are loaded in the Julia session with the `using` statement.
 Any additional packages specified in `extra_packages` will also be installed and loaded.
 }
