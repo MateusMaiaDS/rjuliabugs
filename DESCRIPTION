@@ -11,7 +11,9 @@ SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,LogDensityProblemsAD.jl, Rev
 LazyData: true
 Imports: 
     bayesplot,
-    JuliaCall
+    coda,
+    JuliaCall,
+    posterior
 RoxygenNote: 7.3.2
 Suggests: 
     knitr,
