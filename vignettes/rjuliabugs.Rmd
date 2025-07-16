@@ -2,7 +2,7 @@
 title: "Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rjuliabugs}
+  %\VignetteIndexEntry{Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,6 +13,9 @@ knitr::opts_chunk$set(
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
+library(JuliaCall)
+JuliaCall::julia_install_package_if_needed("Suppressor")
+
 ```
 
 This document provides a complete walkthrough for fitting a simple logistic regression model with random effects using the `rjuliabugs` package. Rather than focusing on deep statistical analysis, the main goal of this guide is to demonstrate how to use the functionality offered by `rjuliabugs` to fit BUGS models from R by leveraging modern probabilistic programming tools available in Julia.
