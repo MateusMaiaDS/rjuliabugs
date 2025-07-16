@@ -70,6 +70,7 @@ jobs:
           println("Adding RCall.jl and Suppressor.jl...")
           Pkg.add("RCall")
           Pkg.add("Suppressor")
+          Pkg.update()
           println("Packages added. Testing RCall...")
 
           using RCall
