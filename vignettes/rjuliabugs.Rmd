@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
-library(JuliaCall)
-JuliaCall::julia_install_package_if_needed("Suppressor")
 
 ```
 
@@ -109,6 +107,8 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 $(\delta=0.8)$ for step size adaptation. This is done using the main function, `juliaBUGS`. For example:
 
 ```{r fitting_the_sampler}
+
+knitr::knit_exit()
 library(rjuliabugs)
 
 posterior <- juliaBUGS(
@@ -119,7 +119,7 @@ posterior <- juliaBUGS(
   n_warmup = 500,
   n_discard = 500,
   n_chain = 2,
-  use_parallel = TRUE,
+  use_parallel = FALSE,
   n_thin = 1
 )
 ```
