@@ -52,9 +52,7 @@ julia_assign_int <- function(x, value) {
 #' @examples
 #' \dontrun{
 #' JuliaCall::julia_setup()
-#' JuliaCall::julia_library("Turing")
-#' JuliaCall::julia_command("... define model and sample into 'chains' ...")
-#' samples <- get_params(c("alpha", "beta"), "chains")
+#' samples <- get_params(name = "sampler_juliaBUGS",params = c("alpha", "beta"))
 #' head(samples)
 #' }
 #'
@@ -112,16 +110,15 @@ get_params_from_name <- function(name, params) {
 #' @param params A character vector specifying which parameters to extract. **(NOTE: This argument is unused in the current function body.)**
 #' @param posterior_type A character string specifying the desired output format. Options are: \code{"array"}, \code{"rvar"}, \code{"mcmc"}, \code{"draws"}.
 #'
-#' @return The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
-#' \itemize{
-#'   \item{\code{"array"}: }{A 3D array of posterior samples.}
-#'   \item{\code{"rvar"}: }{An object of class \code{rvar} from the \pkg{posterior} package.}
-#'   \item{\code{"mcmc"}: }{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
-#'   \item{\code{"draws"}: }{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
-#' }
+#' @return
+#' The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
+#' \item{\code{"array"}}{A 3D array of posterior samples.}
+#' \item{\code{"rvar"}}{An object of class \code{rvar} from the \pkg{posterior} package.}
+#' \item{\code{"mcmc"}}{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
+#' \item{\code{"draws"}}{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
 #'
 #' @details
-#' The function assumes that `get_params_from_name()` and other referenced variables such as `params_to_save` and `n_chain` are available in the current environment.
+#' The function assumes that \code{get_params_from_name()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
 #'
 #' @importFrom posterior rvar as_draws
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
@@ -129,13 +126,15 @@ get_params_from_name <- function(name, params) {
 #'
 #' @examples
 #' \dontrun{
-#' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "rvar")
+#' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 #' }
 get_params <- function(rjuliabugs,
                        params,
                        posterior_type = "array"){
 
   name <- rjuliabugs$name
+  n_chain <- rjuliabugs$mcmc$n_chain
+  params_to_save <- rjuliabugs$mcmc$params_to_save
 
   if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
     stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")

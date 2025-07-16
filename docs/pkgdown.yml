@@ -2,8 +2,8 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  using_juliabugs: using_juliabugs.html
-last_built: 2025-07-16T12:24Z
+  rjuliabugs: rjuliabugs.html
+last_built: 2025-07-16T16:29Z
 urls:
   reference: https://mateusmaiads.github.io/rjuliabugs/reference
   article: https://mateusmaiads.github.io/rjuliabugs/articles

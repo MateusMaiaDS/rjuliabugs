@@ -4,13 +4,12 @@ Title: Interface for using JuliaBUGS.jl in R
 Version: 0.1.0
 Author: Mateus Maia, Xianda Sun
 Maintainer: Mateus Maia <mateus.maiamarques@glasgow.ac.ukt>
-Description: Interface for using JuliaBUGS.jl in R, using other visualization tools as bayesplot and posterior
+Description: Provides an interface for using JuliaBUGS.jl from R. Supports visualization usingpackages as bayesplot and posterior.
 License: MIT + file LICENSE
 Encoding: UTF-8
 SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl, AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl
 LazyData: true
 Imports: 
-    bayesplot,
     coda,
     JuliaCall,
     posterior

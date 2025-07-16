@@ -5,5 +5,5 @@
 
 #' @keywords internal
 .onLoad <- function(libname, pkgname) {
-  message("Calling setup_juliaBUGS() to use rjuliabugs package \n")
+  packageStartupMessage("Calling setup_juliaBUGS() to use rjuliabugs package \n")
 }

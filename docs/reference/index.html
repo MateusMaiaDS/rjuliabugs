@@ -18,14 +18,11 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/rjuliabugs.html">Get started</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/using_juliabugs.html">Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects</a>
-  </div>
+<li class="active nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -41,7 +38,86 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="setting-up-julia-with-rjuliabugs-">Setting up Julia with <code>rjuliabugs</code><a class="anchor" aria-label="anchor" href="#setting-up-julia-with-rjuliabugs-"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="setup_juliaBUGS.html">setup_juliaBUGS()</a></code> 
+        </dt>
+        <dd>Setup Julia Environment for JuliaBUGS</dd>
+      </dl></div><div class="section level2">
+      <h2 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="juliaBUGS.html">juliaBUGS()</a></code> 
+        </dt>
+        <dd>Run a Julia HMC Sampler for a BUGS-like Probabilistic Model</dd>
+      </dl></div><div class="section level2">
+      <h2 id="exploring-the-fitted-model">Exploring the fitted model<a class="anchor" aria-label="anchor" href="#exploring-the-fitted-model"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="get_params.html">get_params()</a></code> 
+        </dt>
+        <dd>Extract and convert posterior parameters</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_params_from_name.html">get_params_from_name()</a></code> 
+        </dt>
+        <dd>Extract Parameter Samples from a Turing.jl MCMCChains Object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summary.rjuliabugs.html">summary(<i>&lt;rjuliabugs&gt;</i>)</a></code> 
+        </dt>
+        <dd>Summary Method for JuliaBUGS Sampler Output</dd>
+      </dl></div><div class="section level2">
+      <h2 id="saving-and-loading-the-fitted-rjuliabugs-object">Saving and loading the fitted <code>rjuliabugs</code> object<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-fitted-rjuliabugs-object"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="save_rjuliabugs.html">save_rjuliabugs()</a></code> 
+        </dt>
+        <dd>Save an `rjuliabugs` Object and Its Julia State</dd>
+      </dl><dl><dt>
+          
+          <code><a href="load_rjuliabugs.html">load_rjuliabugs()</a></code> 
+        </dt>
+        <dd>Load an `rjuliabugs` Object and Restore the Julia State</dd>
+      </dl></div><div class="section level2">
+      <h2 id="utility-functions">Utility functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a></h2>
       
       
 
@@ -58,6 +134,16 @@
         <dd>Convert BUGS Model to Julia's `@bugs` Macro Format</dd>
       </dl><dl><dt>
           
+          <code><a href="wrap_model_to_juliaBUGS.html">wrap_model_to_juliaBUGS()</a></code> 
+        </dt>
+        <dd>Wrap BUGS Model for Julia</dd>
+      </dl><dl><dt>
+          
+          <code><a href="julia_assign_int.html">julia_assign_int()</a></code> 
+        </dt>
+        <dd>Assign an Integer Value to a Julia Variable</dd>
+      </dl><dl><dt>
+          
           <code><a href="convert_numeric_types.html">convert_numeric_types()</a></code> 
         </dt>
         <dd>Convert Numeric Elements in a List to Integer or Float</dd>
@@ -66,53 +152,9 @@
           <code><a href="delete_julia_obj.html">delete_julia_obj()</a></code> 
         </dt>
         <dd>Delete an object from the Julia Main environment</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_params.html">get_params()</a></code> 
-        </dt>
-        <dd>Extract and convert posterior parameters</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_params_from_name.html">get_params_from_name()</a></code> 
-        </dt>
-        <dd>Extract Parameter Samples from a Turing.jl MCMCChains Object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="juliaBUGS.html">juliaBUGS()</a></code> 
-        </dt>
-        <dd>Run a Julia HMC Sampler for a BUGS-like Probabilistic Model</dd>
-      </dl><dl><dt>
-          
-          <code><a href="julia_assign_int.html">julia_assign_int()</a></code> 
-        </dt>
-        <dd>Assign an Integer Value to a Julia Variable</dd>
-      </dl><dl><dt>
-          
-          <code><a href="load_rjuliabugs.html">load_rjuliabugs()</a></code> 
-        </dt>
-        <dd>Load an `rjuliabugs` Object and Restore the Julia State</dd>
-      </dl><dl><dt>
-          
-          <code><a href="save_rjuliabugs.html">save_rjuliabugs()</a></code> 
-        </dt>
-        <dd>Save an `rjuliabugs` Object and Its Julia State</dd>
-      </dl><dl><dt>
-          
-          <code><a href="setup_juliaBUGS.html">setup_juliaBUGS()</a></code> 
-        </dt>
-        <dd>Setup Julia Environment for JuliaBUGS</dd>
-      </dl><dl><dt>
-          
-          <code><a href="summary.rjuliabugs.html">summary(<i>&lt;rjuliabugs&gt;</i>)</a></code> 
-        </dt>
-        <dd>Summary Method for JuliaBUGS Sampler Output</dd>
-      </dl><dl><dt>
-          
-          <code><a href="wrap_model_to_juliaBUGS.html">wrap_model_to_juliaBUGS()</a></code> 
-        </dt>
-        <dd>Wrap BUGS Model for Julia</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

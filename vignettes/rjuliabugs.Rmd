@@ -2,7 +2,7 @@
 title: "Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{walkthrough_example}
+  %\VignetteIndexEntry{rjuliabugs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -112,10 +112,10 @@ posterior <- juliaBUGS(
   data = data,
   model_def = model_def,
   params_to_save = c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
-  n_iter = 2000,
-  n_warmup = 1000,
-  n_discard = 1000,
-  n_chain = 4,
+  n_iter = 1000,
+  n_warmup = 500,
+  n_discard = 500,
+  n_chain = 2,
   use_parallel = TRUE,
   n_thin = 1
 )
