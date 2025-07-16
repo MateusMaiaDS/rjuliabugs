@@ -31,8 +31,11 @@ jobs:
         with:
           version: '1.11.5'
 
-      - name: Install Julia dependencies
-        run: julia --eval 'using Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.add("DataFrames"); Pkg.add("LogDensityProblemsAD"); Pkg.add("ReverseDiff"); Pkg.add("AdvancedHMC"); Pkg.add("AbstractMCMC"); Pkg.add("LogDensityProblems"); Pkg.add("MCMCChains"); Pkg.add("JuliaBUGS")'
+    - name: Configure Julia and install dependencies
+        run: |
+          export R_HOME=$(Rscript -e 'cat(R.home())')
+          echo "Using R_HOME=$R_HOME"
+          julia -e 'ENV["R_HOME"] = ENV["R_HOME"];using Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.add("DataFrames"); Pkg.add("LogDensityProblemsAD"); Pkg.add("ReverseDiff"); Pkg.add("AdvancedHMC"); Pkg.add("AbstractMCMC"); Pkg.add("LogDensityProblems"); Pkg.add("MCMCChains"); Pkg.add("JuliaBUGS"); using RCall'
 
       - uses: r-lib/actions/setup-pandoc@v2
 

@@ -6,6 +6,8 @@
 ~%2FDocuments%2Frjuliabugs%2Finst%2Fbayesplot%2Fbayesplot.R="50A743B9"
 ~%2FDocuments%2Frjuliabugs%2Finst%2Fdebugging_first_function.R="8F97A3BB"
 ~%2FDocuments%2Frjuliabugs%2Finst%2Frun_julia_model.R="4CB9C04F"
+~%2Frjuliabugs%2F.github%2Fworkflows%2FR-CMD-check.yaml="4B9598A6"
+~%2Frjuliabugs%2F.github%2Fworkflows%2Fpkgdown.yaml="151CC288"
 ~%2Frjuliabugs%2F.gitignore="460D4755"
 ~%2Frjuliabugs%2FR%2Fjuliabugs.R="4906E031"
 ~%2Frjuliabugs%2FR%2Fsave_load_rjuliabugs.R="E3FB4290"
