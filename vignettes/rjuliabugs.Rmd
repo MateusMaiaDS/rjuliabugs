@@ -176,6 +176,7 @@ mcmc_areas(
 For the traceplots, we subset only the $\alpha_{0}$ and the $\sigma$ parameters:
 
 ```{r bayes_traceplot, fig.align='center', fig.width=4, fig.height=3, dpi=150}
+library(bayesplot)
 
 # Plotting traceplots for alpha0 and sigma
 mcmc_trace(

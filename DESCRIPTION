@@ -10,12 +10,12 @@ Encoding: UTF-8
 SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl, AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl
 LazyData: true
 Imports: 
-    bayesplot,
     coda,
     JuliaCall,
     posterior
 RoxygenNote: 7.3.2
 Suggests: 
+    bayesplot,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
