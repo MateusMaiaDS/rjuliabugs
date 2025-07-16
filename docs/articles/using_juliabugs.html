@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects">
 <meta property="og:description" content="rjuliabugs">
-<meta property="og:image" content="/logo.png">
+<meta property="og:image" content="https://mateusmaiads.github.io/rjuliabugs/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -175,7 +175,7 @@ original BUGS syntax. In <code>rjuliabugs</code>, we write the model as
 a string in R, following the same structure used in other R packages
 that interface with BUGS-like tools:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<code class="sourceCode R"><span><span class="va">model_def</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
 <span><span class="st">model {</span></span>
 <span><span class="st">    for (i in 1:N) {</span></span>
 <span><span class="st">        r[i] ~ dbin(p[i], n[i])</span></span>
@@ -224,12 +224,12 @@ Not-U-Turn Sampler (NUTS) with the target acceptance probability <span class="ma
 This is done using the main function, <code>juliaBUGS</code>. For
 example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mateusmaiads.github.io/rjuliabugs/" class="external-link">rjuliabugs</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mateusmaiads.github.io/rjuliabugs/">rjuliabugs</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Preparing JuliaBUGS setup... DONE!</span></span>
 <span></span>
 <span><span class="va">posterior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/juliaBUGS.html">juliaBUGS</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">data</span>,</span>
-<span>  model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>  model_def <span class="op">=</span> <span class="va">model_def</span>,</span>
 <span>  params_to_save <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha1"</span>, <span class="st">"alpha2"</span>, <span class="st">"alpha12"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
 <span>  n_iter <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>  n_warmup <span class="op">=</span> <span class="fl">1000</span>,</span>
@@ -255,17 +255,17 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  parameters      mean      std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 48.284126 118.3634 7.300685    349.1      307 1.007          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.815324   0.4343 0.007515   3318.8     3681 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.349762   0.2687 0.005026   2949.2     3365 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.073101   0.3165 0.005787   3024.8     4114 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.547929   0.1880 0.003420   3039.4     3471 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.200191   0.2609 0.006707   1737.9     3736 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.005551   0.2180 0.002786   6251.6     4617 1.003          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.201496   0.2307 0.006035   1580.8     2806 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.268766   0.2572 0.007233   1235.2     4049 1.001          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.111657   0.2378 0.003800   4263.2     3224 1.000          NA</span></span>
+<span><span class="co">#&gt;  parameters      mean     std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
+<span><span class="co">#&gt;         tau 37.843896 86.4534 5.261674    446.8      320 1.010          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.821463  0.4325 0.007434   3361.6     5047 1.000          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.348523  0.2722 0.004721   3310.4     3868 1.003          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.078726  0.3153 0.005278   3533.3     4828 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.548957  0.1928 0.003216   3535.0     4566 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.201383  0.2594 0.004919   2936.1     4689 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.007394  0.2241 0.002794   6551.9     4495 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.203506  0.2326 0.004734   2386.3     4484 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.274478  0.2574 0.006805   1397.1     4450 1.003          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.116144  0.2406 0.003729   4436.6     4431 1.001          NA</span></span>
 <span><span class="co">#&gt;          ⋮</span></span>
 <span><span class="co">#&gt;     17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -371,7 +371,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3022.07</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3591.587</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>

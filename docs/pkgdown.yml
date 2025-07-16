@@ -3,5 +3,8 @@ pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   using_juliabugs: using_juliabugs.html
-last_built: 2025-07-11T15:31Z
+last_built: 2025-07-16T12:24Z
+urls:
+  reference: https://mateusmaiads.github.io/rjuliabugs/reference
+  article: https://mateusmaiads.github.io/rjuliabugs/articles
 

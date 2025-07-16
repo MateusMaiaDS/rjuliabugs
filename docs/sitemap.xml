@@ -1,69 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/404.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/using_juliabugs.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/articles/using_juliabugs.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/index.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/reference/bugs2juliaBUGS.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/bugs2juliaBUGS.html</loc>
   </url>
   <url>
-    <loc>/reference/check_sampler_is_defined.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/check_sampler_is_defined.html</loc>
   </url>
   <url>
-    <loc>/reference/convert_numeric_types.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/convert_numeric_types.html</loc>
   </url>
   <url>
-    <loc>/reference/delete_julia_obj.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/delete_julia_obj.html</loc>
   </url>
   <url>
-    <loc>/reference/get_params.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/get_params.html</loc>
   </url>
   <url>
-    <loc>/reference/get_params_from_name.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/get_params_from_name.html</loc>
   </url>
   <url>
-    <loc>/reference/hello.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/juliaBUGS.html</loc>
   </url>
   <url>
-    <loc>/reference/juliaBUGS.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/julia_assign_int.html</loc>
   </url>
   <url>
-    <loc>/reference/julia_assign_int.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/load_rjuliabugs.html</loc>
   </url>
   <url>
-    <loc>/reference/load_rjuliabugs.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/save_rjuliabugs.html</loc>
   </url>
   <url>
-    <loc>/reference/save_rjuliabugs.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/setup_juliaBUGS.html</loc>
   </url>
   <url>
-    <loc>/reference/setup_juliaBUGS.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/summary.rjuliabugs.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.rjuliabugs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wrap_model_to_juliaBUGS.html</loc>
+    <loc>https://mateusmaiads.github.io/rjuliabugs/reference/wrap_model_to_juliaBUGS.html</loc>
   </url>
 </urlset>
