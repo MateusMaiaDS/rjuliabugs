@@ -8,11 +8,13 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
+knitr::knit_exit()
 
 ```
 
@@ -108,7 +110,6 @@ $(\delta=0.8)$ for step size adaptation. This is done using the main function, `
 
 ```{r fitting_the_sampler}
 
-knitr::knit_exit()
 library(rjuliabugs)
 
 posterior <- juliaBUGS(
