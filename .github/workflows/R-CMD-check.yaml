@@ -37,13 +37,6 @@ jobs:
         with:
           version: '1.11.5'
 
-      - name: Configure Julia and RCall without backslashes
-        shell: bash
-        run: |
-          export R_HOME=$(Rscript -e 'cat(R.home())')
-          echo "Using R_HOME=$R_HOME"
-          julia -e 'ENV["R_HOME"] = "$R_HOME"; import Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); using RCall'
-
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
@@ -51,6 +44,13 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+
+      - name: Configure Julia and RCall without backslashes
+              shell: bash
+              run: |
+                export R_HOME=$(Rscript -e 'cat(R.home())')
+                echo "Using R_HOME=$R_HOME"
+                julia -e 'ENV["R_HOME"] = "$R_HOME"; import Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); using RCall'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
