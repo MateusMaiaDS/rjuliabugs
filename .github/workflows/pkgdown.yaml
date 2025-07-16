@@ -73,7 +73,8 @@ jobs:
           println("Packages added. Testing RCall...")
 
           using RCall
-          @rput 1:5; # A simple test to ensure RCall can communicate with R
+          my_julia_range = 1:5; # Assign the range to a Julia variable
+          @rput my_julia_range; # Now use @rput with the Julia variable name
           println("RCall test successful!")
           # Add any other Julia configurations or pre-compilations if necessary
 
