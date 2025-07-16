@@ -27,7 +27,7 @@ jobs:
           version: '1.11.5'
 
       - name: Install Suppressor
-        run: julia -e 'using Pkg; Pkg.add("Suppressor")'
+        run: julia -e 'using Pkg; Pkg.add("Suppressor"); Pkg.add("Suppressor");'
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2

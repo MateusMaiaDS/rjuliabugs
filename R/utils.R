@@ -390,6 +390,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
 
   # Install all dependencies if needed
   if(verify_package){
+    JuliaCall::julia_install_package_if_needed("RCall")
     JuliaCall::julia_install_package_if_needed("Suppressor")
     JuliaCall::julia_install_package_if_needed("Serialization")
     JuliaCall::julia_install_package_if_needed("LogDensityProblemsAD")
@@ -407,7 +408,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
   }
 
   # Loading those libraries
-  JuliaCall::julia_eval("using Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
+  JuliaCall::julia_eval("using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
 
   if (!is.null(extra_packages)) {
     for (i in seq_along(extra_packages)) {

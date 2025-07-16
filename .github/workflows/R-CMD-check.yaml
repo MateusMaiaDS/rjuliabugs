@@ -38,7 +38,7 @@ jobs:
           version: '1.11.5'
 
       - name: Install Julia dependencies
-        run: julia --eval 'using Pkg; Pkg.add("Suppressor"); Pkg.add("DataFrames"); Pkg.add("LogDensityProblemsAD"); Pkg.add("ReverseDiff"); Pkg.add("AdvancedHMC"); Pkg.add("AbstractMCMC"); Pkg.add("LogDensityProblems"); Pkg.add("MCMCChains"); Pkg.add("JuliaBUGS")'
+        run: julia --eval 'using Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.add("DataFrames"); Pkg.add("LogDensityProblemsAD"); Pkg.add("ReverseDiff"); Pkg.add("AdvancedHMC"); Pkg.add("AbstractMCMC"); Pkg.add("LogDensityProblems"); Pkg.add("MCMCChains"); Pkg.add("JuliaBUGS")'
 
       - uses: r-lib/actions/setup-pandoc@v2
 
