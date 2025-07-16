@@ -122,7 +122,7 @@ juliaBUGS <- function(data,
   }
 
   # Checking all params to save are in the model
-  check_params_to_save <- sapply(params_to_save,function(x){grepl(pattern = x,x = model)})
+  check_params_to_save <- sapply(params_to_save,function(x){grepl(pattern = x,x = model_def)})
 
   if(!all(check_params_to_save)){
     stop(paste0("The params ",paste0(names(check_params_to_save)[!check_params_to_save],collapse = ", ")," are not part of the model."))
