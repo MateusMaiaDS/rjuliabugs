@@ -6,7 +6,7 @@
 \usage{
 juliaBUGS(
   data,
-  model,
+  model_def,
   params_to_save,
   name = "sampler_juliaBUGS",
   n_iter = 2000,
@@ -24,7 +24,7 @@ juliaBUGS(
 \arguments{
 \item{data}{A named list of numeric values (integer or double). All elements must be named.}
 
-\item{model}{A character string with the model definition, either in Julia-compatible format or BUGS syntax.}
+\item{model_def}{A character string with the model definition, either in Julia-compatible format or BUGS syntax.}
 
 \item{params_to_save}{Character vector with the names of model parameters to extract from the sampler output.}
 
@@ -92,11 +92,11 @@ a warning is issued and sampling will run serially.
 }
 \examples{
 \dontrun{
-model <- "model = @model ... end"
+model_def <- "model = @model ... end"
 data <- list(N = 10, x = rnorm(10))
 result <- juliaBUGS(
   data = data,
-  model = model,
+  model_def = model_def,
   params_to_save = c("mu"),
   name = "my_sampler"
 )

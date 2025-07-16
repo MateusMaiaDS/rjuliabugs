@@ -73,7 +73,7 @@ where $x_{1i}$ and $x_{2i}$ are the seed type and root extract of the $i$-th pla
 Once we have our data prepared, we can define the model using the original BUGS syntax. In `rjuliabugs`, we write the model as a string in R, following the same structure used in other R packages that interface with BUGS-like tools:
 
 ```{r juliabugs_code}
-model <- "
+model_def <- "
 model {
     for (i in 1:N) {
         r[i] ~ dbin(p[i], n[i])
@@ -110,7 +110,7 @@ library(rjuliabugs)
 
 posterior <- juliaBUGS(
   data = data,
-  model = model,
+  model_def = model_def,
   params_to_save = c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
   n_iter = 2000,
   n_warmup = 1000,

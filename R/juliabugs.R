@@ -7,7 +7,7 @@
 #' (\eqn{\delta}=0.8) for step size adaptation.
 #'
 #' @param data A named list of numeric values (integer or double). All elements must be named.
-#' @param model A character string with the model definition, either in Julia-compatible format or BUGS syntax.
+#' @param model_def A character string with the model definition, either in Julia-compatible format or BUGS syntax.
 #' @param params_to_save Character vector with the names of model parameters to extract from the sampler output.
 #' @param name Character. Name for the sampler object created in Julia (must be a valid Julia variable name).
 #' @param n_iter Integer. Total number of MCMC iterations. Default is 2000.
@@ -59,11 +59,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' model <- "model = @model ... end"
+#' model_def <- "model = @model ... end"
 #' data <- list(N = 10, x = rnorm(10))
 #' result <- juliaBUGS(
 #'   data = data,
-#'   model = model,
+#'   model_def = model_def,
 #'   params_to_save = c("mu"),
 #'   name = "my_sampler"
 #' )
@@ -71,7 +71,7 @@
 #'
 #' @export
 juliaBUGS <- function(data,
-                      model,
+                      model_def,
                       params_to_save,
                       name = "sampler_juliaBUGS",
                       n_iter = 2000,
@@ -99,7 +99,7 @@ juliaBUGS <- function(data,
 
   # Formatting the BUGS code to be used by juliaBUGS.jl
   if(!is.null(control$julia_model) && control$julia_model!=FALSE ){
-    model <- wrap_model_to_juliaBUGS(model_code = model)
+    model_def <- wrap_model_to_juliaBUGS(model_code = model)
   } else {
 
     ## Setting the default to convert_var_name as FALSE
@@ -107,7 +107,7 @@ juliaBUGS <- function(data,
       convert_var_name <- FALSE
     }
 
-    model <- bugs2juliaBUGS(model_code = model,convert_var_name = convert_var_name)
+    model_def <- bugs2juliaBUGS(model_code = model_def,convert_var_name = convert_var_name)
 
   }
 
@@ -154,6 +154,7 @@ juliaBUGS <- function(data,
   # Converting the data object into a JuliaNamedTuple
   class(data) <- "JuliaNamedTuple"
   JuliaCall::julia_assign(x = "data", data)
+  JuliaCall::julia_eval(model_def) # This line is important because model is actually the model_run of the BUGS code using Julia Macro
   JuliaCall::julia_eval("model = compile(model,data)")
 
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
