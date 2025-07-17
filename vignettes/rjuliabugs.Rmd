@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
+Sys.setenv(R_HOME = R.home())  # For RCall to pick it correctly
 
 ```
 
