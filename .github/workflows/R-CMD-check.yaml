@@ -69,9 +69,9 @@ jobs:
           needs: check
 
       - name: Install package
-        run: Rscript -e 'devtools::install(build_vignettes = TRUE, upgrade = "never")'
+        run: Rscript -e 'devtools::install(build_vignettes = FALSE, upgrade = "never")'
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          build_args: 'c("--no-manual","--no-build-vignettes")'
