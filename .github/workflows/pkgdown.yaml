@@ -12,7 +12,7 @@ on:
 name: pkgdown.yaml
 
 
-permissions: write-all t
+permissions: write-all
 
 jobs:
   pkgdown:
