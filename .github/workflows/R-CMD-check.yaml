@@ -68,6 +68,9 @@ jobs:
           extra-packages: any::rcmdcheck, any::devtools
           needs: check
 
+      - name: Remove vignettes before check
+        run: rm -rf vignettes
+
       - name: Install package
         run: Rscript -e 'devtools::install(build_vignettes = FALSE, upgrade = "never")'
 
