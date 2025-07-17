@@ -48,9 +48,7 @@ The function reshapes the output if only one parameter is extracted to ensure a 
 \examples{
 \dontrun{
 JuliaCall::julia_setup()
-JuliaCall::julia_library("Turing")
-JuliaCall::julia_command("... define model and sample into 'chains' ...")
-samples <- get_params(c("alpha", "beta"), "chains")
+samples <- get_params(name = "sampler_juliaBUGS",params = c("alpha", "beta"))
 head(samples)
 }
 

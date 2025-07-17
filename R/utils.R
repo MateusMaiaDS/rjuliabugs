@@ -52,9 +52,7 @@ julia_assign_int <- function(x, value) {
 #' @examples
 #' \dontrun{
 #' JuliaCall::julia_setup()
-#' JuliaCall::julia_library("Turing")
-#' JuliaCall::julia_command("... define model and sample into 'chains' ...")
-#' samples <- get_params(c("alpha", "beta"), "chains")
+#' samples <- get_params(name = "sampler_juliaBUGS",params = c("alpha", "beta"))
 #' head(samples)
 #' }
 #'
@@ -112,16 +110,15 @@ get_params_from_name <- function(name, params) {
 #' @param params A character vector specifying which parameters to extract. **(NOTE: This argument is unused in the current function body.)**
 #' @param posterior_type A character string specifying the desired output format. Options are: \code{"array"}, \code{"rvar"}, \code{"mcmc"}, \code{"draws"}.
 #'
-#' @return The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
-#' \itemize{
-#'   \item{\code{"array"}: }{A 3D array of posterior samples.}
-#'   \item{\code{"rvar"}: }{An object of class \code{rvar} from the \pkg{posterior} package.}
-#'   \item{\code{"mcmc"}: }{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
-#'   \item{\code{"draws"}: }{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
-#' }
+#' @return
+#' The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
+#' \item{\code{"array"}}{A 3D array of posterior samples.}
+#' \item{\code{"rvar"}}{An object of class \code{rvar} from the \pkg{posterior} package.}
+#' \item{\code{"mcmc"}}{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
+#' \item{\code{"draws"}}{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
 #'
 #' @details
-#' The function assumes that `get_params_from_name()` and other referenced variables such as `params_to_save` and `n_chain` are available in the current environment.
+#' The function assumes that \code{get_params_from_name()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
 #'
 #' @importFrom posterior rvar as_draws
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
@@ -129,13 +126,15 @@ get_params_from_name <- function(name, params) {
 #'
 #' @examples
 #' \dontrun{
-#' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "rvar")
+#' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 #' }
 get_params <- function(rjuliabugs,
                        params,
                        posterior_type = "array"){
 
   name <- rjuliabugs$name
+  n_chain <- rjuliabugs$mcmc$n_chain
+  params_to_save <- rjuliabugs$mcmc$params_to_save
 
   if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
     stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")
@@ -338,42 +337,47 @@ bugs2juliaBUGS <- function(model_code,
 
 #' Setup Julia Environment for JuliaBUGS
 #'
-#' Installs and loads required Julia packages for using JuliaBUGS with R via JuliaCall.
+#' Installs and loads the required Julia packages to use JuliaBUGS via JuliaCall in R.
 #'
-#' This function checks for the required Julia packages for running `JuliaBUGS` and installs them if they are not already installed.
-#' It also loads these packages into the current Julia session. Optionally, users can provide additional Julia packages to install and load.
+#' This function checks whether the core Julia packages needed for running \code{JuliaBUGS} are installed,
+#' installs any missing ones, and loads them into the current Julia session.
+#' Optionally, additional Julia packages can be installed and loaded by specifying them via \code{extra_packages}.
 #'
-#' @param extra_packages A character vector of additional Julia packages to install and load.
-#'   Default is `NULL`, which means only the core packages needed for JuliaBUGS will be handled.
-#' @param ... Additional arguments passed to `JuliaCall::julia_setup()`, such as `installJulia = TRUE`.
+#' @param extra_packages Character vector of additional Julia packages to install and load.
+#'   Defaults to \code{NULL}, meaning only the core packages are handled.
+#' @param verify_package Logical; if \code{TRUE}, verifies and installs missing core packages. Default is \code{TRUE}.
+#' @param install_from_dev Logical; if \code{TRUE}, installs \code{JuliaBUGS} from its development repository. Default is \code{FALSE}.
+#' @param ... Additional arguments passed to \code{JuliaCall::julia_setup()}, such as \code{installJulia = TRUE}.
 #'
 #' @details
-#' The function uses `JuliaCall::julia_install_package_if_needed()` to install core Julia packages:
-#' \itemize{
-#'   \item LogDensityProblemsAD
-#'   \item ReverseDiff
-#'   \item AdvancedHMC
-#'   \item AbstractMCMC
-#'   \item LogDensityProblems
-#'   \item MCMCChains
-#'   \item JuliaBUGS
-#' }
-#' After installation, these packages are loaded in the Julia session with the `using` statement.
-#' Any additional packages specified in `extra_packages` will also be installed and loaded.
+#' The core Julia packages installed (if needed) are:
+#' * Serialization
+#' * LogDensityProblemsAD
+#' * ReverseDiff
+#' * AdvancedHMC
+#' * AbstractMCMC
+#' * LogDensityProblems
+#' * MCMCChains
+#' * DataFrames
+#' * JuliaBUGS
+#'
+#' After installation, all these packages are loaded in the Julia session using \code{using}.
+#' Any additional packages provided via \code{extra_packages} are also installed and loaded.
+#'
+#' @return Invisibly returns \code{NULL}. The function is called for its side effects.
 #'
 #' @examples
 #' \dontrun{
-#' # Setup Julia with default required packages
+#' # Setup Julia with core packages only
 #' setup_juliaBUGS()
 #'
 #' # Setup Julia with additional packages
 #' setup_juliaBUGS(extra_packages = c("Distributions", "Turing"))
 #' }
 #'
-#' @return This function is called for its side effects (installing and loading Julia packages). It returns `NULL` invisibly.
+#' @seealso \code{\link[JuliaCall]{julia_install_package_if_needed}}, \code{\link[JuliaCall]{julia_eval}}
 #'
-#' @seealso [JuliaCall::julia_install_package_if_needed()], [JuliaCall::julia_eval()]
-#'
+#' @md
 #' @export
 setup_juliaBUGS <- function(extra_packages = NULL,
                             verify_package = TRUE,
@@ -386,6 +390,8 @@ setup_juliaBUGS <- function(extra_packages = NULL,
 
   # Install all dependencies if needed
   if(verify_package){
+    JuliaCall::julia_install_package_if_needed("RCall")
+    JuliaCall::julia_install_package_if_needed("Suppressor")
     JuliaCall::julia_install_package_if_needed("Serialization")
     JuliaCall::julia_install_package_if_needed("LogDensityProblemsAD")
     JuliaCall::julia_install_package_if_needed("ReverseDiff")
@@ -402,7 +408,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
   }
 
   # Loading those libraries
-  JuliaCall::julia_eval("using Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
+  JuliaCall::julia_eval("using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
 
   if (!is.null(extra_packages)) {
     for (i in seq_along(extra_packages)) {

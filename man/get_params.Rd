@@ -15,21 +15,19 @@ get_params(rjuliabugs, params, posterior_type = "array")
 }
 \value{
 The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
-\itemize{
-  \item{\code{"array"}: }{A 3D array of posterior samples.}
-  \item{\code{"rvar"}: }{An object of class \code{rvar} from the \pkg{posterior} package.}
-  \item{\code{"mcmc"}: }{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
-  \item{\code{"draws"}: }{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
-}
+\item{\code{"array"}}{A 3D array of posterior samples.}
+\item{\code{"rvar"}}{An object of class \code{rvar} from the \pkg{posterior} package.}
+\item{\code{"mcmc"}}{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
+\item{\code{"draws"}}{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
 }
 \description{
 This function extracts parameters from an object created by `rjuliabugs` and converts them to a specified posterior format.
 }
 \details{
-The function assumes that `get_params_from_name()` and other referenced variables such as `params_to_save` and `n_chain` are available in the current environment.
+The function assumes that \code{get_params_from_name()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
 }
 \examples{
 \dontrun{
-get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "rvar")
+get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 }
 }

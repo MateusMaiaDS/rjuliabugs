@@ -99,7 +99,7 @@ juliaBUGS <- function(data,
 
   # Formatting the BUGS code to be used by juliaBUGS.jl
   if(!is.null(control$julia_model) && control$julia_model!=FALSE ){
-    model_def <- wrap_model_to_juliaBUGS(model_code = model)
+    model_def <- wrap_model_to_juliaBUGS(model_code = model_def)
   } else {
 
     ## Setting the default to convert_var_name as FALSE
@@ -224,7 +224,8 @@ juliaBUGS <- function(data,
                      name = name,
                      sampler = JuliaCall::julia_eval(name,need_return = "R"),
                      n_threads = n_threads,
-                     mcmc = list(n_iter = 2000,
+                     mcmc = list(params_to_save = params_to_save,
+                                 n_iter = 2000,
                                  n_warmup= floor(n_iter/2),
                                  n_discard = n_warmup,
                                  n_thin = 1,
