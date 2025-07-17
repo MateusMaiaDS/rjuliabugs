@@ -68,8 +68,8 @@ jobs:
           extra-packages: any::rcmdcheck, any::devtools
           needs: check
 
-      - name: Remove vignettes before check
-        run: rm -rf vignettes
+      - name: Remove vignettes folder
+        run: Rscript -e "if (dir.exists('vignettes')) unlink('vignettes', recursive=TRUE)"
 
       - name: Install package
         run: Rscript -e 'devtools::install(build_vignettes = FALSE, upgrade = "never")'
