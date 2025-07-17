@@ -79,19 +79,18 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install system dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
+      - uses: r-lib/actions/setup-r@v2
         with:
-          extra-packages: |
-            any::pkgdown
-          needs: |
-            pkgdown
+          use-public-rspm: true
 
-      - name: Install package
-        run: R CMD INSTALL .
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
-      - name: Build pkgdown site
-        run: Rscript -e 'pkgdown::build_site()'
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
@@ -100,4 +99,3 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
-
