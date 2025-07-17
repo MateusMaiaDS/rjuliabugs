@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   rjuliabugs: rjuliabugs.html
-last_built: 2025-07-17T11:32Z
+last_built: 2025-07-17T12:13Z
 urls:
   reference: https://mateusmaiads.github.io/rjuliabugs/reference
   article: https://mateusmaiads.github.io/rjuliabugs/articles
