@@ -2,3 +2,26 @@ url: https://mateusmaiads.github.io/rjuliabugs/
 template:
   bootstrap: 5
 
+reference:
+- title: "Setting up Julia with `rjuliabugs`"
+  contents:
+  - setup_juliaBUGS
+- title: "Fitting the model"
+  contents:
+  - juliaBUGS
+- title: "Exploring the fitted model"
+  contents:
+  - get_params
+  - get_params_from_name
+  - summary.rjuliabugs
+- title: "Saving and loading the fitted `rjuliabugs` object"
+  contents:
+  - save_rjuliabugs
+  - load_rjuliabugs
+- title: "Utility functions"
+  contents:
+  - bugs2juliaBUGS
+  - wrap_model_to_juliaBUGS
+  - julia_assign_int
+  - convert_numeric_types
+  - delete_julia_obj

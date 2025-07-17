@@ -2,17 +2,20 @@
 title: "Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{walkthrough_example}
+  %\VignetteIndexEntry{Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   warning=FALSE,message=FALSE,
   comment = "#>"
 )
+Sys.setenv(R_HOME = R.home())  # For RCall to pick it correctly
+
 ```
 
 This document provides a complete walkthrough for fitting a simple logistic regression model with random effects using the `rjuliabugs` package. Rather than focusing on deep statistical analysis, the main goal of this guide is to demonstrate how to use the functionality offered by `rjuliabugs` to fit BUGS models from R by leveraging modern probabilistic programming tools available in Julia.
@@ -89,6 +92,7 @@ model {
     sigma <- 1 / sqrt(tau)
 }
 "
+
 ```
 
 Users familiar with R packages like `R2jags`, `rjags`, or `R2WinBUGS` will recognize this approach: the model is defined as a string using the BUGS modeling language. For users coming from Stan (e.g., via `rstan` or `cmdstanr`), the idea is similar: the model is written as a probabilistic program inside a string object, then compiled and executed by the backend.
@@ -106,6 +110,7 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 $(\delta=0.8)$ for step size adaptation. This is done using the main function, `juliaBUGS`. For example:
 
 ```{r fitting_the_sampler}
+
 library(rjuliabugs)
 
 posterior <- juliaBUGS(
@@ -116,7 +121,7 @@ posterior <- juliaBUGS(
   n_warmup = 1000,
   n_discard = 1000,
   n_chain = 4,
-  use_parallel = TRUE,
+  use_parallel = FALSE,
   n_thin = 1
 )
 ```
@@ -166,7 +171,7 @@ For a quick illustration, let's observe the density plot of the posteriors and t
 library(bayesplot)
 
 # Plotting the posterior density for the saved parameters
-bayesplot::mcmc_areas(
+mcmc_areas(
   posterior$params,
   pars =  c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
   prob = 0.8
@@ -176,9 +181,10 @@ bayesplot::mcmc_areas(
 For the traceplots, we subset only the $\alpha_{0}$ and the $\sigma$ parameters:
 
 ```{r bayes_traceplot, fig.align='center', fig.width=4, fig.height=3, dpi=150}
+library(bayesplot)
 
 # Plotting traceplots for alpha0 and sigma
-bayesplot::mcmc_trace(
+mcmc_trace(
   x = posterior$params,
   pars = c("alpha0", "sigma"),
   n_warmup = 0,
