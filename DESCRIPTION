@@ -18,5 +18,5 @@ Suggests:
     bayesplot,
     knitr,
     rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder: knitr,rmarkdown
 URL: https://mateusmaiads.github.io/rjuliabugs/
