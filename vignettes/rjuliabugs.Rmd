@@ -113,8 +113,6 @@ $(\delta=0.8)$ for step size adaptation. This is done using the main function, `
 
 library(rjuliabugs)
 
-knitr::knit_exit()
-
 posterior <- juliaBUGS(
   data = data,
   model_def = model_def,
