@@ -64,6 +64,19 @@ jobs:
           ENV["R_HOME"] = get(ENV, "R_HOME", "") # Use get to avoid error if not set, though it should be now
           println("Julia's R_HOME environment variable: $(ENV["R_HOME"])")
 
+          import Pkg
+          println("Adding RCall.jl and Suppressor.jl...")
+          Pkg.add("RCall")
+          Pkg.add("Suppressor")
+          Pkg.update()
+          println("Packages added. Testing RCall...")
+
+          using RCall
+          my_julia_range = 1:5; # Assign the range to a Julia variable
+          @rput my_julia_range; # Now use @rput with the Julia variable name
+          println("RCall test successful!")
+          # Add any other Julia configurations or pre-compilations if necessary
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
