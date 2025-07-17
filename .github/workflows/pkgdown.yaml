@@ -68,7 +68,8 @@ jobs:
           println("Adding RCall.jl and Suppressor.jl...")
           Pkg.add("RCall")
           Pkg.add("Suppressor")
-          Pkg.update()
+          Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl")
+
           println("Packages added. Testing RCall...")
 
           using RCall
@@ -87,6 +88,9 @@ jobs:
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
+
+      - name: Install package
+        run: Rscript -e 'devtools::install(build = TRUE, build_vignettes = TRUE, upgrade = "never")'
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = TRUE, install = TRUE)
