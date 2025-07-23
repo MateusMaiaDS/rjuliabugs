@@ -1,0 +1,76 @@
+---
+title: "rjuliabugs_parallel"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rjuliabugs_parallel}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Using `rjuliabugs` in parallel
+
+The `JuliaBUGS` library in Julia supports parallel sampling through `AbstractMCMC`. While in a native Julia session this can be easily enabled by launching Julia with the `-t <n_threads>` flag, using multithreaded sampling via `rjuliabugs` requires additional setup. Specifically, you must define the environment variable `JULIA_NUM_THREADS=n_threads`, where `n_threads` is the number of threads (or CPU cores) you wish to use for parallel computation. This ensures that `rjuliabugs` can properly initialize Julia with multithreading support when running multiple chains in parallel from within an R session. The instructions on how to configure `JULIA_NUM_THREADS` and enable multithreading in your environment, are the following: 
+
+1. Open your terminal or command prompt.  
+2. Check what is set as `JULIA_NUM_THREADS` is set by running:
+
+```bash
+echo $JULIA_NUM_THREADS
+```
+
+>(On Windows PowerShell use: `echo $Env:JULIA_NUM_THREADS`)
+
+3. If empty or incorrectly set, decide how many threads you want Julia to use (e.g., 4), then set the environment variable in your terminal session:
+
+```bash
+export JULIA_NUM_THREADS=4
+```
+
+> (On Windows PowerShell use: `$Env:JULIA_NUM_THREADS="4"`)
+
+4. **To make this setting permanent (applies every time you open R and Julia):**
+
+   - **On macOS/Linux:**  
+     Open your shell configuration file (e.g., `.bashrc`, `.zshrc`) with a text editor:  
+     
+     ```bash
+     nano ~/.bashrc
+     ```
+     or 
+     ```bash
+     nano ~/.zshrc  
+     ```
+     Add the following line at the end of the file:  
+     ```bash
+     export JULIA_NUM_THREADS=4  
+     ```
+     Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).  
+     Then reload your shell configuration or restart your terminal:  
+     ```bash
+     source ~/.bashrc
+     ```  
+     *(or `source ~/.zshrc` if using zsh)*
+
+   - **On Windows:**  
+     1. Search for "Environment Variables" in the Start menu and open "Edit the system environment variables."  
+     2. Click "Environment Variables."  
+     3. Under "User variables" or "System variables," click "New..."  
+     4. Set the variable name as `JULIA_NUM_THREADS` and the value as the number of threads (e.g., `4`).  
+     5. Click OK to save all dialogs.  
+     6. Restart your terminal or R session for changes to take effect.
+
+5. Verify it is set correctly by re-running:
+
+```bash
+echo $JULIA_NUM_THREADS  
+```
+> (or in R use: `Sys.getenv("JULIA_NUM_THREADS")`)
+
+Setting `JULIA_NUM_THREADS` ensures Julia can execute in parallel where possible when running models through `rjuliabugs`.

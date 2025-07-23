@@ -4,11 +4,13 @@
 #' specified in Julia or in BUGS syntax. It compiles the model, converts data,
 #' sets sampler parameters, and returns posterior samples in various formats. The setup
 #' for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-#' (\eqn{\delta}=0.8) for step size adaptation.
+#' δ=0.8) for step size adaptation.
 #'
 #' @param data A named list of numeric values (integer or double). All elements must be named.
 #' @param model_def A character string with the model definition, either in Julia-compatible format or BUGS syntax.
 #' @param params_to_save Character vector with the names of model parameters to extract from the sampler output.
+#' @param initializations A named list of parameter names for which you may wish to set corresponding initial values for the sampler.
+#' The default is `NULL`, which means no default initial values are used.
 #' @param name Character. Name for the sampler object created in Julia (must be a valid Julia variable name).
 #' @param n_iter Integer. Total number of MCMC iterations. Default is 2000.
 #' @param n_warmup Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is `floor(n_iter / 2)`.
@@ -70,9 +72,12 @@
 #' }
 #'
 #' @export
+#' @md
+
 juliaBUGS <- function(data,
                       model_def,
                       params_to_save,
+                      initializations = NULL,
                       name = "sampler_juliaBUGS",
                       n_iter = 2000,
                       n_warmup= floor(n_iter/2),
@@ -88,10 +93,26 @@ juliaBUGS <- function(data,
   # Checking if the name is defined, and generating a new one if is not the case
   name <- check_sampler_is_defined(name = name)
 
+  # Checking posterior type
   if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
     stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")
   }
 
+
+  # Checking initializations
+  if(!is.null(initializations)){
+
+    if(!is.list(initializations)){
+      stop("Initializations must be a named list.")
+    }
+
+    check_initializations_variables <- sapply(names(initializations),function(x){grepl(pattern = x,x = model_def)})
+
+    if(!all(check_initializations_variables)){
+      stop(paste0("The params ",paste0(names(check_initializations_variables)[!check_initializations_variables],collapse = ", ")," are not part of the model."))
+    }
+
+  }
 
   if(!is.character(name)){
     stop("Insert a valid name.")
@@ -132,8 +153,8 @@ juliaBUGS <- function(data,
   n_threads <- JuliaCall::julia_call("Threads.nthreads",need_return = "R")
 
 
-  if(n_threads==1){
-    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see PUT LINK HERE for a complete documentation.\n")
+  if(n_threads==1 && use_parallel){
+    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/index.html for a complete documentation.\n")
     use_parallel <- FALSE
   }
 
@@ -155,7 +176,17 @@ juliaBUGS <- function(data,
   class(data) <- "JuliaNamedTuple"
   JuliaCall::julia_assign(x = "data", data)
   JuliaCall::julia_eval(model_def) # This line is important because model is actually the model_run of the BUGS code using Julia Macro
-  JuliaCall::julia_eval("model = compile(model,data)")
+
+  if(is.null(initializations)){
+    JuliaCall::julia_eval("model = compile(model,data)")
+  } else {
+
+    # Converting ininitializations properly
+    initializations <- convert_numeric_types(data = initializations)
+    class(initializations) <- "JuliaNamedTuple"
+    JuliaCall::julia_assign(x = "initializations", initializations)
+    JuliaCall::julia_eval("model = compile(model,data,initializations)")
+  }
 
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
   JuliaCall::julia_eval("D = LogDensityProblems.dimension(model)")
@@ -175,15 +206,15 @@ juliaBUGS <- function(data,
   cat("Initialising AbstractMCMC.sample()...")
 
   JuliaCall::julia_eval(paste0(name," = AbstractMCMC.sample(ad_model,
-                                                                     AdvancedHMC.NUTS(0.8),
-                                                                     ",parallel_scheme,",
-                                                                     n_iter,
-                                                                     n_chain;
-                                                                     chain_type = Chains,
-                                                                     n_adapts = n_warmup,
-                                                                     init_params = initial,
-                                                                     discard_initial = n_discard,
-                                                                     thinning = n_thin)"))
+                                                             AdvancedHMC.NUTS(0.8),
+                                                             ",parallel_scheme,",
+                                                             n_iter,
+                                                             n_chain;
+                                                             chain_type = Chains,
+                                                             n_adapts = n_warmup,
+                                                             init_params = initial,
+                                                             discard_initial = n_discard,
+                                                             thinning = n_thin)"))
   cat(" DONE!\n")
 
 

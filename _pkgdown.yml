@@ -14,6 +14,11 @@ reference:
   - get_params
   - get_params_from_name
   - summary.rjuliabugs
+- title: "Converting posterior sample formats"
+  contents:
+  - as_rvar
+  - as_mcmc
+  - as_draws
 - title: "Saving and loading the fitted `rjuliabugs` object"
   contents:
   - save_rjuliabugs

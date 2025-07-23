@@ -535,3 +535,81 @@ check_sampler_is_defined <- function(name) {
   return(name)
 }
 
+# ===== Conversion posterior class functions =============== #
+
+#' @rdname as_rvar
+#' @export
+#' @importFrom posterior rvar
+as_rvar.rjuliabugs <- function(x, ...) {
+  n_chain <- x$mcmc$n_chain
+  x$params <- posterior::rvar(x = x$params, nchains = n_chain)
+  x$mcmc$posterior_type <- "rvar"
+  return(x)
+}
+
+
+#' @rdname as_mcmc
+#' @export
+#' @importFrom coda as.mcmc as.mcmc.list mcmc
+as_mcmc.rjuliabugs <- function(x, ...) {
+  n_chain <- x$mcmc$n_chain
+  x$params <- if (n_chain == 1) {
+    coda::as.mcmc(x$params)
+  } else {
+    coda::as.mcmc.list(
+      lapply(seq(dim(x$params)[2]), function(i) {
+        coda::mcmc(x$params[, i, ])
+      })
+    )
+  }
+  x$mcmc$posterior_type <- "mcmc"
+  return(x)
+}
+
+
+#' @rdname as_draws
+#' @export
+#' @importFrom posterior as_draws
+as_draws.rjuliabugs <- function(x, ...) {
+  x$params <- posterior::as_draws(x$params)
+  x$mcmc$posterior_type <- "draws"
+  return(x)
+}
+
+
+#' @rdname as_rvar
+#' @export
+as_rvar.array <- function(x, n_mcmc = NULL, ...) {
+  if (is.null(n_mcmc)) {
+    stop("You must provide `n_mcmc` when using `as_rvar()` on an array.")
+  }
+  posterior::rvar(x = x, nchains = n_mcmc)
+}
+
+#' @rdname as_mcmc
+#' @export
+as_mcmc.array <- function(x, ...) {
+  dims <- dim(x)
+  if (length(dims) != 3) stop("Input array must be 3D: iterations x chains x parameters")
+
+  n_chains <- dims[2]
+
+  if (n_chains == 1) {
+    coda::as.mcmc(x[, 1, ])
+  } else {
+    coda::as.mcmc.list(
+      lapply(seq(n_chains), function(i) {
+        coda::mcmc(x[, i, ])
+      })
+    )
+  }
+}
+
+#' @rdname as_draws
+#' @export
+as_draws.array <- function(x, ...) {
+  posterior::as_draws(x)
+}
+
+
+# ============================================================ #
