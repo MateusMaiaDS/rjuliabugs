@@ -149,8 +149,8 @@ juliaBUGS <- function(data,
   n_threads <- JuliaCall::julia_call("Threads.nthreads",need_return = "R")
 
 
-  if(n_threads==1){
-    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see PUT LINK HERE for a complete documentation.\n")
+  if(n_threads==1 && use_parallel){
+    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/index.html for a complete documentation.\n")
     use_parallel <- FALSE
   }
 
