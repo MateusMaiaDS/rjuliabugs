@@ -177,7 +177,7 @@ juliaBUGS <- function(data,
     JuliaCall::julia_eval("model = compile(model,data)")
   } else {
 
-
+    # Converting ininitializations properly
     initializations <- convert_numeric_types(data = initializations)
     class(initializations) <- "JuliaNamedTuple"
     JuliaCall::julia_assign(x = "initializations", initializations)

@@ -19,3 +19,4 @@ Suggests:
     knitr,
     rmarkdown
 URL: https://mateusmaiads.github.io/rjuliabugs/
+VignetteBuilder: knitr
