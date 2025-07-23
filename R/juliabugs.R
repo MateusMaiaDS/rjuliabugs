@@ -4,11 +4,13 @@
 #' specified in Julia or in BUGS syntax. It compiles the model, converts data,
 #' sets sampler parameters, and returns posterior samples in various formats. The setup
 #' for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-#' (\eqn{\delta}=0.8) for step size adaptation.
+#' δ=0.8) for step size adaptation.
 #'
 #' @param data A named list of numeric values (integer or double). All elements must be named.
 #' @param model_def A character string with the model definition, either in Julia-compatible format or BUGS syntax.
 #' @param params_to_save Character vector with the names of model parameters to extract from the sampler output.
+#' @param initializations A named list of parameter names for which you may wish to set corresponding initial values for the sampler.
+#' The default is `NULL`, which means no default initial values are used.
 #' @param name Character. Name for the sampler object created in Julia (must be a valid Julia variable name).
 #' @param n_iter Integer. Total number of MCMC iterations. Default is 2000.
 #' @param n_warmup Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is `floor(n_iter / 2)`.
@@ -70,6 +72,8 @@
 #' }
 #'
 #' @export
+#' @md
+
 juliaBUGS <- function(data,
                       model_def,
                       params_to_save,
