@@ -8,6 +8,7 @@ juliaBUGS(
   data,
   model_def,
   params_to_save,
+  initializations = NULL,
   name = "sampler_juliaBUGS",
   n_iter = 2000,
   n_warmup = floor(n_iter/2),
