@@ -3,11 +3,11 @@
 specified in Julia or in BUGS syntax. It compiles the model, converts data,
 sets sampler parameters, and returns posterior samples in various formats. The setup
 for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-(\(\delta\)=0.8) for step size adaptation."><meta property="og:description" content="Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
+δ=0.8) for step size adaptation."><meta property="og:description" content="Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
 specified in Julia or in BUGS syntax. It compiles the model, converts data,
 sets sampler parameters, and returns posterior samples in various formats. The setup
 for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-(\(\delta\)=0.8) for step size adaptation."><meta property="og:image" content="https://mateusmaiads.github.io/rjuliabugs/logo.png"></head><body>
+δ=0.8) for step size adaptation."><meta property="og:image" content="https://mateusmaiads.github.io/rjuliabugs/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -49,7 +49,7 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 specified in Julia or in BUGS syntax. It compiles the model, converts data,
 sets sampler parameters, and returns posterior samples in various formats. The setup
 for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-(\(\delta\)=0.8) for step size adaptation.</p>
+δ=0.8) for step size adaptation.</p>
     </div>
 
     <div class="section level2">
@@ -89,6 +89,11 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 <dd><p>Character vector with the names of model parameters to extract from the sampler output.</p></dd>
 
 
+<dt id="arg-initializations">initializations<a class="anchor" aria-label="anchor" href="#arg-initializations"></a></dt>
+<dd><p>A named list of parameter names for which you may wish to set corresponding initial values for the sampler.
+The default is <code>NULL</code>, which means no default initial values are used.</p></dd>
+
+
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>Character. Name for the sampler object created in Julia (must be a valid Julia variable name).</p></dd>
 
@@ -98,11 +103,11 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 
 
 <dt id="arg-n-warmup">n_warmup<a class="anchor" aria-label="anchor" href="#arg-n-warmup"></a></dt>
-<dd><p>Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is `floor(n_iter / 2)`.</p></dd>
+<dd><p>Integer. Number of iterations used warm-up or tuning (e.g., adaption steps in NUTS). Default is <code>floor(n_iter / 2)</code>.</p></dd>
 
 
 <dt id="arg-n-discard">n_discard<a class="anchor" aria-label="anchor" href="#arg-n-discard"></a></dt>
-<dd><p>Integer. Number of initial samples to be completely discarded. Default is `n_warmup`, i.e: discard all the iterations used as adaptation steps.</p></dd>
+<dd><p>Integer. Number of initial samples to be completely discarded. Default is <code>n_warmup</code>, i.e: discard all the iterations used as adaptation steps.</p></dd>
 
 
 <dt id="arg-n-thin">n_thin<a class="anchor" aria-label="anchor" href="#arg-n-thin"></a></dt>
@@ -114,69 +119,69 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 
 
 <dt id="arg-use-parallel">use_parallel<a class="anchor" aria-label="anchor" href="#arg-use-parallel"></a></dt>
-<dd><p>Logical. Whether to use `AbstractMCMC.MCMCThreads()` for parallel sampling. Default is `TRUE`.</p></dd>
+<dd><p>Logical. Whether to use <code>AbstractMCMC.MCMCThreads()</code> for parallel sampling. Default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-posterior-type">posterior_type<a class="anchor" aria-label="anchor" href="#arg-posterior-type"></a></dt>
-<dd><p>Character. Format of the posterior samples. One of `"array"`, `"rvar"`, `"mcmc"`, or `"draws"`. Default is `"array"`.</p></dd>
+<dd><p>Character. Format of the posterior samples. One of <code>"array"</code>, <code>"rvar"</code>, <code>"mcmc"</code>, or <code>"draws"</code>. Default is <code>"array"</code>.</p></dd>
 
 
 <dt id="arg-force-setup-juliabugs">force_setup_juliaBUGS<a class="anchor" aria-label="anchor" href="#arg-force-setup-juliabugs"></a></dt>
-<dd><p>Logical. If `TRUE`, forces reinitialization of the Julia environment via `setup_juliaBUGS()`. Default is `FALSE`.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, forces reinitialization of the Julia environment via <code><a href="setup_juliaBUGS.html">setup_juliaBUGS()</a></code>. Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-control">control<a class="anchor" aria-label="anchor" href="#arg-control"></a></dt>
-<dd><p>Optional list of control parameters. Supported entries:</p><dl><dt>`data_convert_int`</dt>
-<dd><p>Logical. If `TRUE`, coerces numeric values to integers when possible. Default is `TRUE`.</p></dd>
+<dd><p>Optional list of control parameters. Supported entries:</p><dl><dt><code>data_convert_int</code></dt>
+<dd><p>Logical. If <code>TRUE</code>, coerces numeric values to integers when possible. Default is <code>TRUE</code>.</p></dd>
 
-  <dt>`convert_var_name`</dt>
-<dd><p>Logical. If `TRUE`, automatically renames variables in the BUGS model. Default is `FALSE`.</p></dd>
+<dt><code>convert_var_name</code></dt>
+<dd><p>Logical. If <code>TRUE</code>, automatically renames variables in the BUGS model. Default is <code>FALSE</code>.</p></dd>
 
-  <dt>`julia_model`</dt>
-<dd><p>Logical. If `TRUE`, assumes the model is already in Julia format. Default is `FALSE`.</p></dd>
+<dt><code>julia_model</code></dt>
+<dd><p>Logical. If <code>TRUE</code>, assumes the model is already in Julia format. Default is <code>FALSE</code>.</p></dd>
 
 
 </dl></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to `setup_juliaBUGS()`.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="setup_juliaBUGS.html">setup_juliaBUGS()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class `"rjuliabugs"` containing:</p><dl><dt>params</dt>
-<dd><p>Posterior samples, in the format specified by `posterior_type`.</p></dd>
+    <p>An object of class <code>"rjuliabugs"</code> containing:</p><dl><dt>params</dt>
+<dd><p>Posterior samples, in the format specified by <code>posterior_type</code>.</p></dd>
 
-  <dt>name</dt>
+<dt>name</dt>
 <dd><p>Character string identifying the Julia sampler object.</p></dd>
 
-  <dt>sampler</dt>
-<dd><p>Sampler object returned by `AbstractMCMC.sample`.</p></dd>
+<dt>sampler</dt>
+<dd><p>Sampler object returned by <code>AbstractMCMC.sample</code>.</p></dd>
 
-  <dt>n_threads</dt>
+<dt>n_threads</dt>
 <dd><p>Number of Julia threads detected.</p></dd>
 
-  <dt>mcmc</dt>
+<dt>mcmc</dt>
 <dd><p>List of MCMC configuration parameters.</p></dd>
 
-  <dt>control</dt>
+<dt>control</dt>
 <dd><p>Control options used in the sampler setup.</p></dd>
 
 
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function relies on Julia packages `LogDensityProblems`, `AdvancedHMC`, and `AbstractMCMC`.
-Gradients are computed via `ReverseDiff`. The model is compiled before sampling.</p>
-<p>The `posterior_type` argument determines the return format:</p><ul><li><p>`"array"`: 3D numeric array (iterations × chains × parameters).</p></li>
-<li><p>`"rvar"`: `posterior::rvar` object.</p></li>
-<li><p>`"mcmc"`: `coda::mcmc` (single chain) or `mcmc.list` (multiple chains).</p></li>
-<li><p>`"draws"`: `posterior::draws_array`.</p></li>
+    <p>This function relies on Julia packages <code>LogDensityProblems</code>, <code>AdvancedHMC</code>, and <code>AbstractMCMC</code>.
+Gradients are computed via <code>ReverseDiff</code>. The model is compiled before sampling.</p>
+<p>The <code>posterior_type</code> argument determines the return format:</p><ul><li><p><code>"array"</code>: 3D numeric array (iterations × chains × parameters).</p></li>
+<li><p><code>"rvar"</code>: <code><a href="https://mc-stan.org/posterior/reference/rvar.html" class="external-link">posterior::rvar</a></code> object.</p></li>
+<li><p><code>"mcmc"</code>: <code><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">coda::mcmc</a></code> (single chain) or <code>mcmc.list</code> (multiple chains).</p></li>
+<li><p><code>"draws"</code>: <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">posterior::draws_array</a></code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>You must call `setup_juliaBUGS()` at least once before using this function.
+    <p>You must call <code><a href="setup_juliaBUGS.html">setup_juliaBUGS()</a></code> at least once before using this function.
 If parallel sampling is requested but only one Julia thread is available,
 a warning is issued and sampling will run serially.</p>
     </div>
