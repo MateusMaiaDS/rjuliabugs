@@ -190,7 +190,7 @@ juliaBUGS <- function(data,
 
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
   JuliaCall::julia_eval("D = LogDensityProblems.dimension(model)")
-  JuliaCall::julia_eval("initial = rand(D)")
+  # JuliaCall::julia_eval("initial = rand(D)")
 
 
   # Conver MCMC parameters to int for julia.
@@ -212,7 +212,6 @@ juliaBUGS <- function(data,
                                                              n_chain;
                                                              chain_type = Chains,
                                                              n_adapts = n_warmup,
-                                                             init_params = initial,
                                                              discard_initial = n_discard,
                                                              thinning = n_thin)"))
   cat(" DONE!\n")
