@@ -1,8 +1,8 @@
 ---
-title: "rjuliabugs_parallel"
+title: "Using rjuliabugs in parallel"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rjuliabugs_parallel}
+  %\VignetteIndexEntry{Using rjuliabugs in parallel}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Using `rjuliabugs` in parallel
 
 The `JuliaBUGS` library in Julia supports parallel sampling through `AbstractMCMC`. While in a native Julia session this can be easily enabled by launching Julia with the `-t <n_threads>` flag, using multithreaded sampling via `rjuliabugs` requires additional setup. Specifically, you must define the environment variable `JULIA_NUM_THREADS=n_threads`, where `n_threads` is the number of threads (or CPU cores) you wish to use for parallel computation. This ensures that `rjuliabugs` can properly initialize Julia with multithreading support when running multiple chains in parallel from within an R session. The instructions on how to configure `JULIA_NUM_THREADS` and enable multithreading in your environment, are the following: 
 
