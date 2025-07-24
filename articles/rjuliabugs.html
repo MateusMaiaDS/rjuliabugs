@@ -40,7 +40,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/rjuliabugs_parallel.html">Using rjuliabugs in parallel</a></li>
-    <li><a class="dropdown-item" href="../articles/setup_troubleshooting.html">Using rjuliabugs: Setup, Troubleshooting</a></li>
+    <li><a class="dropdown-item" href="../articles/setup_troubleshooting.html">Using rjuliabugs: Setup and Troubleshooting</a></li>
   </ul>
 </li>
       </ul>
@@ -96,21 +96,24 @@ project.</p>
 correctly installed and set up. The goal here is to provide a working
 example under the assumption that your installation is functional.</p>
 <p>For detailed installation instructions and troubleshooting
-information, please refer to the <a href="https://github.com/MateusMaiaDS/rjuliabugs/" class="external-link">README</a>. The
-installation guide includes the following sections:</p>
+information, please refer to the <a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html">README</a>.
+The installation guide includes the following sections:</p>
 <ul>
-<li><a href="#installing-julia">Installing Julia</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#installing-julia">Installing
+Julia</a></li>
 <li>
-<a href="#troubleshooting-juliacall-setup">Troubleshooting JuliaCall
-setup</a>
+<a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#troubleshooting-juliacall-setup">Troubleshooting
+JuliaCall setup</a>
 <ul>
-<li><a href="#error-type-julia-not-found">Julia not found</a></li>
-<li><a href="#error-type-r_home-not-found">R not found</a></li>
-<li><a href="#other-installation-issues">Other installation
-issues</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-julia-not-found">Julia
+not found</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-r_home-not-found">R
+not found</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#other-installations-issues">Other
+installation issues</a></li>
 </ul>
 </li>
-<li><a href="#using-rjuliabugs-in-parallel">Using
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html">Using
 <code>rjuliabugs</code> in parallel</a></li>
 </ul>
 </div>
@@ -256,17 +259,17 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  parameters     mean      std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 49.76961 117.0030 9.104716    294.6    252.9 1.012          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.83294   0.4261 0.007754   3058.1   3395.7 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.35665   0.2652 0.005055   2779.7   3689.6 1.002          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.09084   0.3095 0.005361   3365.1   3835.1 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.55438   0.1893 0.003355   3188.9   3983.7 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.19249   0.2627 0.006051   2084.4   3719.6 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.01000   0.2180 0.002928   5725.6   4687.4 1.003          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.19186   0.2308 0.005086   2014.4   4458.9 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.26786   0.2571 0.007734   1064.8   4517.8 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.11392   0.2375 0.003867   4028.7   4641.4 1.001          NA</span></span>
+<span><span class="co">#&gt;  parameters      mean      std      mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
+<span><span class="co">#&gt;         tau 53.520847 118.8452 12.264880    178.6      125 1.020          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.818868   0.4232  0.007500   3175.6     4067 1.002          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.352165   0.2682  0.005025   2856.6     4002 1.003          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.084358   0.3134  0.005652   3028.2     4312 1.002          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.552727   0.1903  0.003353   3199.7     3703 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.185937   0.2541  0.006127   1794.4     3777 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.008814   0.2197  0.002808   6121.0     4678 1.005          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.193122   0.2275  0.005852   1487.7     3922 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.260349   0.2590  0.008387    968.7     3588 1.007          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.113036   0.2340  0.004378   3181.8     4286 1.004          NA</span></span>
 <span><span class="co">#&gt;          ...</span></span>
 <span><span class="co">#&gt;   17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -377,7 +380,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3183.552</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3219.338</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>

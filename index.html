@@ -43,7 +43,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/rjuliabugs_parallel.html">Using rjuliabugs in parallel</a></li>
-    <li><a class="dropdown-item" href="articles/setup_troubleshooting.html">Using rjuliabugs: Setup, Troubleshooting</a></li>
+    <li><a class="dropdown-item" href="articles/setup_troubleshooting.html">Using rjuliabugs: Setup and Troubleshooting</a></li>
   </ul>
 </li>
       </ul>
@@ -67,7 +67,7 @@
 
 <p><strong>rjuliabugs</strong> is an R package that provides a bridge between R and <a href="https://github.com/TuringLang/JuliaBUGS.jl?tab=readme-ov-file" class="external-link">JuliaBUGS</a>, the <a href="https://en.wikipedia.org/wiki/WinBUGS" class="external-link">BUGS</a>-style Bayesian modeling interface developed in Julia as part of the <a href="https://turing.ml/dev/" class="external-link">Turing.jl</a> probabilistic programming ecosystem.</p>
 <p><strong>JuliaBUGS</strong> allows users to define models using the familiar BUGS syntax while leveraging the speed and flexibility of the Julia language. It enables automatic translation of BUGS code into modern probabilistic programs that run efficiently with advanced inference engines such as Hamiltonian Monte Carlo (HMC) — all accessible via Turing.jl.</p>
-<p>With <code>rjuliabugs</code>, R users can run BUGS models/code through JuliaBUGS and take advantage of the inference algorithms available in Turing.jl, without leaving the R environment. This not only provides a seamless path to adopt faster (including <a href="#using-rjuliabugs-in-parallel">parallelization</a>) and more flexible sampling methods but also allows integration with R’s extensive post-processing ecosystem (e.g., <code>bayesplot</code>, <code>posterior</code>, <code>coda</code>). It lowers the barrier for existing BUGS users to adopt modern Bayesian tools without abandoning their existing model codebase.</p>
+<p>With <code>rjuliabugs</code>, R users can run BUGS models/code through JuliaBUGS and take advantage of the inference algorithms available in Turing.jl, without leaving the R environment. This not only provides a seamless path to adopt faster (including <a href="https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html">parallelization</a>) and more flexible sampling methods but also allows integration with R’s extensive post-processing ecosystem (e.g., <code>bayesplot</code>, <code>posterior</code>, <code>coda</code>). It lowers the barrier for existing BUGS users to adopt modern Bayesian tools without abandoning their existing model codebase.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -77,18 +77,18 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MateusMaiaDS/rjuliabugs"</span><span class="op">)</span></span></code></pre></div>
 <p>⚠️ <strong>Loading the package</strong>:<br>
 When starting a R session for the first time, after loading the package <code>rjuliabugs</code> and before running any function, we recommend to run <code><a href="reference/setup_juliaBUGS.html">?rjuliabugs::setup_juliaBUGS</a></code> to build all Julia setup in R and install any needed dependencies. We recommend this initially as it an be time-consuming. See <code><a href="reference/setup_juliaBUGS.html">?rjuliabugs::setup_juliaBUGS</a></code> for more details.</p>
-<p>For further guidance, the rest of this README summarize most of the FAQ and additional instructions for installing Julia and setting <code>rjuliabugs</code>, troubleshooting, and running <code>rjuliabugs</code> in parallel. We recommend reading the articles:</p>
+<p>For further guidance, there articles in this page which summarize most of the FAQ and additional instructions for installing Julia and setting <code>rjuliabugs</code>, troubleshooting, and running <code>rjuliabugs</code> in parallel. We recommend the reading of them before working with <code>rjuliabugs</code>:</p>
 <ul>
-<li><a href="#installing-julia">Installing Julia</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#installing-julia">Installing Julia</a></li>
 <li>
-<a href="#troubleshooting-juliacall-setup">Troubleshooting JuliaCall setup:</a>
+<a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#troubleshooting-juliacall-setup">Troubleshooting JuliaCall setup</a>
 <ul>
-<li><a href="#error-type-julia-not-found">Julia not found</a></li>
-<li><a href="#error-type-r_home-not-found">R not found</a></li>
-<li><a href="#other-installation-issues">Other installation issues</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-julia-not-found">Julia not found</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-r_home-not-found">R not found</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#other-installations-issues">Other installation issues</a></li>
 </ul>
 </li>
-<li><a href="#using-rjuliabugs-in-parallel">Using <code>rjuliabugs</code> in parallel</a></li>
+<li><a href="https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html">Using <code>rjuliabugs</code> in parallel</a></li>
 </ul>
 </div>
 <div class="section level2">
