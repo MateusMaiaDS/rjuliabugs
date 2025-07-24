@@ -44,8 +44,8 @@ remotes::install_github("MateusMaiaDS/rjuliabugs")
 ⚠️ **Loading the package**:  
 When starting a R session for the first time, after loading the package
 `rjuliabugs` and before running any function, we recommend to run
-`?rjuliabugs::setup_juliaBUGS` to build all Julia setup in R and install
-any needed dependencies. We recommend this initially as it an be
+`rjuliabugs::setup_juliaBUGS()` to build all Julia setup in R and
+install any needed dependencies. We recommend this initially as it an be
 time-consuming. See `?rjuliabugs::setup_juliaBUGS` for more details.
 
 For further guidance, there articles in this page which summarize most
