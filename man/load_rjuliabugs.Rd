@@ -2,30 +2,29 @@
 % Please edit documentation in R/save_load_rjuliabugs.R
 \name{load_rjuliabugs}
 \alias{load_rjuliabugs}
-\title{Load an `rjuliabugs` Object and Restore the Julia State}
+\title{Load an \code{rjuliabugs} Object and Restore the Julia State}
 \usage{
 load_rjuliabugs(file)
 }
 \arguments{
-\item{file}{A character string giving the path to the `.rds` file.}
+\item{file}{A character string giving the path to the \code{.rds} file.}
 }
 \value{
-An object of class `rjuliabugs`, with the Julia sampler object loaded into the current session.
-  If the name was changed to avoid conflict, the returned object reflects the updated name.
+An object of class \code{rjuliabugs}, with the Julia sampler object loaded into the current session.
+If the name was changed to avoid conflict, the returned object reflects the updated name.
 }
 \description{
-Loads an object of class `rjuliabugs` from an `.rds` file and restores the
-corresponding Julia sampler object using Julia’s `Serialization.deserialize`.
-The path linking the `Chains` object from `Julia` is defined in the when the
-function `save_rjuliabugs()` is called.
+Loads an object of class \code{rjuliabugs} from an \code{.rds} file and restores the
+corresponding Julia sampler object using Julia’s \code{Serialization.deserialize}.
+The path linking the \code{Chains} object from \code{Julia} is defined in the when the
+function \code{save_rjuliabugs()} is called.
 }
 \details{
-If the original sampler name (`name`) already exists in the active Julia session,
+If the original sampler name (\code{name}) already exists in the active Julia session,
 a new unique name is generated to avoid overwriting it. A warning will be issued
 to indicate that the name has changed.
 
-
-The `.rds` file must contain a valid `rjuliabugs` object with both the `name` and `chains_file` fields defined.
+The \code{.rds} file must contain a valid \code{rjuliabugs} object with both the \code{name} and \code{chains_file} fields defined.
 The function checks if the sampler name is already defined in Julia. If so, a unique name is generated
 using \code{\link{check_sampler_is_defined}}, and the Julia object is loaded under that name.
 }

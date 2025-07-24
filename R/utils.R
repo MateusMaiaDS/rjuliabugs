@@ -379,6 +379,7 @@ bugs2juliaBUGS <- function(model_code,
 #'
 #' @md
 #' @export
+#' @md
 setup_juliaBUGS <- function(extra_packages = NULL,
                             verify_package = TRUE,
                             install_from_dev = FALSE,
@@ -440,6 +441,7 @@ setup_juliaBUGS <- function(extra_packages = NULL,
 #' convert_numeric_types(input_list)
 #'
 #' @export
+#' @md
 convert_numeric_types <- function(data) {
   result <- lapply(data, function(vec) {
 
@@ -488,6 +490,7 @@ break_string_to_numeric <- function(input_string) {
 #' }
 #'
 #' @export
+#' @md
 delete_julia_obj <- function(obj_name) {
   JuliaCall::julia_eval(paste0("Base.delete_binding(Main, :", obj_name, ")"))
   return(invisible(NULL))
@@ -503,6 +506,7 @@ delete_julia_obj <- function(obj_name) {
 #' @return A unique name not currently defined in Julia.
 #'
 #' @keywords internal
+#' @md
 check_sampler_is_defined <- function(name) {
   if (!is.character(name) || length(name) != 1) {
     stop("`name` must be a single character string.")
@@ -540,6 +544,7 @@ check_sampler_is_defined <- function(name) {
 #' @rdname as_rvar
 #' @export
 #' @importFrom posterior rvar
+#' @md
 as_rvar.rjuliabugs <- function(x, ...) {
   n_chain <- x$mcmc$n_chain
   x$params <- posterior::rvar(x = x$params, nchains = n_chain)
@@ -551,6 +556,7 @@ as_rvar.rjuliabugs <- function(x, ...) {
 #' @rdname as_mcmc
 #' @export
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
+#' @md
 as_mcmc.rjuliabugs <- function(x, ...) {
   n_chain <- x$mcmc$n_chain
   x$params <- if (n_chain == 1) {
@@ -570,6 +576,7 @@ as_mcmc.rjuliabugs <- function(x, ...) {
 #' @rdname as_draws
 #' @export
 #' @importFrom posterior as_draws
+#' @md
 as_draws.rjuliabugs <- function(x, ...) {
   x$params <- posterior::as_draws(x$params)
   x$mcmc$posterior_type <- "draws"
@@ -579,6 +586,7 @@ as_draws.rjuliabugs <- function(x, ...) {
 
 #' @rdname as_rvar
 #' @export
+#' @md
 as_rvar.array <- function(x, n_mcmc = NULL, ...) {
   if (is.null(n_mcmc)) {
     stop("You must provide `n_mcmc` when using `as_rvar()` on an array.")
@@ -588,6 +596,7 @@ as_rvar.array <- function(x, n_mcmc = NULL, ...) {
 
 #' @rdname as_mcmc
 #' @export
+#' @md
 as_mcmc.array <- function(x, ...) {
   dims <- dim(x)
   if (length(dims) != 3) stop("Input array must be 3D: iterations x chains x parameters")
@@ -607,6 +616,7 @@ as_mcmc.array <- function(x, ...) {
 
 #' @rdname as_draws
 #' @export
+#' @md
 as_draws.array <- function(x, ...) {
   posterior::as_draws(x)
 }

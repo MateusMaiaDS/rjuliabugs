@@ -154,7 +154,7 @@ juliaBUGS <- function(data,
 
 
   if(n_threads==1 && use_parallel){
-    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/index.html for a complete documentation.\n")
+    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html for a complete documentation.\n")
     use_parallel <- FALSE
   }
 
@@ -180,7 +180,6 @@ juliaBUGS <- function(data,
   if(is.null(initializations)){
     JuliaCall::julia_eval("model = compile(model,data)")
   } else {
-
     # Converting ininitializations properly
     initializations <- convert_numeric_types(data = initializations)
     class(initializations) <- "JuliaNamedTuple"
@@ -190,7 +189,13 @@ juliaBUGS <- function(data,
 
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
   JuliaCall::julia_eval("D = LogDensityProblems.dimension(model)")
-  # JuliaCall::julia_eval("initial = rand(D)")
+
+  if(is.null(initializations)){
+    JuliaCall::julia_eval("initial_theta = rand(D)")
+  } else {
+    JuliaCall::julia_eval("initial_theta = JuliaBUGS.getparams(model)")
+  }
+
 
 
   # Conver MCMC parameters to int for julia.
@@ -212,6 +217,7 @@ juliaBUGS <- function(data,
                                                              n_chain;
                                                              chain_type = Chains,
                                                              n_adapts = n_warmup,
+                                                             init_params = initial_theta,
                                                              discard_initial = n_discard,
                                                              thinning = n_thin)"))
   cat(" DONE!\n")

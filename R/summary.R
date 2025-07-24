@@ -25,6 +25,7 @@
 #' @importFrom JuliaCall julia_eval
 #' @method summary rjuliabugs
 #' @export
+#' @md
 summary.rjuliabugs <- function(object, ...) {
   args <- list(...)
 

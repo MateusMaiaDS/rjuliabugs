@@ -13,17 +13,17 @@ as_draws(x, ...)
 \method{as_draws}{array}(x, ...)
 }
 \arguments{
-\item{x}{An object to convert (e.g., a `rjuliabugs` object or a 3D array).}
+\item{x}{An object to convert (e.g., a \code{rjuliabugs} object or a 3D array).}
 
 \item{...}{Further arguments passed to specific methods.}
 }
 \value{
-A `draws` object (e.g., `draws_array`) or a modified `rjuliabugs` object.
+A \code{draws} object (e.g., \code{draws_array}) or a modified \code{rjuliabugs} object.
 }
 \description{
-Generic function to convert an object to a [`posterior::draws`] representation
-(e.g., `draws_array`, `draws_matrix`, or other formats).
+Generic function to convert an object to a \code{\link[posterior:draws]{posterior::draws}} representation
+(e.g., \code{draws_array}, \code{draws_matrix}, or other formats).
 }
 \seealso{
-[posterior::as_draws()]
+\code{\link[posterior:draws]{posterior::as_draws()}}
 }

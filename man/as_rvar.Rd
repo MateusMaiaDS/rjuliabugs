@@ -13,19 +13,19 @@ as_rvar(x, ...)
 \method{as_rvar}{array}(x, n_mcmc = NULL, ...)
 }
 \arguments{
-\item{x}{An object to convert (e.g., a `rjuliabugs` object or a 3D numeric array).}
+\item{x}{An object to convert (e.g., a \code{rjuliabugs} object or a 3D numeric array).}
 
 \item{...}{Further arguments passed to specific methods.}
 
-\item{n_mcmc}{(For arrays only) Number of MCMC chains. Required if `x` is an array.}
+\item{n_mcmc}{(For arrays only) Number of MCMC chains. Required if \code{x} is an array.}
 }
 \value{
-An object of class `rvar`, or an updated `rjuliabugs` object with `params` converted to `rvar`.
+An object of class \code{rvar}, or an updated \code{rjuliabugs} object with \code{params} converted to \code{rvar}.
 }
 \description{
-Generic function to convert an object to a [`posterior::rvar`] representation.
+Generic function to convert an object to a \code{\link[posterior:rvar]{posterior::rvar}} representation.
 This is typically used to convert MCMC output into a more flexible and vectorized format.
 }
 \seealso{
-[posterior::rvar()]
+\code{\link[posterior:rvar]{posterior::rvar()}}
 }

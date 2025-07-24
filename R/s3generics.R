@@ -12,6 +12,8 @@
 #' @seealso [posterior::rvar()]
 #'
 #' @export
+#' @md
+
 as_rvar <- function(x, ...) {
   UseMethod("as_rvar")
 }
@@ -29,6 +31,8 @@ as_rvar <- function(x, ...) {
 #' @seealso [coda::as.mcmc()], [coda::mcmc()]
 #'
 #' @export
+#' @md
+
 as_mcmc <- function(x, ...) {
   UseMethod("as_mcmc")
 }
@@ -46,6 +50,7 @@ as_mcmc <- function(x, ...) {
 #' @seealso [posterior::as_draws()]
 #'
 #' @export
+#' @md
 as_draws <- function(x, ...) {
   UseMethod("as_draws")
 }

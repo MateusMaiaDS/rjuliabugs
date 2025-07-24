@@ -13,7 +13,7 @@ check_sampler_is_defined(name)
 A unique name not currently defined in Julia.
 }
 \description{
-Checks whether a Julia variable name is already defined in the `Main` module.
+Checks whether a Julia variable name is already defined in the \code{Main} module.
 If the name exists, appends random characters until a unique name is found.
 }
 \keyword{internal}

@@ -13,16 +13,16 @@ as_mcmc(x, ...)
 \method{as_mcmc}{array}(x, ...)
 }
 \arguments{
-\item{x}{An object to convert (e.g., a `rjuliabugs` object or a 3D array).}
+\item{x}{An object to convert (e.g., a \code{rjuliabugs} object or a 3D array).}
 
 \item{...}{Further arguments passed to specific methods.}
 }
 \value{
-An object of class `mcmc`, `mcmc.list`, or a `rjuliabugs` object with updated `params`.
+An object of class \code{mcmc}, \code{mcmc.list}, or a \code{rjuliabugs} object with updated \code{params}.
 }
 \description{
-Generic function to convert MCMC output to [`coda::mcmc`] or [`coda::mcmc.list`] format.
+Generic function to convert MCMC output to \code{\link[coda:mcmc]{coda::mcmc}} or \code{\link[coda:mcmc.list]{coda::mcmc.list}} format.
 }
 \seealso{
-[coda::as.mcmc()], [coda::mcmc()]
+\code{\link[coda:mcmc]{coda::as.mcmc()}}, \code{\link[coda:mcmc]{coda::mcmc()}}
 }

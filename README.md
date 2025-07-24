@@ -25,11 +25,11 @@ With `rjuliabugs`, R users can run BUGS models/code through JuliaBUGS
 and take advantage of the inference algorithms available in Turing.jl,
 without leaving the R environment. This not only provides a seamless
 path to adopt faster (including
-[parallelization](#using-rjuliabugs-in-parallel)) and more flexible
-sampling methods but also allows integration with R’s extensive
-post-processing ecosystem (e.g., `bayesplot`, `posterior`, `coda`). It
-lowers the barrier for existing BUGS users to adopt modern Bayesian
-tools without abandoning their existing model codebase.
+[parallelization](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html))
+and more flexible sampling methods but also allows integration with R’s
+extensive post-processing ecosystem (e.g., `bayesplot`, `posterior`,
+`coda`). It lowers the barrier for existing BUGS users to adopt modern
+Bayesian tools without abandoning their existing model codebase.
 
 ## Installation
 
@@ -48,17 +48,23 @@ When starting a R session for the first time, after loading the package
 any needed dependencies. We recommend this initially as it an be
 time-consuming. See `?rjuliabugs::setup_juliaBUGS` for more details.
 
-For further guidance, the rest of this README summarize most of the FAQ
-and additional instructions for installing Julia and setting
+For further guidance, there articles in this page which summarize most
+of the FAQ and additional instructions for installing Julia and setting
 `rjuliabugs`, troubleshooting, and running `rjuliabugs` in parallel. We
-recommend reading the articles:
+recommend the reading of them before working with `rjuliabugs`:
 
-- [Installing Julia](#installing-julia)
-- [Troubleshooting JuliaCall setup:](#troubleshooting-juliacall-setup)
-  - [Julia not found](#error-type-julia-not-found)
-  - [R not found](#error-type-r_home-not-found)
-  - [Other installation issues](#other-installation-issues)
-- [Using `rjuliabugs` in parallel](#using-rjuliabugs-in-parallel)
+- [Installing
+  Julia](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#installing-julia)
+- [Troubleshooting JuliaCall
+  setup](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#troubleshooting-juliacall-setup)
+  - [Julia not
+    found](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-julia-not-found)
+  - [R not
+    found](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-r_home-not-found)
+  - [Other installation
+    issues](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#other-installations-issues)
+- [Using `rjuliabugs` in
+  parallel](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html)
 
 ## Contributing
 

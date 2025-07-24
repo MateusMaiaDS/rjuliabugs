@@ -28,14 +28,14 @@ For more technical details about `JuliaBUGS`, please refer to [this link](https:
 
 This vignette assumes that `rjuliabugs` has already been correctly installed and set up. The goal here is to provide a working example under the assumption that your installation is functional.
 
-For detailed installation instructions and troubleshooting information, please refer to the [README](https://github.com/MateusMaiaDS/rjuliabugs/). The installation guide includes the following sections:
+For detailed installation instructions and troubleshooting information, please refer to the [README](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html). The installation guide includes the following sections:
 
-- [Installing Julia](#installing-julia)
-- [Troubleshooting JuliaCall setup](#troubleshooting-juliacall-setup)
-  - [Julia not found](#error-type-julia-not-found)
-  - [R not found](#error-type-r_home-not-found)
-  - [Other installation issues](#other-installation-issues)
-- [Using `rjuliabugs` in parallel](#using-rjuliabugs-in-parallel)
+- [Installing Julia](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#installing-julia)
+- [Troubleshooting JuliaCall setup](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#troubleshooting-juliacall-setup)
+  - [Julia not found](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-julia-not-found)
+  - [R not found](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#error-type-r_home-not-found)
+  - [Other installation issues](https://mateusmaiads.github.io/rjuliabugs/articles/setup_troubleshooting.html#other-installations-issues)
+- [Using `rjuliabugs` in parallel](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html)
 
 
 ## Data Preparation

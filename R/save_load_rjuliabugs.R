@@ -22,6 +22,7 @@
 #' }
 #'
 #' @export
+#' @md
 save_rjuliabugs <- function(rjuliabugs_model,
                             file,
                             chains_file = NULL){
@@ -92,6 +93,7 @@ save_rjuliabugs <- function(rjuliabugs_model,
 #' @seealso \code{\link{check_sampler_is_defined}}
 #'
 #' @export
+#' @md
 load_rjuliabugs <- function(file){
 
   rjuliabugs_obj <- readRDS(file = file)

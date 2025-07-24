@@ -1,8 +1,8 @@
 ---
-title: "Using rjuliabugs: Setup, Troubleshooting"
+title: "Using rjuliabugs: Setup and Troubleshooting"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using rjuliabugs: Setup, Troubleshooting}
+  %\VignetteIndexEntry{Using rjuliabugs: Setup and Troubleshooting}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 
 
 
-This section show how to install Julia and setup your R enviroment to use `rjuliabugs` package. See the [article](https://turinglang.org/JuliaBUGS.jl/stable/example/).
+This section show how to install Julia and setup your R enviroment to use `rjuliabugs` package. 
 
-See also, [JuliaBUGS Documentation](https://turinglang.org/JuliaBUGS.jl/stable/),[JAGS Source Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/).
+See also, [JuliaBUGS Documentation](https://turinglang.org/JuliaBUGS.jl/stable/), and [JAGS Source Code](https://sourceforge.net/p/mcmc-jags/code-0/ci/default/tree/), for a more complete documentation on JuliaBUGS and JAGS sampler, respectively
 
  
 ## Installing `Julia`
