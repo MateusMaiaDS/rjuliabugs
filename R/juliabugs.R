@@ -210,6 +210,8 @@ juliaBUGS <- function(data,
 
   cat("Initialising AbstractMCMC.sample()...")
 
+  JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
+
   JuliaCall::julia_eval(paste0(name," = AbstractMCMC.sample(ad_model,
                                                              AdvancedHMC.NUTS(0.8),
                                                              ",parallel_scheme,",
@@ -219,7 +221,7 @@ juliaBUGS <- function(data,
                                                              n_adapts = n_warmup,
                                                              init_params = initial_theta,
                                                              discard_initial = n_discard,
-                                                             thinning = n_thin)"))
+                                                             thinning = n_thin, progress = true)"))
   cat(" DONE!\n")
 
 
