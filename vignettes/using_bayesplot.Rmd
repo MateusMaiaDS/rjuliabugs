@@ -1,0 +1,37 @@
+---
+title: "Plotting `rjuliabugs` draws using bayesplot package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plotting `rjuliabugs` draws using bayesplot package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+This article focuese on plotting the parameter estimates from the MCMC draws obtained with the `rjuliabugs::juliaBUGS()` sampler. We do not cover the MCMC diagnostics, neither other visualizations tools or packages, although they could be easily adapted with as we work with the `params` array from from the `rjuliabugs object`. The plots showed here are the same as the ones described in the original vignette of Jonah Habry and Martin Modrák and we recommend the read of their article https://mc-stan.org/bayesplot/articles/visual-mcmc-diagnostics.html, from each most of the code and plot here as the same as presented by them. 
+
+For a initial setup we call the necessary models to visualize the examples
+
+```{r eval =FALSE, warning=FALSE,message=FALSE}
+library(bayesplot)
+library(ggplot2)
+library(rjuliabugs)
+```
+
+## Example
+
+As previously mentioned the goal of this vignette is exclusively to show how to use and present some of the visualizations tools from samples obtained from the sampler from `rjuliabugs`. Therefore we will assume that the `rjuliabugs` model object is already fitted and named as `posterior`. For a full walkthrough until this moment, please refer to the article named [Get Started](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html) until the section where we generate the [posterior draws from the sampler](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html#inference-running-the-sampler)
+
+### Inspect the `params` object.
+
+The `rjuliabugs` is a `S3 object` which contains all the information and data used in the sampler. This includes, from the the the name of identify the model object in the `Julia` environment, the `mcmc` configuration parameters to the posterior draws named as `params` which by default is given by an 3D numeric array with respective dimensions being (iterations \times chains \times parameters). The choice of array as the default is due to its compatibility with most of other packages in `R` enviroment to work with posterior samplers. However, the converstion to other types to be comptabilite to other packages is possible through the functions `as_rvar`, `as_mcmc` and `as_draws` which can be called over the model object itself (`as_rvar(rjuliabugs)`) or the `rjuliabugs$params` object (`as_rvar(juliabugs$params`). See the [reference](https://mateusmaiads.github.io/rjuliabugs/reference/index.html#converting-posterior-sample-formats) section for a complete documentation of the examples. 
+
+Verifying the params object 

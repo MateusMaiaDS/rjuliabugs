@@ -164,9 +164,7 @@ juliaBUGS <- function(data,
   }
 
   # Setting up the Julia Environment
-  if(force_setup_juliaBUGS){
-    setup_juliaBUGS(...)
-  }
+  setup_juliaBUGS(...)
 
   # Setting default configuration for control parameters
   if(is.null(control)){
