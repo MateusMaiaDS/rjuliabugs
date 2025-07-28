@@ -19,6 +19,7 @@ juliaBUGS(
   posterior_type = "array",
   force_setup_juliaBUGS = FALSE,
   control = NULL,
+  progress = TRUE,
   ...
 )
 }
@@ -54,8 +55,10 @@ The default is \code{NULL}, which means no default initial values are used.}
 \describe{
 \item{\code{data_convert_int}}{Logical. If \code{TRUE}, coerces numeric values to integers when possible. Default is \code{TRUE}.}
 \item{\code{convert_var_name}}{Logical. If \code{TRUE}, automatically renames variables in the BUGS model. Default is \code{FALSE}.}
-\item{\code{julia_model}}{Logical. If \code{TRUE}, assumes the model is already in Julia format. Default is \code{FALSE}.}
+\item{\code{julia_model}}{Logical. If \code{TRUE}, assumes the model is already in Julia format used by the models under the \code{Turing.jl} appraoch, not a BUGS model. Default is \code{FALSE}.}
 }}
+
+\item{progress}{Logical. If \code{TRUE}, a progress bar will be displayed; if \code{FALSE}, it will not. The default is \code{TRUE}.}
 
 \item{...}{Additional arguments passed to \code{setup_juliaBUGS()}.}
 }

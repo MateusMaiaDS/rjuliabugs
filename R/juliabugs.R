@@ -24,8 +24,9 @@
 #'   \describe{
 #'     \item{`data_convert_int`}{Logical. If `TRUE`, coerces numeric values to integers when possible. Default is `TRUE`.}
 #'     \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the BUGS model. Default is `FALSE`.}
-#'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format. Default is `FALSE`.}
+#'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format used by the models under the `Turing.jl` appraoch, not a BUGS model. Default is `FALSE`.}
 #'   }
+#' @param progress Logical. If `TRUE`, a progress bar will be displayed; if `FALSE`, it will not. The default is `TRUE`.
 #' @param ... Additional arguments passed to `setup_juliaBUGS()`.
 #'
 #' @return An object of class `"rjuliabugs"` containing:
@@ -88,8 +89,12 @@ juliaBUGS <- function(data,
                       posterior_type = "array",
                       force_setup_juliaBUGS = FALSE,
                       control = NULL,
+                      progress = TRUE,
                       ...){
 
+  # False dictionary
+  bool_dictionary <- list("FALSE" = "false","TRUE" = "true",
+                          "F" = "false", "T" = "true")
   # Checking if the name is defined, and generating a new one if is not the case
   name <- check_sampler_is_defined(name = name)
 
@@ -159,7 +164,9 @@ juliaBUGS <- function(data,
   }
 
   # Setting up the Julia Environment
-  setup_juliaBUGS(...)
+  if(force_setup_juliaBUGS){
+    setup_juliaBUGS(...)
+  }
 
   # Setting default configuration for control parameters
   if(is.null(control)){
@@ -210,18 +217,21 @@ juliaBUGS <- function(data,
 
   cat("Initialising AbstractMCMC.sample()...")
 
-  JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
+  ## Once the PR for parallel progress bar is working
+  # JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
+  # JuliaCall::julia_eval("sample(M(), S(), MCMCThreads(), 500, 4; progress=:perchain)",need_return = "Julia")
 
-  JuliaCall::julia_eval(paste0(name," = AbstractMCMC.sample(ad_model,
-                                                             AdvancedHMC.NUTS(0.8),
-                                                             ",parallel_scheme,",
-                                                             n_iter,
-                                                             n_chain;
-                                                             chain_type = Chains,
-                                                             n_adapts = n_warmup,
-                                                             init_params = initial_theta,
-                                                             discard_initial = n_discard,
-                                                             thinning = n_thin, progress = true)"))
+  JuliaCall::julia_eval(paste0(name," = sample(ad_model,
+                                               AdvancedHMC.NUTS(0.8),
+                                               ",parallel_scheme,",
+                                               n_iter,
+                                               n_chain;
+                                               chain_type = Chains,
+                                               n_adapts = n_warmup,
+                                               init_params = initial_theta,
+                                               discard_initial = n_discard,
+                                               thinning = n_thin,
+                                               progress=",bool_dictionary[[as.character(progress)]],")"))
   cat(" DONE!\n")
 
 
