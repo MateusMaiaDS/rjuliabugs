@@ -69,6 +69,7 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 <span>  posterior_type <span class="op">=</span> <span class="st">"array"</span>,</span>
 <span>  force_setup_juliaBUGS <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  control <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -138,10 +139,14 @@ The default is <code>NULL</code>, which means no default initial values are used
 <dd><p>Logical. If <code>TRUE</code>, automatically renames variables in the BUGS model. Default is <code>FALSE</code>.</p></dd>
 
 <dt><code>julia_model</code></dt>
-<dd><p>Logical. If <code>TRUE</code>, assumes the model is already in Julia format. Default is <code>FALSE</code>.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, assumes the model is already in Julia format used by the models under the <code>Turing.jl</code> appraoch, not a BUGS model. Default is <code>FALSE</code>.</p></dd>
 
 
 </dl></dd>
+
+
+<dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, a progress bar will be displayed; if <code>FALSE</code>, it will not. The default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
