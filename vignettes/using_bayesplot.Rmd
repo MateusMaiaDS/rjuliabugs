@@ -9,7 +9,9 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  collapse = TRUE, 
+  fig.align='center', fig.width=4, fig.height=3, dpi=150,
+  warning = FALSE,message = FALSE,
   comment = "#>"
 )
 ```
@@ -28,10 +30,164 @@ library(rjuliabugs)
 
 ## Example
 
-As previously mentioned the goal of this vignette is exclusively to show how to use and present some of the visualizations tools from samples obtained from the sampler from `rjuliabugs`. Therefore we will assume that the `rjuliabugs` model object is already fitted and named as `posterior`. For a full walkthrough until this moment, please refer to the article named [Get Started](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html) until the section where we generate the [posterior draws from the sampler](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html#inference-running-the-sampler)
+As previously mentioned the goal of this vignette is exclusively to show how to use and present some of the visualizations tools from samples obtained from the sampler from `rjuliabugs`. Therefore we will assume that the `rjuliabugs` model object is already fitted and named as `rjuliabugs_fit``. For a full walkthrough until this moment, please refer to the article named [Get Started](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html) until the section where we generate the [posterior draws from the sampler](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html#inference-running-the-sampler)
 
 ### Inspect the `params` object.
 
 The `rjuliabugs` is a `S3 object` which contains all the information and data used in the sampler. This includes, from the the the name of identify the model object in the `Julia` environment, the `mcmc` configuration parameters to the posterior draws named as `params` which by default is given by an 3D numeric array with respective dimensions being (iterations \times chains \times parameters). The choice of array as the default is due to its compatibility with most of other packages in `R` enviroment to work with posterior samplers. However, the converstion to other types to be comptabilite to other packages is possible through the functions `as_rvar`, `as_mcmc` and `as_draws` which can be called over the model object itself (`as_rvar(rjuliabugs)`) or the `rjuliabugs$params` object (`as_rvar(juliabugs$params`). See the [reference](https://mateusmaiads.github.io/rjuliabugs/reference/index.html#converting-posterior-sample-formats) section for a complete documentation of the examples. 
 
-Verifying the params object 
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(rjuliabugs)
+set.seed(42)
+data <- list(
+    r = c(10, 23, 23, 26, 17, 5, 53, 55, 32, 46, 10, 8, 10, 8, 23, 0, 3, 22, 15, 32, 3),
+    n = c(39, 62, 81, 51, 39, 6, 74, 72, 51, 79, 13, 16, 30, 28, 45, 4, 12, 41, 30, 51, 7),
+    x1 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    x2 = c(0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    N = 21
+)
+model_def <- "
+model {
+    for (i in 1:N) {
+        r[i] ~ dbin(p[i], n[i])
+        b[i] ~ dnorm(0.0, tau)
+        logit(p[i]) <- alpha0 + alpha1 * x1[i] + alpha2 * x2[i] +
+                       alpha12 * x1[i] * x2[i] + b[i]
+    }
+    alpha0 ~ dnorm(0.0, 1.0E-6)
+    alpha1 ~ dnorm(0.0, 1.0E-6)
+    alpha2 ~ dnorm(0.0, 1.0E-6)
+    alpha12 ~ dnorm(0.0, 1.0E-6)
+    tau ~ dgamma(0.001, 0.001)
+    sigma <- 1 / sqrt(tau)
+}
+"
+
+rjuliabugs_fit <- juliaBUGS(
+  data = data,
+  name = "rjuliabugs_fit",
+  model_def = model_def,
+  params_to_save = c("alpha0", "alpha1", "alpha2", "alpha12", "sigma"),
+  n_iter = 2000,
+  n_warmup = 1000,
+  n_discard = 1000,
+  n_chain = 4,
+  use_parallel = TRUE,
+  n_thin = 1
+)
+
+```
+
+Verifying the dimensions of the `params` object we would have
+
+```{r }
+dim(rjuliabugs_fit$params)
+```
+
+we have a total of `r dim(rjuliabugs_fit$params)[1]` iterations, `r dim(rjuliabugs_fit$params)[2]` chains and `r dim(rjuliabugs_fit$params)[3]` parameters that were stored.
+
+## Posterior uncertainty intervals
+
+Central credible intervals from the posterior distribution can be visualized using the `mcmc_intervals` function.
+
+### `mcmc_intervals`
+```{r mcmc_intervals, fig.align='center'}
+color_scheme_set("red")
+mcmc_intervals(rjuliabugs_fit$params, pars =  rjuliabugs_fit$mcmc$params_to_save)
+
+```
+
+By default, the plot displays 50% credible intervals as bold lines and 90% intervals as thinner outer segments. These settings can be adjusted using the `prob` and `prob_outer` parameters, respectively. The plotted points represent the posterior medians; if preferred, the `point_est` option allows switching to posterior means or suppressing point estimates entirely.
+
+To represent uncertainty with shaded regions beneath the posterior density estimates, the `mcmc_areas` function can be employed.
+
+### `mcmc_intervals`
+
+```{r mcmc_areas}
+mcmc_areas(
+  rjuliabugs_fit$params, 
+  pars = rjuliabugs_fit$mcmc$params_to_save,
+  prob = 0.8, # 80% intervals
+  prob_outer = 0.99, # 99%
+  point_est = "mean"
+)
+```
+
+### `mcmc_areas_ridges`
+
+We can also generate additional plots with by calling `mcmc_areas_ridges`
+
+```{r mcmc_areas_ridges}
+mcmc_areas_ridges(
+  rjuliabugs_fit$params, 
+  pars = rjuliabugs_fit$mcmc$params_to_save,
+  prob = 0.8, # 80% intervals
+  prob_outer = 0.99, # 99%
+  point_est = "mean"
+)
+```
+## Univariate marginal posterior distributions
+
+The `bayesplot` package includes functions for visualizing marginal posterior distributions through histograms or kernel density estimates, either by merging all Markov chains or displaying them individually.
+
+### `mcmc_hist`
+
+The `mcmc_hist` function plots marginal posterior distributions (combining all chains):
+
+```{mcmc_hist}
+color_scheme_set("blue")
+mcmc_hist(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+```
+
+## `mcmc_hist_by_chain`
+
+To visualize individual histograms for each of the four Markov chains, the `mcmc_hist_by_chain` function can be used; it generates separate facets for each chain within the plot.
+
+
+```{mcmc_hist_chain}
+color_scheme_set("darkgreen")
+mcmc_hist_by_chain(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+```
+
+If we are interested in also display a transformation for display any of the histograms, this is possible by setting the `transformations` argument.
+
+```{mcmc_hist_chain_transform}
+color_scheme_set("darkgreen")
+mcmc_hist_by_chain(rjuliabugs_fit$params, pars = c("alpha0", "sigma"),
+                   transformations = list("sigma" = "log"))
+```
+
+
+Many of the plotting functions for MCMC draws also include a `transformations` argument to apply transformations to the parameters before plotting.
+
+
+### `mcmc_dens`
+
+The `mcmc_dens` function works similarly to `mcmc_hist`, but it displays kernel density estimates in place of histograms. This include a version of `mcmc_dens_by_chain`.
+
+
+```{r mcmc_dens}
+color_scheme_set("brightblue")
+mcmc_dens(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+```
+
+### `mcmc_dens_overlay`
+
+Similar to `mcmc_hist_by_chain`, the `mcmc_dens_overlay` function distinguishes between Markov chains; however, rather than showing them in separate panels, it overlays their density estimates in a single plot.
+
+```{r mcmc_dens_overlay}
+mcmc_dens_overlay(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+```
+
+
+### `mcmc_violin`
+
+The `mcmc_violin` function visualizes the density estimates for each chain using violin plots and adds horizontal lines at quantiles specified by the user.
+
+```{r mcmc_violion}
+color_scheme_set("teal")
+mcmc_violin(rjuliabugs_fit$params, pars = c("alpha0", "alpha12"))
+```
+
+
+## Bivariate plots

@@ -11,8 +11,10 @@ vignette: >
 library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  warning=FALSE,message=FALSE,
+  warning=FALSE, message=FALSE,
+  fig.align='center', fig.width=4, fig.height=3, dpi=150,
   comment = "#>"
+  
 )
 Sys.setenv(R_HOME = R.home())  # For RCall to pick it correctly
 
