@@ -5,7 +5,8 @@ articles:
   rjuliabugs_parallel: rjuliabugs_parallel.html
   rjuliabugs: rjuliabugs.html
   setup_troubleshooting: setup_troubleshooting.html
-last_built: 2025-07-28T16:25Z
+  using_bayesplot: using_bayesplot.html
+last_built: 2025-07-30T20:05Z
 urls:
   reference: https://mateusmaiads.github.io/rjuliabugs/reference
   article: https://mateusmaiads.github.io/rjuliabugs/articles
