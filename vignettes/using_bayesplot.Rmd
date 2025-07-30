@@ -22,7 +22,7 @@ This article focuese on plotting the parameter estimates from the MCMC draws obt
 
 For a initial setup we call the necessary models to visualize the examples
 
-```{r eval =FALSE, warning=FALSE,message=FALSE}
+```{r warning=FALSE,message=FALSE}
 library(bayesplot)
 library(ggplot2)
 library(rjuliabugs)
