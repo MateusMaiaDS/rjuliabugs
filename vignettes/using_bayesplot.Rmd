@@ -225,7 +225,7 @@ if (requireNamespace("hexbin", quietly = TRUE)) {
 In addition to `mcmc_scatter` and `mcmc_hex`, the bayesplot package also includes the `mcmc_pairs` function, which allows users to create pairs plots for exploring relationships among multiple parameters.
 
 ```{r mcmc_pairs}
-color_scheme_set("darkred")
+color_scheme_set("purple")
 # requires hexbin package
 mcmc_pairs(rjuliabugs_fit$params, 
          pars = c("alpha0", "alpha1","alpha12"),
