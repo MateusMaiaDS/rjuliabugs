@@ -191,3 +191,106 @@ mcmc_violin(rjuliabugs_fit$params, pars = c("alpha0", "alpha12"))
 
 
 ## Bivariate plots
+
+A range of functions can be used to visualize bivariate marginal posterior distributions. Several of these functions allow optional parameters to incorporate MCMC diagnostic details into the plots. The extended diagnostic features are explained in a separate vignette focused on visual MCMC diagnostics. The examples here replicate some examples but for complete reference check the original [documentation](https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html)
+
+### `mcmc_scatter`
+
+The `mcmc_scatter` function generates a basic scatter plot showing the relationship between two parameters.
+
+
+```{r mcmc_scatter}
+color_scheme_set("orange")
+mcmc_scatter(rjuliabugs_fit$params, 
+             pars = c("alpha0", "alpha12"),
+             size = 1.5,
+             alpha = 0.5)
+```
+
+
+### `mcmc_hex`
+
+The `mcmc_hex` function produces a comparable plot using hexagonal bins, which helps reduce overplotting when many points overlap.
+
+```{r mcmc_hex}
+color_scheme_set("gray")
+# requires hexbin package
+if (requireNamespace("hexbin", quietly = TRUE)) {
+  mcmc_hex(rjuliabugs_fit$params, pars = c("alpha0", "alpha12"))
+}
+```
+
+### `mcmc_pairs`
+
+In addition to `mcmc_scatter` and `mcmc_hex`, the bayesplot package also includes the `mcmc_pairs` function, which allows users to create pairs plots for exploring relationships among multiple parameters.
+
+```{r mcmc_pairs}
+color_scheme_set("darkred")
+# requires hexbin package
+mcmc_pairs(rjuliabugs_fit$params, 
+         pars = c("alpha0", "alpha1","alpha12"),
+         off_diag_args = list(size = 1.5))
+```
+
+
+Univariate marginal posterior distributions appear along the diagonal as histograms by default, but this can be switched to density plots using `diag_fun = "dens"`. The bivariate relationships are shown above and below the diagonal using scatter plots, though these can be replaced with hex-bin plots by setting `off_diag_fun = "hex"`. By default, `mcmc_pairs` splits the Markov chains—showing half above the diagonal and the rest below if the number of chains is even. Additional options for customizing how chains are divided across these plots are available through the `condition` argument, although these settings are primarily useful when including MCMC diagnostic information. Further details on that are provided in the official vignette from `bayesplot` documentation named  [Visual MCMC Diagnostics vignette](https://mc-stan.org/bayesplot/articles/visual-mcmc-diagnostics.html).
+
+## Trace plots
+
+Trace plots display Markov chains smaples, allowing users to inspect how parameter values evolve over iterations. This section presents the standard trace plots available in the `bayesplot` package.
+
+### `mcmc_trace`
+
+The `mcmc_trace` function generates basic trace plots to visualize the sampling paths of parameters across iterations.
+
+```{r mcmc_trace}
+color_scheme_set("blue")
+mcmc_trace(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+```
+
+If the differences between chains are difficult to distinguish, a mixed color scheme can be used to improve clarity. For example:
+
+
+```{r mcmc_multiple_trace_color}
+color_scheme_set("mix-blue-red")
+mcmc_trace(rjuliabugs_fit$params, pars = c("alpha0", "sigma"),
+           facet_args = list(ncol = 1, strip.position = "left"))
+```
+
+The example above also demonstrates the `facet_args` argument, which allows you to pass options to `ggplot2`'s `facet_wrap`. Setting `ncol = 1` stacks the trace plots in a single column, and `strip.position = "left"` moves the facet labels to the y-axis rather than displaying them above each plot.
+
+
+### `mcmc_trace_highlight`
+
+The `mcmc_trace_highlight` function displays points instead of lines and lowers the opacity of all chains except one, which is emphasized using the `highlight` argument.
+
+```{r mcmc_higlight_traceplot}
+color_scheme_set("viridis")
+mcmc_trace_highlight(rjuliabugs_fit$params, pars = c( "sigma"),
+           highlight = 1)
+```
+
+
+While trace plots focus on how the Markov chains evolve over iterations, `mcmc_rank_hist()` examines how well the chains mix by comparing the distribution of their ranks. Ideally, the histogram should be roughly uniform, indicating good mixing across chains. See Vehtari et al. (2021) for more background.
+
+```{r mcmc_rank} 
+mcmc_rank_ecdf(rjuliabugs_fit$params, pars = c("sigma"))
+```
+
+Additionally, `mcmc_rank_hist()` plots the empirical cumulative distribution functions (ECDFs) of the ranks along with simultaneous confidence bands. These bands have a coverage probability controlled by the `prob` argument, meaning they are designed to fully contain all rank ECDFs with probability `prob`. When `plot_diff = TRUE`, the plot also shows the difference between the observed rank ECDFs and the theoretical uniform distribution expected if all samples came from the same distribution. For more details, see Säilynoja et al. (2022). The function is similar to `mcmc_rank_ecdf`.
+
+## References
+
+Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, Paul-Christian Bürkner "Rank-Normalization, Folding, and Localization: An Improved  R-hat for Assessing Convergence of MCMC (with Discussion)," Bayesian Analysis, Bayesian Anal. 16(2), 667-718, (June 2021)
+
+Säilynoja, T., Bürkner, PC. & Vehtari, A. Graphical test for discrete uniformity and its applications in goodness-of-fit evaluation and multiple sample comparison. Stat Comput 32, 32 (2022). https://doi.org/10.1007/s11222-022-10090-6
+
+Gabry, J., and Goodrich, B. (2017). rstanarm: Bayesian Applied Regression Modeling via Stan. R package version 2.15.3. https://mc-stan.org/rstanarm/, https://CRAN.R-project.org/package=rstanarm
+
+Gabry, J., Simpson, D., Vehtari, A., Betancourt, M. and Gelman, A. (2019), Visualization in Bayesian workflow. J. R. Stat. Soc. A, 182: 389-402. :10.1111/rssa.12378. (journal version, arXiv preprint, code on GitHub)
+
+Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., and Rubin, D. B. (2013). Bayesian Data Analysis. Chapman & Hall/CRC Press, London, third edition.
+
+Stan Development Team. (2017). Stan Modeling Language Users Guide and Reference Manual. https://mc-stan.org/users/documentation/
+
+Stan Development Team. (2024). bayesplot: Plotting for MCMC draws. https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html
