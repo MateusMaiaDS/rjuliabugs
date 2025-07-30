@@ -17,6 +17,7 @@ RoxygenNote: 7.3.2
 Suggests: 
     bayesplot,
     knitr,
-    rmarkdown
+    rmarkdown,
+    gridExtra
 URL: https://mateusmaiads.github.io/rjuliabugs/
 VignetteBuilder: knitr
