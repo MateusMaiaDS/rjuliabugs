@@ -258,6 +258,156 @@ quantiles specified by the user.</p>
 <div class="section level2">
 <h2 id="bivariate-plots">Bivariate plots<a class="anchor" aria-label="anchor" href="#bivariate-plots"></a>
 </h2>
+<p>A range of functions can be used to visualize bivariate marginal
+posterior distributions. Several of these functions allow optional
+parameters to incorporate MCMC diagnostic details into the plots. The
+extended diagnostic features are explained in a separate vignette
+focused on visual MCMC diagnostics. The examples here replicate some
+examples but for complete reference check the original <a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">documentation</a></p>
+<div class="section level3">
+<h3 id="mcmc_scatter">
+<code>mcmc_scatter</code><a class="anchor" aria-label="anchor" href="#mcmc_scatter"></a>
+</h3>
+<p>The <code>mcmc_scatter</code> function generates a basic scatter plot
+showing the relationship between two parameters.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"orange"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_scatter</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
+<span>             pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span>,</span>
+<span>             size <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>             alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_scatter-1.png" width="600" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="mcmc_hex">
+<code>mcmc_hex</code><a class="anchor" aria-label="anchor" href="#mcmc_hex"></a>
+</h3>
+<p>The <code>mcmc_hex</code> function produces a comparable plot using
+hexagonal bins, which helps reduce overplotting when many points
+overlap.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"gray"</span><span class="op">)</span></span>
+<span><span class="co"># requires hexbin package</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"hexbin"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_hex</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="mcmc_pairs">
+<code>mcmc_pairs</code><a class="anchor" aria-label="anchor" href="#mcmc_pairs"></a>
+</h3>
+<p>In addition to <code>mcmc_scatter</code> and <code>mcmc_hex</code>,
+the bayesplot package also includes the <code>mcmc_pairs</code>
+function, which allows users to create pairs plots for exploring
+relationships among multiple parameters.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"purple"</span><span class="op">)</span></span>
+<span><span class="co"># requires hexbin package</span></span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_pairs</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
+<span>         pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha1"</span>,<span class="st">"alpha12"</span><span class="op">)</span>,</span>
+<span>         off_diag_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_pairs-1.png" width="600" style="display: block; margin: auto;"></p>
+<p>Univariate marginal posterior distributions appear along the diagonal
+as histograms by default, but this can be switched to density plots
+using <code>diag_fun = "dens"</code>. The bivariate relationships are
+shown above and below the diagonal using scatter plots, though these can
+be replaced with hex-bin plots by setting
+<code>off_diag_fun = "hex"</code>. By default, <code>mcmc_pairs</code>
+splits the Markov chains—showing half above the diagonal and the rest
+below if the number of chains is even. Additional options for
+customizing how chains are divided across these plots are available
+through the <code>condition</code> argument, although these settings are
+primarily useful when including MCMC diagnostic information. Further
+details on that are provided in the official vignette from
+<code>bayesplot</code> documentation named <a href="https://mc-stan.org/bayesplot/articles/visual-mcmc-diagnostics.html" class="external-link">Visual
+MCMC Diagnostics vignette</a>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="trace-plots">Trace plots<a class="anchor" aria-label="anchor" href="#trace-plots"></a>
+</h2>
+<p>Trace plots display Markov chains smaples, allowing users to inspect
+how parameter values evolve over iterations. This section presents the
+standard trace plots available in the <code>bayesplot</code>
+package.</p>
+<div class="section level3">
+<h3 id="mcmc_trace">
+<code>mcmc_trace</code><a class="anchor" aria-label="anchor" href="#mcmc_trace"></a>
+</h3>
+<p>The <code>mcmc_trace</code> function generates basic trace plots to
+visualize the sampling paths of parameters across iterations.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_trace-1.png" width="600" style="display: block; margin: auto;"></p>
+<p>If the differences between chains are difficult to distinguish, a
+mixed color scheme can be used to improve clarity. For example:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"mix-blue-red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
+<span>           facet_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span>, strip.position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_multiple_trace_color-1.png" width="600" style="display: block; margin: auto;"></p>
+<p>The example above also demonstrates the <code>facet_args</code>
+argument, which allows you to pass options to <code>ggplot2</code>’s
+<code>facet_wrap</code>. Setting <code>ncol = 1</code> stacks the trace
+plots in a single column, and <code>strip.position = "left"</code> moves
+the facet labels to the y-axis rather than displaying them above each
+plot.</p>
+</div>
+<div class="section level3">
+<h3 id="mcmc_trace_highlight">
+<code>mcmc_trace_highlight</code><a class="anchor" aria-label="anchor" href="#mcmc_trace_highlight"></a>
+</h3>
+<p>The <code>mcmc_trace_highlight</code> function displays points
+instead of lines and lowers the opacity of all chains except one, which
+is emphasized using the <code>highlight</code> argument.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace_highlight</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="st">"sigma"</span><span class="op">)</span>,</span>
+<span>           highlight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_higlight_traceplot-1.png" width="600" style="display: block; margin: auto;"></p>
+<p>While trace plots focus on how the Markov chains evolve over
+iterations, <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_hist()</a></code> examines how well the chains
+mix by comparing the distribution of their ranks. Ideally, the histogram
+should be roughly uniform, indicating good mixing across chains. See
+Vehtari et al. (2021) for more background.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_ecdf</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_bayesplot_files/figure-html/mcmc_rank-1.png" width="600" style="display: block; margin: auto;"></p>
+<p>Additionally, <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_hist()</a></code> plots the empirical
+cumulative distribution functions (ECDFs) of the ranks along with
+simultaneous confidence bands. These bands have a coverage probability
+controlled by the <code>prob</code> argument, meaning they are designed
+to fully contain all rank ECDFs with probability <code>prob</code>. When
+<code>plot_diff = TRUE</code>, the plot also shows the difference
+between the observed rank ECDFs and the theoretical uniform distribution
+expected if all samples came from the same distribution. For more
+details, see Säilynoja et al. (2022). The function is similar to
+<code>mcmc_rank_ecdf</code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter,
+Paul-Christian Bürkner “Rank-Normalization, Folding, and Localization:
+An Improved R-hat for Assessing Convergence of MCMC (with Discussion),”
+Bayesian Analysis, Bayesian Anal. 16(2), 667-718, (June 2021)</p>
+<p>Säilynoja, T., Bürkner, PC. &amp; Vehtari, A. Graphical test for
+discrete uniformity and its applications in goodness-of-fit evaluation
+and multiple sample comparison. Stat Comput 32, 32 (2022). <a href="https://doi.org/10.1007/s11222-022-10090-6" class="external-link uri">https://doi.org/10.1007/s11222-022-10090-6</a></p>
+<p>Gabry, J., and Goodrich, B. (2017). rstanarm: Bayesian Applied
+Regression Modeling via Stan. R package version 2.15.3. <a href="https://mc-stan.org/rstanarm/" class="external-link uri">https://mc-stan.org/rstanarm/</a>, <a href="https://CRAN.R-project.org/package=rstanarm" class="external-link uri">https://CRAN.R-project.org/package=rstanarm</a></p>
+<p>Gabry, J., Simpson, D., Vehtari, A., Betancourt, M. and Gelman, A.
+(2019), Visualization in Bayesian workflow. J. R. Stat. Soc. A, 182:
+389-402. :10.1111/rssa.12378. (journal version, arXiv preprint, code on
+GitHub)</p>
+<p>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A.,
+and Rubin, D. B. (2013). Bayesian Data Analysis. Chapman &amp; Hall/CRC
+Press, London, third edition.</p>
+<p>Stan Development Team. (2017). Stan Modeling Language Users Guide and
+Reference Manual. <a href="https://mc-stan.org/users/documentation/" class="external-link uri">https://mc-stan.org/users/documentation/</a></p>
+<p>Stan Development Team. (2024). bayesplot: Plotting for MCMC draws. <a href="https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html" class="external-link uri">https://mc-stan.org/bayesplot/articles/plotting-mcmc-draws.html</a></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
