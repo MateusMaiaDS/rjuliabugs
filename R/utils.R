@@ -132,12 +132,13 @@ get_params_from_name <- function(name, params) {
 #'
 #' @importFrom posterior rvar as_draws
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
 #' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 #' }
+
 get_params <- function(rjuliabugs, params, posterior_type = "array") {
   name <- rjuliabugs$name
   n_chain <- rjuliabugs$mcmc$n_chain
@@ -204,7 +205,7 @@ get_params <- function(rjuliabugs, params, posterior_type = "array") {
 #' head(samples)
 #' }
 #'
-#' @export
+#' @keywords internal
 get_params_from_name <- function(params, name) {
   if (!is.character(params)) {
     stop("`params` must be a character vector of parameter names.")
@@ -640,3 +641,63 @@ as_draws.array <- function(x, ...) {
 }
 
 # ============================================================ #
+
+#' Extract Posterior Samples from an `rjuliabugs` S3 Object
+#'
+#' Extracts posterior samples for specified parameters from a fitted `rjuliabugs` object. Output can be returned
+#' in several formats depending on downstream analysis requirements.
+#'
+#' @param rjuliabugs An S3 object of class `rjuliabugs`, typically returned by a call to the `juliaBUGS()` function.
+#' Must contain a `params` 3D array and `mcmc` list with fields `params_to_save` and `n_chain`.
+#' @param pars Character vector of parameter names to extract. If `NULL`, defaults to `rjuliabugs$mcmc$params_to_save`.
+#' @param type Character string indicating output type: one of `"array"` (default), `"rvar"`, `"mcmc"`, or `"draws"`.
+#' @param include Logical; if `TRUE`, extract only `pars`; if `FALSE`, exclude `pars`.
+#'
+#' @return The posterior samples in the specified format:
+#' \itemize{
+#'   \item a 3D `array` [iterations × chains × parameters],
+#'   \item a `posterior::rvar` object,
+#'   \item a `coda::mcmc` or `coda::mcmc.list`,
+#'   \item or a `posterior::draws_array`/`draws_list`.
+#' }
+#'
+#' @importFrom posterior rvar as_draws
+#' @importFrom coda mcmc as.mcmc as.mcmc.list
+#' @export
+extract <- function(rjuliabugs, pars = NULL, type = "array", include = TRUE) {
+  if (is.null(pars)) {
+    pars <- rjuliabugs$mcmc$params_to_save
+  }
+
+  post_samples <- if (include) {
+    rjuliabugs$params[,,
+      pars %in% dimnames(rjuliabugs$params)[[3]],
+      drop = FALSE
+    ]
+  } else {
+    rjuliabugs$params[,,
+      !pars %in% dimnames(rjuliabugs$params)[[3]],
+      drop = FALSE
+    ]
+  }
+
+  if (type == "array") {
+    post_samples <- as.array(post_samples)
+  } else if (type == "rvar") {
+    post_samples <- posterior::rvar(x = post_samples, nchains = n_chain)
+  } else if (type == "mcmc") {
+    post_samples <- if (rjuliabugs$mcmc$n_chain == 1) {
+      coda::as.mcmc(post_samples)
+    } else {
+      coda::as.mcmc.list(lapply(seq(dim(post_samples)[2]), function(x) {
+        coda::mcmc(post_samples[, x, ])
+      }))
+    }
+  } else if (type == "draws") {
+    post_samples <- posterior::as_draws(post_samples)
+  } else {
+    stop("No valid type.")
+  }
+
+  return(post_samples)
+}

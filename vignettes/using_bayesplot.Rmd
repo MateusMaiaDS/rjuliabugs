@@ -79,13 +79,20 @@ rjuliabugs_fit <- juliaBUGS(
 
 ```
 
-Verifying the dimensions of the `params` object we would have
+At first we need to extract the posterior samples, to do it so we will use the `rjuliabugs::extract` function:
 
-```{r }
-dim(rjuliabugs_fit$params)
+```{r extract}
+pars_names <- c("alpha0","alpha1","alpha2","alpha12","sigma")
+posterior_samples <- rjuliabugs::extract(rjuliabugs_fit,pars = pars_names)
 ```
 
-we have a total of `r dim(rjuliabugs_fit$params)[1]` iterations, `r dim(rjuliabugs_fit$params)[2]` chains and `r dim(rjuliabugs_fit$params)[3]` parameters that were stored.
+Verifying the dimensions of the `posterior_samples` object we would have
+
+```{r }
+dim(posterior_samples)
+```
+
+we have a total of `r dim(posterior_samples)[1]` iterations, `r dim(posterior_samples)[2]` chains and `r dim(posterior_samples)[3]` parameters that were stored.
 
 ## Posterior uncertainty intervals
 
@@ -94,7 +101,7 @@ Central credible intervals from the posterior distribution can be visualized usi
 ### `mcmc_intervals`
 ```{r mcmc_intervals, fig.align='center'}
 color_scheme_set("red")
-mcmc_intervals(rjuliabugs_fit$params, pars =  rjuliabugs_fit$mcmc$params_to_save)
+mcmc_intervals(posterior_samples, pars =  pars_names)
 
 ```
 
@@ -106,8 +113,8 @@ To represent uncertainty with shaded regions beneath the posterior density estim
 
 ```{r mcmc_areas}
 mcmc_areas(
-  rjuliabugs_fit$params, 
-  pars = rjuliabugs_fit$mcmc$params_to_save,
+  posterior_samples, 
+  pars = pars_names,
   prob = 0.8, # 80% intervals
   prob_outer = 0.99, # 99%
   point_est = "mean"
@@ -120,8 +127,8 @@ We can also generate additional plots with by calling `mcmc_areas_ridges`
 
 ```{r mcmc_areas_ridges}
 mcmc_areas_ridges(
-  rjuliabugs_fit$params, 
-  pars = rjuliabugs_fit$mcmc$params_to_save,
+  posterior_samples, 
+  pars = pars_names,
   prob = 0.8, # 80% intervals
   prob_outer = 0.99, # 99%
   point_est = "mean"
@@ -137,7 +144,7 @@ The `mcmc_hist` function plots marginal posterior distributions (combining all c
 
 ```{mcmc_hist}
 color_scheme_set("blue")
-mcmc_hist(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+mcmc_hist(posterior_samples, pars = c("alpha0", "sigma"))
 ```
 
 ### `mcmc_hist_by_chain`
@@ -147,14 +154,14 @@ To visualize individual histograms for each of the four Markov chains, the `mcmc
 
 ```{mcmc_hist_chain}
 color_scheme_set("darkgreen")
-mcmc_hist_by_chain(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+mcmc_hist_by_chain(posterior_samples, pars = c("alpha0", "sigma"))
 ```
 
 If we are interested in also display a transformation for display any of the histograms, this is possible by setting the `transformations` argument.
 
 ```{mcmc_hist_chain_transform}
 color_scheme_set("darkgreen")
-mcmc_hist_by_chain(rjuliabugs_fit$params, pars = c("alpha0", "sigma"),
+mcmc_hist_by_chain(posterior_samples, pars = c("alpha0", "sigma"),
                    transformations = list("sigma" = "log"))
 ```
 
@@ -169,7 +176,7 @@ The `mcmc_dens` function works similarly to `mcmc_hist`, but it displays kernel 
 
 ```{r mcmc_dens}
 color_scheme_set("brightblue")
-mcmc_dens(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+mcmc_dens(posterior_samples, pars = c("alpha0", "sigma"))
 ```
 
 ### `mcmc_dens_overlay`
@@ -177,7 +184,7 @@ mcmc_dens(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
 Similar to `mcmc_hist_by_chain`, the `mcmc_dens_overlay` function distinguishes between Markov chains; however, rather than showing them in separate panels, it overlays their density estimates in a single plot.
 
 ```{r mcmc_dens_overlay}
-mcmc_dens_overlay(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+mcmc_dens_overlay(posterior_samples, pars = c("alpha0", "sigma"))
 ```
 
 
@@ -187,7 +194,7 @@ The `mcmc_violin` function visualizes the density estimates for each chain using
 
 ```{r mcmc_violion}
 color_scheme_set("teal")
-mcmc_violin(rjuliabugs_fit$params, pars = c("alpha0", "alpha12"))
+mcmc_violin(posterior_samples, pars = c("alpha0", "alpha12"))
 ```
 
 
@@ -202,7 +209,7 @@ The `mcmc_scatter` function generates a basic scatter plot showing the relations
 
 ```{r mcmc_scatter}
 color_scheme_set("orange")
-mcmc_scatter(rjuliabugs_fit$params, 
+mcmc_scatter(posterior_samples, 
              pars = c("alpha0", "alpha12"),
              size = 1.5,
              alpha = 0.5)
@@ -217,7 +224,7 @@ The `mcmc_hex` function produces a comparable plot using hexagonal bins, which h
 color_scheme_set("gray")
 # requires hexbin package
 if (requireNamespace("hexbin", quietly = TRUE)) {
-  mcmc_hex(rjuliabugs_fit$params, pars = c("alpha0", "alpha12"))
+  mcmc_hex(posterior_samples, pars = c("alpha0", "alpha12"))
 }
 ```
 
@@ -228,7 +235,7 @@ In addition to `mcmc_scatter` and `mcmc_hex`, the bayesplot package also include
 ```{r mcmc_pairs}
 color_scheme_set("purple")
 # requires hexbin package
-mcmc_pairs(rjuliabugs_fit$params, 
+mcmc_pairs(posterior_samples, 
          pars = c("alpha0", "alpha1","alpha12"),
          off_diag_args = list(size = 1.5))
 ```
@@ -246,7 +253,7 @@ The `mcmc_trace` function generates basic trace plots to visualize the sampling 
 
 ```{r mcmc_trace}
 color_scheme_set("blue")
-mcmc_trace(rjuliabugs_fit$params, pars = c("alpha0", "sigma"))
+mcmc_trace(posterior_samples, pars = c("alpha0", "sigma"))
 ```
 
 If the differences between chains are difficult to distinguish, a mixed color scheme can be used to improve clarity. For example:
@@ -254,7 +261,7 @@ If the differences between chains are difficult to distinguish, a mixed color sc
 
 ```{r mcmc_multiple_trace_color}
 color_scheme_set("mix-blue-red")
-mcmc_trace(rjuliabugs_fit$params, pars = c("alpha0", "sigma"),
+mcmc_trace(posterior_samples, pars = c("alpha0", "sigma"),
            facet_args = list(ncol = 1, strip.position = "left"))
 ```
 
@@ -267,7 +274,7 @@ The `mcmc_trace_highlight` function displays points instead of lines and lowers 
 
 ```{r mcmc_higlight_traceplot}
 color_scheme_set("viridis")
-mcmc_trace_highlight(rjuliabugs_fit$params, pars = c( "sigma"),
+mcmc_trace_highlight(posterior_samples, pars = c( "sigma"),
            highlight = 1)
 ```
 
@@ -275,7 +282,7 @@ mcmc_trace_highlight(rjuliabugs_fit$params, pars = c( "sigma"),
 While trace plots focus on how the Markov chains evolve over iterations, `mcmc_rank_hist()` examines how well the chains mix by comparing the distribution of their ranks. Ideally, the histogram should be roughly uniform, indicating good mixing across chains. See Vehtari et al. (2021) for more background.
 
 ```{r mcmc_rank, fig.width=8} 
-mcmc_rank_hist(rjuliabugs_fit$params, pars = c("sigma"))
+mcmc_rank_hist(posterior_samples, pars = c("sigma"))
 ```
 
 Additionally, `mcmc_rank_ecdf()` plots the empirical cumulative distribution functions (ECDFs) of the ranks along with simultaneous confidence bands. These bands have a coverage probability controlled by the `prob` argument, meaning they are designed to fully contain all rank ECDFs with probability `prob`. When `plot_diff = TRUE`, the plot also shows the difference between the observed rank ECDFs and the theoretical uniform distribution expected if all samples came from the same distribution. For more details, see Säilynoja et al. (2022). The function arguments are similar to `mcmc_rank_hist`.
