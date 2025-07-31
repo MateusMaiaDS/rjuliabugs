@@ -274,7 +274,7 @@ mcmc_trace_highlight(rjuliabugs_fit$params, pars = c( "sigma"),
 
 While trace plots focus on how the Markov chains evolve over iterations, `mcmc_rank_hist()` examines how well the chains mix by comparing the distribution of their ranks. Ideally, the histogram should be roughly uniform, indicating good mixing across chains. See Vehtari et al. (2021) for more background.
 
-```{r mcmc_rank} 
+```{r mcmc_rank, fig.width=8} 
 mcmc_rank_hist(rjuliabugs_fit$params, pars = c("sigma"))
 ```
 
