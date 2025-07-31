@@ -23,35 +23,41 @@
 #'
 #' @export
 #' @md
-save_rjuliabugs <- function(rjuliabugs_model,
-                            file,
-                            chains_file = NULL){
-
-  if(is.null(rjuliabugs_model$name)){
+save_rjuliabugs <- function(rjuliabugs_model, file, chains_file = NULL) {
+  if (is.null(rjuliabugs_model$name)) {
     stop("No valid name for the the Chains object from rjuliabugs object.")
   }
 
-  if(is.null(chains_file)){
-
-    if(is.null(rjuliabugs_model$chains_file)){
-        stop("No valid path for the 'chains_file' is defined in rjuliabugs_model object.")
+  if (is.null(chains_file)) {
+    if (is.null(rjuliabugs_model$chains_file)) {
+      stop(
+        "No valid path for the 'chains_file' is defined in rjuliabugs_model object."
+      )
     } else {
       chains_file_path <- rjuliabugs_model$chains_file
     }
-
   } else {
-
     chains_file_path <- chains_file
     rjuliabugs_model$chains_file <- chains_file_path
   }
 
   if (!endsWith(chains_file_path, ".jls")) {
-    stop(sprintf("Invalid `chains_file`: '%s' does not end with '.jls'", chains_file_path))
+    stop(sprintf(
+      "Invalid `chains_file`: '%s' does not end with '.jls'",
+      chains_file_path
+    ))
   }
 
-
-
-  JuliaCall::julia_eval(paste0(cmd = 'Serialization.serialize("',chains_file_path,'",',rjuliabugs_model$name,')'),need_return = "Julia")
+  JuliaCall::julia_eval(
+    paste0(
+      cmd = 'Serialization.serialize("',
+      chains_file_path,
+      '",',
+      rjuliabugs_model$name,
+      ')'
+    ),
+    need_return = "Julia"
+  )
 
   if (!endsWith(tolower(file), ".rds")) {
     file <- paste0(file, ".rds")
@@ -60,7 +66,6 @@ save_rjuliabugs <- function(rjuliabugs_model,
   saveRDS(rjuliabugs_model, file = file)
 
   return(invisible(NULL))
-
 }
 
 #' Load an `rjuliabugs` Object and Restore the Julia State
@@ -94,20 +99,23 @@ save_rjuliabugs <- function(rjuliabugs_model,
 #'
 #' @export
 #' @md
-load_rjuliabugs <- function(file){
-
+load_rjuliabugs <- function(file) {
   rjuliabugs_obj <- readRDS(file = file)
 
-  if(is.null(rjuliabugs_obj$name) || is.null(rjuliabugs_obj$chains_file)){
-    stop("Both chain 'name' and 'chains_file' from  the rjuliasampler object must be defined.")
+  if (is.null(rjuliabugs_obj$name) || is.null(rjuliabugs_obj$chains_file)) {
+    stop(
+      "Both chain 'name' and 'chains_file' from  the rjuliasampler object must be defined."
+    )
   } else {
     # Checking and updating rjuliabugs_obj$name if needed
     rjuliabugs_obj$name <- check_sampler_is_defined(name = rjuliabugs_obj$name)
-    JuliaCall::julia_eval(paste0(rjuliabugs_obj$name,' = Serialization.deserialize("',rjuliabugs_obj$chains_file,'")'))
+    JuliaCall::julia_eval(paste0(
+      rjuliabugs_obj$name,
+      ' = Serialization.deserialize("',
+      rjuliabugs_obj$chains_file,
+      '")'
+    ))
   }
 
   return(rjuliabugs_obj)
-
 }
-
-

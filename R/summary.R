@@ -32,48 +32,97 @@ summary.rjuliabugs <- function(object, ...) {
   digits <- if (!is.null(args$digits)) args$digits else 4
   n_display <- if (!is.null(args$n_display)) args$n_display else 10
   get_summary <- if (!is.null(args$get_summary)) args$get_summary else FALSE
-  get_quantiles <- if (!is.null(args$get_quantiles)) args$get_quantiles else FALSE
-  julia_summary_only <- if (!is.null(args$julia_summary_only)) args$julia_summary_only else FALSE
+  get_quantiles <- if (!is.null(args$get_quantiles)) {
+    args$get_quantiles
+  } else {
+    FALSE
+  }
+  julia_summary_only <- if (!is.null(args$julia_summary_only)) {
+    args$julia_summary_only
+  } else {
+    FALSE
+  }
 
   if (julia_summary_only) {
-    JuliaCall::julia_eval(paste0("display(", object$name, ")"), need_return = "Julia")
+    JuliaCall::julia_eval(
+      paste0("display(", object$name, ")"),
+      need_return = "Julia"
+    )
     return(invisible(NULL))
   } else {
     JuliaCall::julia_eval("using DataFrames")
 
-    JuliaCall::julia_eval(paste0("df = DataFrame(MCMCChains.summarystats(", object$name, ").nt)"), need_return = "Julia")
-    JuliaCall::julia_eval("df.parameters = String.(df.parameters)", need_return = "Julia")
-    JuliaCall::julia_eval("df.ess_bulk = Float64.(df.ess_bulk)", need_return = "Julia")
+    JuliaCall::julia_eval(
+      paste0("df = DataFrame(MCMCChains.summarystats(", object$name, ").nt)"),
+      need_return = "Julia"
+    )
+    JuliaCall::julia_eval(
+      "df.parameters = String.(df.parameters)",
+      need_return = "Julia"
+    )
+    JuliaCall::julia_eval(
+      "df.ess_bulk = Float64.(df.ess_bulk)",
+      need_return = "Julia"
+    )
 
-    str_params_name <- unlist(JuliaCall::julia_eval(paste0("String.(keys(get_params(", object$name, ")))"), need_return = "R"))
+    str_params_name <- unlist(JuliaCall::julia_eval(
+      paste0("String.(keys(get_params(", object$name, ")))"),
+      need_return = "R"
+    ))
     str_params_name <- str_params_name[1:(which(str_params_name == "lp") - 1)]
 
-    mcmc_settings <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("range(", object$name, ")"), need_return = "Julia")))
-    mcmc_n_chains <- break_string_to_numeric(as.character(JuliaCall::julia_eval(paste0("size(", object$name, ", 3)"), need_return = "Julia")))
+    mcmc_settings <- break_string_to_numeric(as.character(JuliaCall::julia_eval(
+      paste0("range(", object$name, ")"),
+      need_return = "Julia"
+    )))
+    mcmc_n_chains <- break_string_to_numeric(as.character(JuliaCall::julia_eval(
+      paste0("size(", object$name, ", 3)"),
+      need_return = "Julia"
+    )))
 
     cat("Summary of JuliaBUGS sampler:\n\n")
     cat(paste0("Iterations        = ", mcmc_settings[3], "\n"))
     cat(paste0("Number of chains  = ", mcmc_n_chains, "\n"))
-    cat(paste0("Number of posterior samples = ", floor((mcmc_settings[3] - mcmc_settings[1] + 1) / mcmc_settings[2]), "\n"))
+    cat(paste0(
+      "Number of posterior samples = ",
+      floor((mcmc_settings[3] - mcmc_settings[1] + 1) / mcmc_settings[2]),
+      "\n"
+    ))
     cat(paste0("Thinning parameter = ", mcmc_settings[2], "\n"))
-    cat(paste0("Samples per chain = ", mcmc_settings[1], ":", mcmc_settings[3], "\n\n"))
+    cat(paste0(
+      "Samples per chain = ",
+      mcmc_settings[1],
+      ":",
+      mcmc_settings[3],
+      "\n\n"
+    ))
 
     summary_obj <- JuliaCall::julia_eval("df")
 
     cat("Summary Statistics:\n\n")
-    print(summary_obj[1:n_display, , drop = FALSE], digits = digits, row.names = FALSE)
+    print(
+      summary_obj[1:n_display, , drop = FALSE],
+      digits = digits,
+      row.names = FALSE
+    )
 
     n_display_val <- min(n_display, nrow(summary_obj))
     if (nrow(summary_obj) > n_display_val) {
-      cat(format("         ...\n", width = 14))  # replaced ⋮ with ASCII
+      cat(format("         ...\n", width = 14)) # replaced ⋮ with ASCII
       cat(sprintf("  %d rows omitted\n", nrow(summary_obj) - n_display_val))
     }
 
     summary_list <- if (get_summary) list(summary = summary_obj) else NULL
 
     if (get_quantiles) {
-      JuliaCall::julia_eval(paste0("qt_df = DataFrame(MCMCChains.quantile(", object$name, ").nt)"), need_return = "Julia")
-      JuliaCall::julia_eval("qt_df.parameters = String.(qt_df.parameters)", need_return = "Julia")
+      JuliaCall::julia_eval(
+        paste0("qt_df = DataFrame(MCMCChains.quantile(", object$name, ").nt)"),
+        need_return = "Julia"
+      )
+      JuliaCall::julia_eval(
+        "qt_df.parameters = String.(qt_df.parameters)",
+        need_return = "Julia"
+      )
       quantile_obj <- JuliaCall::julia_eval("qt_df", need_return = "R")
       quantile_list <- list(quantiles = quantile_obj)
     } else {

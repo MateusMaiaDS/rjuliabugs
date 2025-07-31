@@ -68,35 +68,45 @@ get_params_from_name <- function(name, params) {
 
   params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
 
-  JuliaCall::julia_eval(paste0("julia_params = get_params(",name,")"),need_return = "Julia")
+  JuliaCall::julia_eval(
+    paste0("julia_params = get_params(", name, ")"),
+    need_return = "Julia"
+  )
 
-  post_samples <- vector("list",length = length(params))
+  post_samples <- vector("list", length = length(params))
 
-  for(i in 1:length(params)){
-     post_samples[[i]] <- JuliaCall::julia_eval(paste0("Float64.(julia_params.",params[i],".data)"),
-                                                need_return = "R")
+  for (i in 1:length(params)) {
+    post_samples[[i]] <- JuliaCall::julia_eval(
+      paste0("Float64.(julia_params.", params[i], ".data)"),
+      need_return = "R"
+    )
   }
 
-  mcmc_n_chains <- as.numeric((JuliaCall::julia_eval(paste0("size(",name,", 3)"),need_return = "Julia")))
+  mcmc_n_chains <- as.numeric(
+    (JuliaCall::julia_eval(
+      paste0("size(", name, ", 3)"),
+      need_return = "Julia"
+    ))
+  )
 
-
-  if(mcmc_n_chains==1){
-    post_samples <- do.call(cbind,post_samples)
+  if (mcmc_n_chains == 1) {
+    post_samples <- do.call(cbind, post_samples)
     colnames(post_samples) <- params
-
   } else {
-
-    post_samples_array <- array(dim = c(nrow(post_samples[[1]]),
-                                        ncol(post_samples[[1]]),
-                                        length(post_samples)))
-    for(i in 1:length(params)){
-      post_samples_array[,,i] <- post_samples[[i]]
+    post_samples_array <- array(
+      dim = c(
+        nrow(post_samples[[1]]),
+        ncol(post_samples[[1]]),
+        length(post_samples)
+      )
+    )
+    for (i in 1:length(params)) {
+      post_samples_array[,, i] <- post_samples[[i]]
     }
 
     dimnames(post_samples_array)[[3]] <- params
 
     post_samples <- post_samples_array
-
   }
 
   return(post_samples)
@@ -128,52 +138,41 @@ get_params_from_name <- function(name, params) {
 #' \dontrun{
 #' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 #' }
-get_params <- function(rjuliabugs,
-                       params,
-                       posterior_type = "array"){
-
+get_params <- function(rjuliabugs, params, posterior_type = "array") {
   name <- rjuliabugs$name
   n_chain <- rjuliabugs$mcmc$n_chain
   params_to_save <- rjuliabugs$mcmc$params_to_save
 
-  if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
-    stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")
+  if (!(posterior_type %in% c("array", "rvar", "mcmc", "draws"))) {
+    stop(
+      "Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'."
+    )
   }
 
-  params_raw <- if(!is.null(params_to_save)){
-    get_params_from_name(name = name,
-                         params = params_to_save)
+  params_raw <- if (!is.null(params_to_save)) {
+    get_params_from_name(name = name, params = params_to_save)
   }
 
   # Converting the posterior type
-  if(posterior_type == "array"){
-
+  if (posterior_type == "array") {
     params <- params_raw
-
   } else if (posterior_type == "rvar") {
-
-    params <- posterior::rvar(x = params_raw,nchains = n_chain)
-
-  } else if (posterior_type == "mcmc"){
-
-    params <- if(n_chain == 1) {
+    params <- posterior::rvar(x = params_raw, nchains = n_chain)
+  } else if (posterior_type == "mcmc") {
+    params <- if (n_chain == 1) {
       coda::as.mcmc(params_raw)
     } else {
-      coda::as.mcmc.list(lapply(seq(dim(params_raw)[2]),function(x){coda::mcmc(params_raw[,x,])}))
+      coda::as.mcmc.list(lapply(seq(dim(params_raw)[2]), function(x) {
+        coda::mcmc(params_raw[, x, ])
+      }))
     }
-
-  } else if(posterior_type == "draws"){
-
+  } else if (posterior_type == "draws") {
     params <- posterior::as_draws(params_raw)
-
   } else {
-
     stop("Insert a valid posterior_type.")
-
   }
 
   return(params)
-
 }
 
 #' Extract Parameter Samples from a Turing.jl MCMCChains Object
@@ -217,35 +216,45 @@ get_params_from_name <- function(params, name) {
 
   params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
 
-  JuliaCall::julia_eval(paste0("julia_params = get_params(",name,")"),need_return = "Julia")
+  JuliaCall::julia_eval(
+    paste0("julia_params = get_params(", name, ")"),
+    need_return = "Julia"
+  )
 
-  post_samples <- vector("list",length = length(params))
+  post_samples <- vector("list", length = length(params))
 
-  for(i in 1:length(params)){
-    post_samples[[i]] <- JuliaCall::julia_eval(paste0("Float64.(julia_params.",params[i],".data)"),
-                                               need_return = "R")
+  for (i in 1:length(params)) {
+    post_samples[[i]] <- JuliaCall::julia_eval(
+      paste0("Float64.(julia_params.", params[i], ".data)"),
+      need_return = "R"
+    )
   }
 
-  mcmc_n_chains <- as.numeric((JuliaCall::julia_eval(paste0("size(",name,", 3)"),need_return = "Julia")))
+  mcmc_n_chains <- as.numeric(
+    (JuliaCall::julia_eval(
+      paste0("size(", name, ", 3)"),
+      need_return = "Julia"
+    ))
+  )
 
-
-  if(mcmc_n_chains==1){
-    post_samples <- do.call(cbind,post_samples)
+  if (mcmc_n_chains == 1) {
+    post_samples <- do.call(cbind, post_samples)
     colnames(post_samples) <- params
-
   } else {
-
-    post_samples_array <- array(dim = c(nrow(post_samples[[1]]),
-                                        ncol(post_samples[[1]]),
-                                        length(post_samples)))
-    for(i in 1:length(params)){
-      post_samples_array[,,i] <- post_samples[[i]]
+    post_samples_array <- array(
+      dim = c(
+        nrow(post_samples[[1]]),
+        ncol(post_samples[[1]]),
+        length(post_samples)
+      )
+    )
+    for (i in 1:length(params)) {
+      post_samples_array[,, i] <- post_samples[[i]]
     }
 
     dimnames(post_samples_array)[[3]] <- params
 
     post_samples <- post_samples_array
-
   }
 
   return(post_samples)
@@ -277,19 +286,16 @@ get_params_from_name <- function(params, name) {
 #' wrap_model_to_juliaBUGS(model_body)
 #'
 #' @export
-wrap_model_to_juliaBUGS <- function(model_code){
-
+wrap_model_to_juliaBUGS <- function(model_code) {
   trimmed_code <- trimws(model_code)
 
   starts_correctly <- grepl("^model = @bugs begin", trimmed_code)
   ends_correctly <- grepl("end\\s*$", trimmed_code)
 
-  if(starts_correctly && ends_correctly){
+  if (starts_correctly && ends_correctly) {
     return(trimmed_code)
   } else {
-    return(paste0('model = @bugs begin\n',
-                  trimmed_code,
-                  '\nend'))
+    return(paste0('model = @bugs begin\n', trimmed_code, '\nend'))
   }
 }
 
@@ -319,9 +325,7 @@ wrap_model_to_juliaBUGS <- function(model_code){
 #' bugs2juliaBUGS(model, convert_var_name = FALSE)
 #'
 #' @export
-bugs2juliaBUGS <- function(model_code,
-                           convert_var_name = TRUE) {
-
+bugs2juliaBUGS <- function(model_code, convert_var_name = TRUE) {
   trimmed_code <- trimws(model_code)
   julia_bool <- c("TRUE" = "true", "FALSE" = "false")
   not_has_model_block <- !grepl("model\\s*\\{", model_code)
@@ -331,7 +335,9 @@ bugs2juliaBUGS <- function(model_code,
     trimmed_code,
     '\n""", ',
     julia_bool[as.character(convert_var_name)],
-    ', ',julia_bool[as.character(not_has_model_block)],')'
+    ', ',
+    julia_bool[as.character(not_has_model_block)],
+    ')'
   ))
 }
 
@@ -380,17 +386,17 @@ bugs2juliaBUGS <- function(model_code,
 #' @md
 #' @export
 #' @md
-setup_juliaBUGS <- function(extra_packages = NULL,
-                            verify_package = TRUE,
-                            install_from_dev = FALSE,
-                            ...){
-
-
+setup_juliaBUGS <- function(
+  extra_packages = NULL,
+  verify_package = TRUE,
+  install_from_dev = FALSE,
+  ...
+) {
   cat("Preparing JuliaBUGS setup... ")
   julia <- JuliaCall::julia_setup(...)
 
   # Install all dependencies if needed
-  if(verify_package){
+  if (verify_package) {
     JuliaCall::julia_install_package_if_needed("RCall")
     JuliaCall::julia_install_package_if_needed("Suppressor")
     JuliaCall::julia_install_package_if_needed("Serialization")
@@ -402,14 +408,18 @@ setup_juliaBUGS <- function(extra_packages = NULL,
     JuliaCall::julia_install_package_if_needed("MCMCChains")
     JuliaCall::julia_install_package_if_needed("DataFrames")
   }
-  if(install_from_dev && verify_package){
-    JuliaCall::julia_eval('Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl.git")')
+  if (install_from_dev && verify_package) {
+    JuliaCall::julia_eval(
+      'Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl.git")'
+    )
   } else if (verify_package) {
     JuliaCall::julia_install_package_if_needed("JuliaBUGS")
   }
 
   # Loading those libraries
-  JuliaCall::julia_eval("using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS")
+  JuliaCall::julia_eval(
+    "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS"
+  )
 
   if (!is.null(extra_packages)) {
     for (i in seq_along(extra_packages)) {
@@ -444,23 +454,28 @@ setup_juliaBUGS <- function(extra_packages = NULL,
 #' @md
 convert_numeric_types <- function(data) {
   result <- lapply(data, function(vec) {
-
     # Get existing names (can be NULL)
     nms <- names(vec)
 
     # Process each element
-    converted <- sapply(vec, function(x) {
-      if (is.na(x)) {
-        return(NA)
-      } else if (x %% 1 == 0) {
-        return(as.integer(x))
-      } else {
-        return(as.numeric(x))
-      }
-    }, USE.NAMES = FALSE)
+    converted <- sapply(
+      vec,
+      function(x) {
+        if (is.na(x)) {
+          return(NA)
+        } else if (x %% 1 == 0) {
+          return(as.integer(x))
+        } else {
+          return(as.numeric(x))
+        }
+      },
+      USE.NAMES = FALSE
+    )
 
     # Re-assign names if they exist
-    if (!is.null(nms)) names(converted) <- nms
+    if (!is.null(nms)) {
+      names(converted) <- nms
+    }
 
     return(converted)
   })
@@ -532,7 +547,8 @@ check_sampler_is_defined <- function(name) {
   if (new_name) {
     warning(sprintf(
       "The object '%s' was already defined in the Julia environment. The name has been changed to '%s'.",
-      name_old, name
+      name_old,
+      name
     ))
   }
 
@@ -599,7 +615,9 @@ as_rvar.array <- function(x, n_mcmc = NULL, ...) {
 #' @md
 as_mcmc.array <- function(x, ...) {
   dims <- dim(x)
-  if (length(dims) != 3) stop("Input array must be 3D: iterations x chains x parameters")
+  if (length(dims) != 3) {
+    stop("Input array must be 3D: iterations x chains x parameters")
+  }
 
   n_chains <- dims[2]
 
@@ -620,6 +638,5 @@ as_mcmc.array <- function(x, ...) {
 as_draws.array <- function(x, ...) {
   posterior::as_draws(x)
 }
-
 
 # ============================================================ #

@@ -12,6 +12,7 @@
 ~%2Frjuliabugs%2FDESCRIPTION="629F8594"
 ~%2Frjuliabugs%2FNAMESPACE="B7B07BEE"
 ~%2Frjuliabugs%2FR%2Fjuliabugs.R="4906E031"
+~%2Frjuliabugs%2FR%2Fs3generics.R="B57F098F"
 ~%2Frjuliabugs%2FR%2Fsave_load_rjuliabugs.R="E3FB4290"
 ~%2Frjuliabugs%2FR%2Fsummary.R="0D4BE16C"
 ~%2Frjuliabugs%2FR%2Futils.R="68941487"

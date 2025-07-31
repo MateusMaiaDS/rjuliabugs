@@ -75,91 +75,120 @@
 #' @export
 #' @md
 
-juliaBUGS <- function(data,
-                      model_def,
-                      params_to_save,
-                      initializations = NULL,
-                      name = "sampler_juliaBUGS",
-                      n_iter = 2000,
-                      n_warmup= floor(n_iter/2),
-                      n_discard = n_warmup,
-                      n_thin = 1,
-                      n_chain = 1,
-                      use_parallel = TRUE,
-                      posterior_type = "array",
-                      force_setup_juliaBUGS = FALSE,
-                      control = NULL,
-                      progress = TRUE,
-                      ...){
-
+juliaBUGS <- function(
+  data,
+  model_def,
+  params_to_save,
+  initializations = NULL,
+  name = "sampler_juliaBUGS",
+  n_iter = 2000,
+  n_warmup = floor(n_iter / 2),
+  n_discard = n_warmup,
+  n_thin = 1,
+  n_chain = 1,
+  use_parallel = TRUE,
+  posterior_type = "array",
+  force_setup_juliaBUGS = FALSE,
+  control = NULL,
+  progress = TRUE,
+  ...
+) {
   # False dictionary
-  bool_dictionary <- list("FALSE" = "false","TRUE" = "true",
-                          "F" = "false", "T" = "true")
+  bool_dictionary <- list(
+    "FALSE" = "false",
+    "TRUE" = "true",
+    "F" = "false",
+    "T" = "true"
+  )
   # Checking if the name is defined, and generating a new one if is not the case
   name <- check_sampler_is_defined(name = name)
 
   # Checking posterior type
-  if(!(posterior_type %in% c("array","rvar","mcmc","draws"))){
-    stop("Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'.")
+  if (!(posterior_type %in% c("array", "rvar", "mcmc", "draws"))) {
+    stop(
+      "Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'."
+    )
   }
 
-
   # Checking initializations
-  if(!is.null(initializations)){
-
-    if(!is.list(initializations)){
+  if (!is.null(initializations)) {
+    if (!is.list(initializations)) {
       stop("Initializations must be a named list.")
     }
 
-    check_initializations_variables <- sapply(names(initializations),function(x){grepl(pattern = x,x = model_def)})
+    check_initializations_variables <- sapply(
+      names(initializations),
+      function(x) {
+        grepl(pattern = x, x = model_def)
+      }
+    )
 
-    if(!all(check_initializations_variables)){
-      stop(paste0("The params ",paste0(names(check_initializations_variables)[!check_initializations_variables],collapse = ", ")," are not part of the model."))
+    if (!all(check_initializations_variables)) {
+      stop(paste0(
+        "The params ",
+        paste0(
+          names(check_initializations_variables)[
+            !check_initializations_variables
+          ],
+          collapse = ", "
+        ),
+        " are not part of the model."
+      ))
     }
-
   }
 
-  if(!is.character(name)){
+  if (!is.character(name)) {
     stop("Insert a valid name.")
   }
 
   # Formatting the BUGS code to be used by juliaBUGS.jl
-  if(!is.null(control$julia_model) && control$julia_model!=FALSE ){
+  if (!is.null(control$julia_model) && control$julia_model != FALSE) {
     model_def <- wrap_model_to_juliaBUGS(model_code = model_def)
   } else {
-
     ## Setting the default to convert_var_name as FALSE
-    if(is.null(control$convert_var_name)){
+    if (is.null(control$convert_var_name)) {
       convert_var_name <- FALSE
     }
 
-    model_def <- bugs2juliaBUGS(model_code = model_def,convert_var_name = convert_var_name)
-
+    model_def <- bugs2juliaBUGS(
+      model_code = model_def,
+      convert_var_name = convert_var_name
+    )
   }
 
   # Verify over the data obj
-  if(!is.list(data)){
+  if (!is.list(data)) {
     stop("Invalid data object. Data must be a named list")
   }
 
   # Verify over the data obj
-  if(is.null(names(data))){
+  if (is.null(names(data))) {
     stop("No names in the data object. The data object must be a named list")
   }
 
   # Checking all params to save are in the model
-  check_params_to_save <- sapply(params_to_save,function(x){grepl(pattern = x,x = model_def)})
+  check_params_to_save <- sapply(params_to_save, function(x) {
+    grepl(pattern = x, x = model_def)
+  })
 
-  if(!all(check_params_to_save)){
-    stop(paste0("The params ",paste0(names(check_params_to_save)[!check_params_to_save],collapse = ", ")," are not part of the model."))
+  if (!all(check_params_to_save)) {
+    stop(paste0(
+      "The params ",
+      paste0(
+        names(check_params_to_save)[!check_params_to_save],
+        collapse = ", "
+      ),
+      " are not part of the model."
+    ))
   }
 
   # Checking the number of threads() in Julia are correctly specified
-  n_threads <- JuliaCall::julia_call("Threads.nthreads",need_return = "R")
+  n_threads <- JuliaCall::julia_call("Threads.nthreads", need_return = "R")
 
-
-  if(n_threads==1 && use_parallel){
-    warning("Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html for a complete documentation.\n")
+  if (n_threads == 1 && use_parallel) {
+    warning(
+      "Number of threads identified in Julia enviroment is equal to one and AbstractMCMC.sample will be run serially not in parallel. To a correct specification of the number of threads see https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs_parallel.html for a complete documentation.\n"
+    )
     use_parallel <- FALSE
   }
 
@@ -167,13 +196,17 @@ juliaBUGS <- function(data,
   setup_juliaBUGS(...)
 
   # Setting default configuration for control parameters
-  if(is.null(control)){
+  if (is.null(control)) {
     data_convert_int <- TRUE
   } else {
-    data_convert_int <- if(is.null(control$data_convert_int)) TRUE else control$data_convert_int
+    data_convert_int <- if (is.null(control$data_convert_int)) {
+      TRUE
+    } else {
+      control$data_convert_int
+    }
   }
 
-  if(data_convert_int){
+  if (data_convert_int) {
     data <- convert_numeric_types(data = data)
   }
 
@@ -182,7 +215,7 @@ juliaBUGS <- function(data,
   JuliaCall::julia_assign(x = "data", data)
   JuliaCall::julia_eval(model_def) # This line is important because model is actually the model_run of the BUGS code using Julia Macro
 
-  if(is.null(initializations)){
+  if (is.null(initializations)) {
     JuliaCall::julia_eval("model = compile(model,data)")
   } else {
     # Converting ininitializations properly
@@ -195,13 +228,11 @@ juliaBUGS <- function(data,
   JuliaCall::julia_eval("ad_model = ADgradient(:ReverseDiff, model)")
   JuliaCall::julia_eval("D = LogDensityProblems.dimension(model)")
 
-  if(is.null(initializations)){
+  if (is.null(initializations)) {
     JuliaCall::julia_eval("initial_theta = rand(D)")
   } else {
     JuliaCall::julia_eval("initial_theta = JuliaBUGS.getparams(model)")
   }
-
-
 
   # Conver MCMC parameters to int for julia.
   julia_assign_int("n_iter", as.integer(n_iter))
@@ -211,7 +242,11 @@ juliaBUGS <- function(data,
   julia_assign_int("n_chain", as.integer(n_chain))
 
   # Defining which type of computational scheme will be used
-  parallel_scheme <- ifelse(use_parallel,"AbstractMCMC.MCMCThreads()","AbstractMCMC.MCMCSerial()")
+  parallel_scheme <- ifelse(
+    use_parallel,
+    "AbstractMCMC.MCMCThreads()",
+    "AbstractMCMC.MCMCSerial()"
+  )
 
   cat("Initialising AbstractMCMC.sample()...")
 
@@ -219,9 +254,13 @@ juliaBUGS <- function(data,
   # JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
   # JuliaCall::julia_eval("sample(M(), S(), MCMCThreads(), 500, 4; progress=:perchain)",need_return = "Julia")
 
-  JuliaCall::julia_eval(paste0(name," = sample(ad_model,
+  JuliaCall::julia_eval(paste0(
+    name,
+    " = sample(ad_model,
                                                AdvancedHMC.NUTS(0.8),
-                                               ",parallel_scheme,",
+                                               ",
+    parallel_scheme,
+    ",
                                                n_iter,
                                                n_chain;
                                                chain_type = Chains,
@@ -229,60 +268,55 @@ juliaBUGS <- function(data,
                                                init_params = initial_theta,
                                                discard_initial = n_discard,
                                                thinning = n_thin,
-                                               progress=",bool_dictionary[[as.character(progress)]],")"))
+                                               progress=",
+    bool_dictionary[[as.character(progress)]],
+    ")"
+  ))
   cat(" DONE!\n")
 
-
-  params_raw <- if(!is.null(params_to_save)){
-    get_params_from_name(name = name,
-               params = params_to_save)
+  params_raw <- if (!is.null(params_to_save)) {
+    get_params_from_name(name = name, params = params_to_save)
   }
 
   # Converting the posterior type
-  if(posterior_type == "array"){
-
+  if (posterior_type == "array") {
     params <- params_raw
-
   } else if (posterior_type == "rvar") {
-
-    params <- posterior::rvar(x = params_raw,nchains = n_chain)
-
-  } else if (posterior_type == "mcmc"){
-
-    params <- if(n_chain == 1) {
+    params <- posterior::rvar(x = params_raw, nchains = n_chain)
+  } else if (posterior_type == "mcmc") {
+    params <- if (n_chain == 1) {
       coda::as.mcmc(params_raw)
     } else {
-      coda::as.mcmc.list(lapply(seq(dim(params_raw)[2]),function(x){coda::mcmc(params_raw[,x,])}))
+      coda::as.mcmc.list(lapply(seq(dim(params_raw)[2]), function(x) {
+        coda::mcmc(params_raw[, x, ])
+      }))
     }
-
-  } else if(posterior_type == "draws"){
-
+  } else if (posterior_type == "draws") {
     params <- posterior::as_draws(params_raw)
-
   } else {
-
     stop("Insert a valid posterior_type.")
-
   }
 
   ## Creating rjuliabugs obj
-  rjuliabugs <- list(params = params,
-                     name = name,
-                     sampler = JuliaCall::julia_eval(name,need_return = "R"),
-                     n_threads = n_threads,
-                     mcmc = list(params_to_save = params_to_save,
-                                 n_iter = 2000,
-                                 n_warmup= floor(n_iter/2),
-                                 n_discard = n_warmup,
-                                 n_thin = 1,
-                                 n_chain = 1,
-                                 use_parallel = TRUE,
-                                 posterior_type = "array"),
-                     control = control)
-
+  rjuliabugs <- list(
+    params = params,
+    name = name,
+    sampler = JuliaCall::julia_eval(name, need_return = "R"),
+    n_threads = n_threads,
+    mcmc = list(
+      params_to_save = params_to_save,
+      n_iter = 2000,
+      n_warmup = floor(n_iter / 2),
+      n_discard = n_warmup,
+      n_thin = 1,
+      n_chain = 1,
+      use_parallel = TRUE,
+      posterior_type = "array"
+    ),
+    control = control
+  )
 
   class(rjuliabugs) <- "rjuliabugs"
 
   return(rjuliabugs)
-
 }
