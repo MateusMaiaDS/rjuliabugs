@@ -41,7 +41,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/rjuliabugs_parallel.html">Using rjuliabugs in parallel</a></li>
     <li><a class="dropdown-item" href="../articles/setup_troubleshooting.html">Using rjuliabugs: Setup and Troubleshooting</a></li>
-    <li><a class="dropdown-item" href="../articles/using_bayesplot.html">Plotting `rjuliabugs` draws using bayesplot package</a></li>
+    <li><a class="dropdown-item" href="../articles/using_bayesplot.html">Plotting rjuliabugs draws using bayesplot package</a></li>
   </ul>
 </li>
       </ul>
@@ -261,16 +261,16 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  parameters      mean      std      mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 57.534396 137.1536 10.193982    242.5    261.6 1.028          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.824923   0.4344  0.007667   3183.8   3541.0 1.003          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.353257   0.2746  0.005191   2815.0   3426.7 1.002          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.084618   0.3096  0.005394   3268.1   4145.3 1.002          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.551427   0.1902  0.003398   3102.0   3777.2 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.187806   0.2559  0.007070   1449.8   4541.4 1.006          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.009561   0.2180  0.002861   5952.5   3673.1 1.009          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.191431   0.2279  0.006286   1345.3   4263.0 1.004          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.264242   0.2599  0.009242    770.8   3619.9 1.008          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.111770   0.2382  0.004247   3454.5   4035.8 1.004          NA</span></span>
+<span><span class="co">#&gt;         tau 52.701685 149.4699 13.036366    299.4    191.1 1.009          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.827869   0.4246  0.007004   3681.6   4160.5 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.354354   0.2698  0.004661   3370.0   3489.0 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.091662   0.3111  0.005133   3690.4   3652.6 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.556147   0.1949  0.003440   3194.3   3300.7 1.000          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.192465   0.2605  0.005734   2136.0   3737.9 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.008408   0.2223  0.002951   5823.8   4255.3 1.003          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.198069   0.2329  0.005615   1760.2   4394.6 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.272729   0.2641  0.007857   1110.2   3113.1 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.117150   0.2402  0.004016   3945.2   3809.0 1.002          NA</span></span>
 <span><span class="co">#&gt;          ...</span></span>
 <span><span class="co">#&gt;   17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -381,7 +381,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3133.109</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3212.162</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>
