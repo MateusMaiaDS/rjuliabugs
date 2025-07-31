@@ -132,12 +132,13 @@ get_params_from_name <- function(name, params) {
 #'
 #' @importFrom posterior rvar as_draws
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
 #' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 #' }
+
 get_params <- function(rjuliabugs, params, posterior_type = "array") {
   name <- rjuliabugs$name
   n_chain <- rjuliabugs$mcmc$n_chain
@@ -204,7 +205,7 @@ get_params <- function(rjuliabugs, params, posterior_type = "array") {
 #' head(samples)
 #' }
 #'
-#' @export
+#' @keywords internal
 get_params_from_name <- function(params, name) {
   if (!is.character(params)) {
     stop("`params` must be a character vector of parameter names.")

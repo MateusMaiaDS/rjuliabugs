@@ -31,3 +31,4 @@ The function assumes that \code{get_params_from_name()} and other referenced var
 get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
 }
 }
+\keyword{internal}
