@@ -393,7 +393,15 @@ setup_juliaBUGS <- function(
   ...
 ) {
   cat("Preparing JuliaBUGS setup... ")
-  julia <- JuliaCall::julia_setup(...)
+  
+  # Add special handling for Linux CI to avoid segfaults
+  julia_args <- list(...)
+  if (Sys.getenv("CI") == "true" && grepl("linux", R.version$os)) {
+    julia_args$installJulia <- FALSE
+    julia_args$rebuild <- FALSE
+  }
+  
+  julia <- do.call(JuliaCall::julia_setup, julia_args)
 
   # Install all dependencies if needed
   if (verify_package) {
