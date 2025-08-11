@@ -56,15 +56,15 @@ jobs:
           echo "R_HOME=$R_HOME_PATH" >> $GITHUB_ENV
           echo "R_HOME environment variable set."
 
-      - name: Configure Julia and RCall
+      - name: Configure Julia packages
         shell: bash
         run: |
           # R_HOME is now available as a persistent environment variable for this step
           echo "Using R_HOME for Julia: $R_HOME"
-          # First install packages without loading RCall
-          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add(["RCall", "Suppressor", "Serialization", "LogDensityProblemsAD", "ReverseDiff", "AdvancedHMC", "AbstractMCMC", "LogDensityProblems", "MCMCChains", "DataFrames"]); Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl", subdir="JuliaBUGS"); Pkg.update()'
-          # Now rebuild RCall with the correct R_HOME and test it
-          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.build("RCall"); using RCall; R"1+1"'
+          # Install all packages except RCall first
+          julia -e 'import Pkg; Pkg.add(["Suppressor", "Serialization", "LogDensityProblemsAD", "ReverseDiff", "AdvancedHMC", "AbstractMCMC", "LogDensityProblems", "MCMCChains", "DataFrames"]); Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl", subdir="JuliaBUGS")'
+          # Install RCall but don't load it - let JuliaCall handle the initialization
+          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.build("RCall")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
