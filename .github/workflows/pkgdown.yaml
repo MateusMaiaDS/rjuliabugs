@@ -65,10 +65,10 @@ jobs:
           println("Julia's R_HOME environment variable: $(ENV["R_HOME"])")
 
           import Pkg
-          println("Adding RCall.jl and Suppressor.jl...")
-          Pkg.add("RCall")
-          Pkg.add("Suppressor")
-          Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl")
+          println("Adding Julia dependencies...")
+          Pkg.add(["RCall","Suppressor","LogDensityProblemsAD","ReverseDiff","AdvancedHMC","AbstractMCMC","LogDensityProblems","MCMCChains","DataFrames"])
+          # JuliaBUGS moved under a subdirectory in the repo
+          Pkg.add(Pkg.PackageSpec(url="https://github.com/TuringLang/JuliaBUGS.jl", subdir="JuliaBUGS"))
 
           println("Packages added. Testing RCall...")
 
