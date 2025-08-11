@@ -67,9 +67,10 @@ jobs:
         run: |
           ENV["R_HOME"] = get(ENV, "R_HOME", "")
           import Pkg
-          Pkg.add("RCall")
-          Pkg.add("Suppressor")
-          Pkg.add("JuliaBUGS")
+          println("Adding Julia dependencies...")
+          Pkg.add(["RCall","Suppressor","LogDensityProblemsAD","ReverseDiff","AdvancedHMC","AbstractMCMC","LogDensityProblems","MCMCChains","DataFrames","JuliaBUGS"])
+
+          println("Packages added. Testing RCall...")
           using RCall
           my_range = 1:5
           @rput my_range
