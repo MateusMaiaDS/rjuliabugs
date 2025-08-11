@@ -419,7 +419,7 @@ setup_juliaBUGS <- function(
 
   # Loading those libraries
   JuliaCall::julia_eval(
-    "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS"
+    "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames, JuliaBUGS"
   )
 
   if (!is.null(extra_packages)) {

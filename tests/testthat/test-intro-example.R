@@ -7,19 +7,9 @@ test_that("intro vignette example runs on Julia", {
   # Ensure R_HOME is visible to Julia's RCall (extra safety in addition to CI setup)
   Sys.setenv(R_HOME = R.home())
 
-  # Skip Julia setup in CI environment where Julia is pre-configured
-  # The CI environment variable is set by GitHub Actions
-  if (Sys.getenv("CI") != "true") {
-    # Light setup: avoid package install here (CI pre-installs Julia packages)
-    expect_silent(rjuliabugs::setup_juliaBUGS(verify_package = FALSE))
-  } else {
-    # In CI, just initialize JuliaCall and load all required packages
-    JuliaCall::julia_setup()
-    # Load all the pre-installed packages that JuliaBUGS needs
-    JuliaCall::julia_eval(
-      "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames, JuliaBUGS"
-    )
-  }
+  # Always use setup_juliaBUGS to ensure proper loading
+  # In CI, packages are pre-installed so we skip verification
+  expect_silent(rjuliabugs::setup_juliaBUGS(verify_package = FALSE))
 
   # Data from the intro vignette (seeds example)
   data <- list(
