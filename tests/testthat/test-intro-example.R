@@ -13,10 +13,12 @@ test_that("intro vignette example runs on Julia", {
     # Light setup: avoid package install here (CI pre-installs Julia packages)
     expect_silent(rjuliabugs::setup_juliaBUGS(verify_package = FALSE))
   } else {
-    # In CI, just initialize JuliaCall and load JuliaBUGS
+    # In CI, just initialize JuliaCall and load all required packages
     JuliaCall::julia_setup()
-    # Load the pre-installed JuliaBUGS package
-    JuliaCall::julia_library("JuliaBUGS")
+    # Load all the pre-installed packages that JuliaBUGS needs
+    JuliaCall::julia_eval(
+      "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames, JuliaBUGS"
+    )
   }
 
   # Data from the intro vignette (seeds example)
