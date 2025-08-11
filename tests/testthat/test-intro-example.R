@@ -3,30 +3,20 @@ test_that("intro vignette example runs on Julia", {
   if (Sys.which("julia") == "") {
     skip("Julia is not available on PATH; skipping intro example test.")
   }
-  
-  # Skip on Ubuntu in CI due to JuliaCall/RCall segfault issues
-  # This is a known issue with Julia 1.10+ and RCall on Ubuntu
-  if (Sys.getenv("CI") == "true" && grepl("linux", R.version$os)) {
-    skip("Skipping on Ubuntu CI due to known JuliaCall/RCall segfault")
-  }
 
   # Ensure R_HOME is visible to Julia's RCall (extra safety in addition to CI setup)
   Sys.setenv(R_HOME = R.home())
   
-  # Check if we're in CI and Julia packages are already configured
-  if (Sys.getenv("CI") == "true") {
-    # In CI, Julia packages should already be installed and RCall configured
-    # Just initialize JuliaCall without reinstalling packages
-    capture.output({
-      JuliaCall::julia_setup()
-      # Verify RCall is working
-      JuliaCall::julia_eval("using RCall")
-      JuliaCall::julia_eval("using Suppressor, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames, JuliaBUGS")
-    })
-  } else {
-    # Local development: use setup_juliaBUGS
-    capture.output(rjuliabugs::setup_juliaBUGS(verify_package = FALSE))
-  }
+  # Setup Julia environment
+  capture.output({
+    if (Sys.getenv("CI") == "true") {
+      # In CI: packages are pre-installed, skip verification
+      rjuliabugs::setup_juliaBUGS(verify_package = FALSE)
+    } else {
+      # Local development: verify packages
+      rjuliabugs::setup_juliaBUGS(verify_package = TRUE)
+    }
+  })
 
   # Data from the intro vignette (seeds example)
   data <- list(
