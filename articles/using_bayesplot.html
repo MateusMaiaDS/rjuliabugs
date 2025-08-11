@@ -118,15 +118,10 @@ functions <code>as_rvar</code>, <code>as_mcmc</code> and
 (<code>as_rvar(rjuliabugs)</code>) or the <code>rjuliabugs$params</code>
 object (<code>as_rvar(juliabugs$params</code>). See the <a href="https://mateusmaiads.github.io/rjuliabugs/reference/index.html#converting-posterior-sample-formats">reference</a>
 section for a complete documentation of the examples.</p>
-<p>At first we need to extract the posterior samples, to do it so we
-will use the <code><a href="../reference/extract.html">rjuliabugs::extract</a></code> function:</p>
+<p>Verifying the dimensions of the <code>params</code> object we would
+have</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pars_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>,<span class="st">"alpha1"</span>,<span class="st">"alpha2"</span>,<span class="st">"alpha12"</span>,<span class="st">"sigma"</span><span class="op">)</span></span>
-<span><span class="va">posterior_samples</span> <span class="op">&lt;-</span> <span class="fu">rjuliabugs</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span>,pars <span class="op">=</span> <span class="va">pars_names</span><span class="op">)</span></span></code></pre></div>
-<p>Verifying the dimensions of the <code>posterior_samples</code> object
-we would have</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">posterior_samples</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2000    4    5</span></span></code></pre></div>
 <p>we have a total of 2000 iterations, 4 chains and 5 parameters that
 were stored.</p>
@@ -141,9 +136,9 @@ visualized using the <code>mcmc_intervals</code> function.</p>
 <h3 id="mcmc_intervals">
 <code>mcmc_intervals</code><a class="anchor" aria-label="anchor" href="#mcmc_intervals"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_intervals</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span>  <span class="va">pars_names</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_intervals</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span>  <span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">mcmc</span><span class="op">$</span><span class="va">params_to_save</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_intervals-1.png" width="600" style="display: block; margin: auto;"></p>
 <p>By default, the plot displays 50% credible intervals as bold lines
 and 90% intervals as thinner outer segments. These settings can be
@@ -160,10 +155,10 @@ employed.</p>
 <h3 id="mcmc_intervals-1">
 <code>mcmc_intervals</code><a class="anchor" aria-label="anchor" href="#mcmc_intervals-1"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span></span>
-<span>  <span class="va">posterior_samples</span>, </span>
-<span>  pars <span class="op">=</span> <span class="va">pars_names</span>,</span>
+<span>  <span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
+<span>  pars <span class="op">=</span> <span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">mcmc</span><span class="op">$</span><span class="va">params_to_save</span>,</span>
 <span>  prob <span class="op">=</span> <span class="fl">0.8</span>, <span class="co"># 80% intervals</span></span>
 <span>  prob_outer <span class="op">=</span> <span class="fl">0.99</span>, <span class="co"># 99%</span></span>
 <span>  point_est <span class="op">=</span> <span class="st">"mean"</span></span>
@@ -176,10 +171,10 @@ employed.</p>
 </h3>
 <p>We can also generate additional plots with by calling
 <code>mcmc_areas_ridges</code></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas_ridges</a></span><span class="op">(</span></span>
-<span>  <span class="va">posterior_samples</span>, </span>
-<span>  pars <span class="op">=</span> <span class="va">pars_names</span>,</span>
+<span>  <span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
+<span>  pars <span class="op">=</span> <span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">mcmc</span><span class="op">$</span><span class="va">params_to_save</span>,</span>
 <span>  prob <span class="op">=</span> <span class="fl">0.8</span>, <span class="co"># 80% intervals</span></span>
 <span>  prob_outer <span class="op">=</span> <span class="fl">0.99</span>, <span class="co"># 99%</span></span>
 <span>  point_est <span class="op">=</span> <span class="st">"mean"</span></span>
@@ -198,7 +193,7 @@ individually.</p>
 <p>The <code>mcmc_hist</code> function plots marginal posterior
 distributions (combining all chains):</p>
 <pre class="mcmc_hist"><code><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"blue"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="mcmc_hist_by_chain">
@@ -208,12 +203,12 @@ distributions (combining all chains):</p>
 chains, the <code>mcmc_hist_by_chain</code> function can be used; it
 generates separate facets for each chain within the plot.</p>
 <pre class="mcmc_hist_chain"><code><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"darkgreen"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist_by_chain</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist_by_chain</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>If we are interested in also display a transformation for display any
 of the histograms, this is possible by setting the
 <code>transformations</code> argument.</p>
 <pre class="mcmc_hist_chain_transform"><code><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"darkgreen"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist_by_chain</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist_by_chain</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
 <span>                   transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"sigma"</span> <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>Many of the plotting functions for MCMC draws also include a
 <code>transformations</code> argument to apply transformations to the
@@ -227,9 +222,9 @@ parameters before plotting.</p>
 <code>mcmc_hist</code>, but it displays kernel density estimates in
 place of histograms. This include a version of
 <code>mcmc_dens_by_chain</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"brightblue"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_dens-1.png" width="600" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -240,8 +235,8 @@ place of histograms. This include a version of
 <code>mcmc_dens_overlay</code> function distinguishes between Markov
 chains; however, rather than showing them in separate panels, it
 overlays their density estimates in a single plot.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens_overlay</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens_overlay</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_dens_overlay-1.png" width="600" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -251,9 +246,9 @@ overlays their density estimates in a single plot.</p>
 <p>The <code>mcmc_violin</code> function visualizes the density
 estimates for each chain using violin plots and adds horizontal lines at
 quantiles specified by the user.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"teal"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_violin</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_violin</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_violion-1.png" width="600" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -272,9 +267,9 @@ examples but for complete reference check the original <a href="https://mc-stan.
 </h3>
 <p>The <code>mcmc_scatter</code> function generates a basic scatter plot
 showing the relationship between two parameters.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"orange"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_scatter</a></span><span class="op">(</span><span class="va">posterior_samples</span>, </span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_scatter</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
 <span>             pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span>,</span>
 <span>             size <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>             alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
@@ -287,11 +282,11 @@ showing the relationship between two parameters.</p>
 <p>The <code>mcmc_hex</code> function produces a comparable plot using
 hexagonal bins, which helps reduce overplotting when many points
 overlap.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"gray"</span><span class="op">)</span></span>
 <span><span class="co"># requires hexbin package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"hexbin"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_hex</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_hex</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha12"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -302,10 +297,10 @@ overlap.</p>
 the bayesplot package also includes the <code>mcmc_pairs</code>
 function, which allows users to create pairs plots for exploring
 relationships among multiple parameters.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"purple"</span><span class="op">)</span></span>
 <span><span class="co"># requires hexbin package</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_pairs</a></span><span class="op">(</span><span class="va">posterior_samples</span>, </span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_pairs</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, </span>
 <span>         pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"alpha1"</span>,<span class="st">"alpha12"</span><span class="op">)</span>,</span>
 <span>         off_diag_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_pairs-1.png" width="600" style="display: block; margin: auto;"></p>
@@ -338,15 +333,15 @@ package.</p>
 </h3>
 <p>The <code>mcmc_trace</code> function generates basic trace plots to
 visualize the sampling paths of parameters across iterations.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"blue"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_trace-1.png" width="600" style="display: block; margin: auto;"></p>
 <p>If the differences between chains are difficult to distinguish, a
 mixed color scheme can be used to improve clarity. For example:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"mix-blue-red"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha0"</span>, <span class="st">"sigma"</span><span class="op">)</span>,</span>
 <span>           facet_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span>, strip.position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_multiple_trace_color-1.png" width="600" style="display: block; margin: auto;"></p>
 <p>The example above also demonstrates the <code>facet_args</code>
@@ -363,9 +358,9 @@ plot.</p>
 <p>The <code>mcmc_trace_highlight</code> function displays points
 instead of lines and lowers the opacity of all chains except one, which
 is emphasized using the <code>highlight</code> argument.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/bayesplot-colors.html" class="external-link">color_scheme_set</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace_highlight</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="st">"sigma"</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace_highlight</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="st">"sigma"</span><span class="op">)</span>,</span>
 <span>           highlight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_higlight_traceplot-1.png" width="600" style="display: block; margin: auto;"></p>
 <p>While trace plots focus on how the Markov chains evolve over
@@ -373,8 +368,8 @@ iterations, <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.h
 mix by comparing the distribution of their ranks. Ideally, the histogram
 should be roughly uniform, indicating good mixing across chains. See
 Vehtari et al. (2021) for more background.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_hist</a></span><span class="op">(</span><span class="va">posterior_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_hist</a></span><span class="op">(</span><span class="va">rjuliabugs_fit</span><span class="op">$</span><span class="va">params</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sigma"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="using_bayesplot_files/figure-html/mcmc_rank-1.png" width="1200" style="display: block; margin: auto;"></p>
 <p>Additionally, <code><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_ecdf()</a></code> plots the empirical
 cumulative distribution functions (ECDFs) of the ranks along with
