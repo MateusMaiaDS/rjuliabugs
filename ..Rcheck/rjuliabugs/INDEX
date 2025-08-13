@@ -1,0 +1,22 @@
+as_draws                Convert to posterior::draws format
+as_mcmc                 Convert to coda::mcmc or mcmc.list format
+as_rvar                 Convert to posterior::rvar format
+bugs2juliaBUGS          Convert BUGS Model to Julia's '@bugs' Macro
+                        Format
+convert_numeric_types   Convert Numeric Elements in a List to Integer
+                        or Float
+delete_julia_obj        Delete an object from the Julia Main
+                        environment
+get_params              Extract and convert posterior parameters
+get_params_from_name    Extract Parameter Samples from a Turing.jl
+                        MCMCChains Object
+juliaBUGS               Run a Julia HMC Sampler for a BUGS-like
+                        Probabilistic Model
+julia_assign_int        Assign an Integer Value to a Julia Variable
+load_rjuliabugs         Load an 'rjuliabugs' Object and Restore the
+                        Julia State
+save_rjuliabugs         Save an 'rjuliabugs' Object and Its Julia State
+setup_juliaBUGS         Setup Julia Environment for JuliaBUGS
+summary.rjuliabugs      Summary Method for JuliaBUGS Sampler Output
+wrap_model_to_juliaBUGS
+                        Wrap BUGS Model for Julia

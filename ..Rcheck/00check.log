@@ -1,0 +1,105 @@
+* using log directory ‘/home/xiandasun/Projects/rjuliabugs/..Rcheck’
+* using R version 4.5.1 (2025-06-13)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+    GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+* running under: Ubuntu 24.04.2 LTS
+* using session charset: UTF-8
+* using options ‘--no-manual --ignore-vignettes --as-cran’
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘rjuliabugs’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: ‘Mateus Maia <mateus.maiamarques@glasgow.ac.uk>’
+
+New submission
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Packages suggested but not available for checking: 'bayesplot', 'gridExtra'
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .DS_Store
+  .github/.gitignore
+  .gitignore
+  inst/.DS_Store
+  vignettes/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+  .github
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+
+CRAN-pack does not know about
+  .DS_Store
+  inst/.DS_Store
+  ..Rcheck
+  .git
+  .github
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘rjuliabugs’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... NOTE
+Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ being installed.
+Non-standard files/directories found at top level:
+  ‘LICENSE.md’ ‘README.Rmd’ ‘_pkgdown.yml’ ‘docs’ ‘pkgdown’
+  ‘rjuliabugs.Rproj’
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Found the following directory with the name of a version control directory:
+  ./.git
+These should not be in a package tarball.
+Subdirectory ‘inst’ contains no files.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking LazyData ... INFO
+  'LazyData' is specified without a 'data' directory
+* checking files in ‘vignettes’ ... SKIPPED
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 1 WARNING, 4 NOTEs

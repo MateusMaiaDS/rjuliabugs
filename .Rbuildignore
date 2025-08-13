@@ -8,3 +8,11 @@
 ^docs$
 ^pkgdown$
 README.Rmd
+^\.git$
+^\.DS_Store$
+^inst/\.DS_Store$
+^\.vscode$
+^\.idea$
+^\.Renviron$
+^\.env$
+^..Rcheck$

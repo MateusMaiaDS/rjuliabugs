@@ -11,20 +11,16 @@ Author: Mateus Maia [aut, cre], Xianda Sun [aut]
 Description: Provides an interface for using JuliaBUGS.jl from R. Supports visualization using packages such as bayesplot and posterior.
 License: MIT + file LICENSE
 Encoding: UTF-8
-SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl, LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl, AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl, RCall.jl, Suppressor.jl
+SystemRequirements: Julia (>= 1.10.8), JuliaBUGS.jl,
+        LogDensityProblemsAD.jl, ReverseDiff.jl, AdvancedHMC.jl,
+        AbstractMCMC.jl, LogDensityProblems.jl, MCMCChains.jl,
+        RCall.jl, Suppressor.jl
 LazyData: true
-Imports:
-    coda,
-    JuliaCall,
-    posterior
+Imports: coda, JuliaCall, posterior
 RoxygenNote: 7.3.2
-Suggests:
-    bayesplot,
-    knitr,
-    rmarkdown,
-    gridExtra,
-    testthat (>= 3.0.0),
-    withr
+Suggests: bayesplot, knitr, rmarkdown, gridExtra, testthat (>= 3.0.0),
+        withr
 URL: https://mateusmaiads.github.io/rjuliabugs/
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Built: R 4.5.1; ; 2025-08-13 16:43:43 UTC; unix

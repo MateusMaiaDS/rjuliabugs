@@ -28,6 +28,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: false
 
     steps:
       - uses: actions/checkout@v4
@@ -56,15 +57,20 @@ jobs:
           echo "R_HOME=$R_HOME_PATH" >> $GITHUB_ENV
           echo "R_HOME environment variable set."
 
-      - name: Configure Julia packages
+      - name: Configure Julia packages (non-Linux)
+        if: runner.os != 'Linux'
         shell: bash
         run: |
-          # R_HOME is now available as a persistent environment variable for this step
           echo "Using R_HOME for Julia: $R_HOME"
-          # Install all packages except RCall first
-          julia -e 'import Pkg; Pkg.add(["Suppressor", "Serialization", "LogDensityProblemsAD", "ReverseDiff", "AdvancedHMC", "AbstractMCMC", "LogDensityProblems", "MCMCChains", "DataFrames"]); Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl", subdir="JuliaBUGS")'
-          # Install RCall but don't load it - let JuliaCall handle the initialization
+          julia -e 'import Pkg; Pkg.add(["Suppressor", "Serialization", "LogDensityProblemsAD", "ReverseDiff", "AdvancedHMC", "AbstractMCMC", "LogDensityProblems", "MCMCChains", "DataFrames"]); Pkg.add("JuliaBUGS")'
           julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.build("RCall")'
+
+      - name: Configure Julia packages (Linux minimal)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          echo "Using R_HOME for Julia: $R_HOME"
+          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.build("RCall")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

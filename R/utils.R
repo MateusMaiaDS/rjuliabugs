@@ -396,6 +396,11 @@ setup_juliaBUGS <- function(
   
   # Add special handling for Linux CI to avoid segfaults
   julia_args <- list(...)
+  # Prefer the Julia found on PATH to avoid picking up a different version
+  julia_path <- Sys.which("julia")
+  if (nzchar(julia_path)) {
+    julia_args$JULIA_HOME <- dirname(julia_path)
+  }
   if (Sys.getenv("CI") == "true" && grepl("linux", R.version$os)) {
     julia_args$installJulia <- FALSE
     julia_args$rebuild <- FALSE
