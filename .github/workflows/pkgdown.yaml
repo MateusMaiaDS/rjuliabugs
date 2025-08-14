@@ -1,5 +1,4 @@
-name: pkgdown-macos
-
+# macOS-exclusive pkgdown workflow with Julia and JAGS
 on:
   push:
     branches: [main, master]
@@ -9,11 +8,15 @@ on:
     types: [published]
   workflow_dispatch:
 
+name: pkgdown-macos
+
 permissions: write-all
 
 jobs:
   pkgdown:
     runs-on: macos-latest
+    concurrency:
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       JULIA_DEPOT_PATH: /Users/runner/.julia
@@ -21,70 +24,75 @@ jobs:
       contents: write
 
     steps:
-      # 1. Checkout code
       - uses: actions/checkout@v4
 
-      # 2. Install JAGS (macOS-only)
+      # Install JAGS for rjags
       - name: Install JAGS
         run: |
           brew update
           brew install jags
           brew link --force jags
 
-      - name: Set up R (x86_64)
+      # Setup R
+      - name: Set up R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: '4.4.1'
           use-public-rspm: true
-          arch: 'x86_64'
+          r-version: '4.4.1' # Ensure x86_64 binary (default runner arch)
 
-
-      # 4. Install rjags from source (requires JAGS)
+      # Install rjags from source
       - name: Install rjags
         run: Rscript -e 'install.packages("rjags", type = "source")'
 
-      # 5. Set R_HOME for Julia
+      # Determine and export R_HOME
       - name: Set R_HOME for Julia
-        run: echo "R_HOME=$(Rscript -e 'cat(R.home())')" >> $GITHUB_ENV
+        shell: bash
+        run: |
+          R_HOME_PATH=$(Rscript -e 'cat(R.home())')
+          echo "R_HOME=$R_HOME_PATH" >> $GITHUB_ENV
+          export R_HOME=$R_HOME_PATH
+          echo "R_HOME set to $R_HOME"
 
-      # 6. Set up Julia (macOS-only)
+      # Setup Julia
       - name: Set up Julia
-        uses: julia-actions/setup-julia@v2
+        uses: julia-actions/setup-julia@v1
         with:
           version: '1.11.5'
-          arch: 'x64'
+        env:
+          JULIA_DEPOT_PATH: /Users/runner/.julia
 
-      # 7. Install Julia packages and test RCall
-      - name: Install Julia packages
+      # Install Julia packages including RCall
+      - name: Install Julia RCall and JuliaBUGS
         shell: julia {0}
         run: |
           ENV["R_HOME"] = get(ENV, "R_HOME", "")
           import Pkg
           Pkg.add("RCall")
           Pkg.add("Suppressor")
-          Pkg.add("JuliaBUGS")
+          Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl")
           using RCall
-          my_julia_range = 1:5
-          @rput my_julia_range
-          println("RCall test successful!")
+          my_range = 1:5
+          @rput my_range
+          println("RCall test successful")
 
-      # 8. Setup Pandoc (macOS)
+      # Setup Pandoc
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # 9. Install R package dependencies
+      # Install R dependencies for pkgdown
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::., any::devtools
 
-      # 10. Install your R package with vignettes
-      - name: Install package
+      # Install package including vignettes
+      - name: Install R package
         run: Rscript -e 'devtools::install(build = TRUE, build_vignettes = TRUE, upgrade = "never")'
 
-      # 11. Build pkgdown site
-      - name: Build site
-        run: Rscript -e 'pkgdown::build_site_github_pages(new_process = TRUE, install = TRUE)'
+      # Build site
+      - name: Build pkgdown site
+        shell: Rscript {0}
+        run: pkgdown::build_site_github_pages(new_process = TRUE, install = TRUE)
 
-      # 12. Deploy to GitHub Pages
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
