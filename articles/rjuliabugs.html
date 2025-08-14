@@ -39,7 +39,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/rjuliabugs_parallel.html">Using rjuliabugs in parallel</a></li>
+<li><a class="dropdown-item" href="../articles/other_ppl.html">Translating Probabilistic Models: From JAGS, Nimble, and Stan to rjuliabugs</a></li>
+    <li><a class="dropdown-item" href="../articles/rjuliabugs_parallel.html">Using rjuliabugs in parallel</a></li>
     <li><a class="dropdown-item" href="../articles/setup_troubleshooting.html">Using rjuliabugs: Setup and Troubleshooting</a></li>
     <li><a class="dropdown-item" href="../articles/using_bayesplot.html">Plotting rjuliabugs draws using bayesplot package</a></li>
   </ul>
@@ -260,17 +261,17 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  parameters      mean      std      mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 56.537094 134.1444 11.423069    243.6    182.1 1.010          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.828819   0.4391  0.007852   3126.8   3643.1 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.354223   0.2738  0.005024   3018.9   3629.7 1.000          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.087128   0.3135  0.005584   3121.0   4374.8 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.551511   0.1923  0.003459   3073.4   3857.5 1.001          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.193019   0.2611  0.006743   1604.4   4039.8 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.008037   0.2180  0.003031   5337.6   3627.8 1.004          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.193803   0.2327  0.006112   1404.4   4315.3 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.269587   0.2646  0.008443    957.6   4938.0 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.113748   0.2438  0.004105   3846.2   4350.4 1.004          NA</span></span>
+<span><span class="co">#&gt;  parameters     mean     std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
+<span><span class="co">#&gt;         tau 39.74610 86.8906 4.374627    480.6    485.8 1.012          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.82833  0.4350 0.007351   3499.4   4179.8 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.34649  0.2712 0.004810   3173.0   3938.8 1.002          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.08310  0.3196 0.005326   3695.8   3838.4 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.54791  0.1970 0.003322   3485.5   3682.3 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.19529  0.2602 0.005583   2267.2   3941.6 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.00735  0.2218 0.002934   5996.1   4034.4 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.20473  0.2343 0.004918   2281.3   3899.1 1.003          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.26799  0.2563 0.006439   1591.9   4231.1 1.003          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.11046  0.2402 0.003546   4923.3   3688.3 1.002          NA</span></span>
 <span><span class="co">#&gt;          ...</span></span>
 <span><span class="co">#&gt;   17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -381,7 +382,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3091.219</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3517.728</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>
@@ -405,7 +406,7 @@ object</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mateus Maia, Xianda Sun.</p>
+  <p>Developed by Mateus Maia.</p>
 </div>
 
 <div class="pkgdown-footer-right">

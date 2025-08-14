@@ -2,11 +2,12 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  other_ppl: other_ppl.html
   rjuliabugs_parallel: rjuliabugs_parallel.html
   rjuliabugs: rjuliabugs.html
   setup_troubleshooting: setup_troubleshooting.html
   using_bayesplot: using_bayesplot.html
-last_built: 2025-08-13T16:54Z
+last_built: 2025-08-14T19:42Z
 urls:
   reference: https://mateusmaiads.github.io/rjuliabugs/reference
   article: https://mateusmaiads.github.io/rjuliabugs/articles
