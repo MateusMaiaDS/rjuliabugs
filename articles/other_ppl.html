@@ -126,7 +126,10 @@ and its standard error
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\sigma_j</annotation></semantics></math>.<br>
 The data are as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fl">8</span></span>
+<code class="sourceCode R"><span><span class="co"># Setting a seed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fl">8</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">28</span>, <span class="fl">8</span>, <span class="op">-</span><span class="fl">3</span>, <span class="fl">7</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">18</span>, <span class="fl">12</span><span class="op">)</span>          <span class="co"># estimated treatment effects</span></span>
 <span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">10</span>, <span class="fl">16</span>, <span class="fl">11</span>, <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">10</span>, <span class="fl">18</span><span class="op">)</span>   <span class="co"># standard errors</span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>J <span class="op">=</span> <span class="va">J</span>, y <span class="op">=</span> <span class="va">y</span>, sigma <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span></span></code></pre></div>
@@ -142,14 +145,14 @@ hierarchical model.<br>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>j</mi></msub><mo>=</mo><mi>μ</mi><mo>+</mo><mi>τ</mi><mo>⋅</mo><msub><mi>η</mi><mi>j</mi></msub><mo>,</mo><msub><mi>η</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_j = \mu + \tau \cdot \eta_j, \eta_j \sim \mbox{Normal}(0,1)</annotation></semantics></math><br>
 - Weakly informative priors:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu \sim \mbox{Normal}(0, 10)</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tau \sim \mbox{Uniform}(0, 10)</annotation></semantics></math></p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>25</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tau \sim \mbox{Uniform}(0, 25)</annotation></semantics></math></p>
 <p>Summarising the model setup we have:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>y</mi><mi>j</mi></msub><mo>∣</mo><msub><mi>θ</mi><mi>j</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>j</mi></msub><mo>,</mo><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>8</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>θ</mi><mi>j</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>μ</mi><mo>+</mo><mi>τ</mi><msub><mi>η</mi><mi>j</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>η</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>μ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>τ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>y</mi><mi>j</mi></msub><mo>∣</mo><msub><mi>θ</mi><mi>j</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>j</mi></msub><mo>,</mo><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>8</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>θ</mi><mi>j</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>μ</mi><mo>+</mo><mi>τ</mi><msub><mi>η</mi><mi>j</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>η</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>μ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Normal</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>τ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>25</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 y_j \mid \theta_j &amp;\sim \mbox{Normal}(\theta_j, \sigma_j^2), \quad j = 1, \dots, 8 \\
 \theta_j &amp;= \mu + \tau \eta_j, \quad \eta_j \sim \mbox{Normal}(0,1) \\
 \mu &amp;\sim \mbox{Normal}(0, 10) \\
-\tau &amp;\sim \mbox{Uniform}(0, 10)
+\tau &amp;\sim \mbox{Uniform}(0, 25)
 \end{aligned}
 </annotation></semantics></math></p>
 <p>Now we describe how the hierarchical Eight Schools model can be
@@ -233,7 +236,7 @@ the it the example, can be seen from the code:</p>
 <span>  <span class="op">}</span></span>
 <span>  </span>
 <span>  <span class="va">mu</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span>  <span class="va">tau</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>  </span>
+<span>  <span class="va">tau</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">25</span><span class="op">)</span>  </span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Constants</span></span>
@@ -271,6 +274,34 @@ the it the example, can be seen from the code:</p>
 <p>JAGS uses BUGS-style syntax to define hierarchical Bayesian models.
 Therefore, it use can be defined below:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># library(R2jags)  # or rjags</span></span>
+<span></span>
+<span><span class="va">jags_model_string</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">model {</span></span>
+<span><span class="st">  for (j in 1:J) {</span></span>
+<span><span class="st">    y[j] ~ dnorm(theta[j], pow(sigma[j], -2))</span></span>
+<span><span class="st">    theta[j] &lt;- mu + tau * eta[j]</span></span>
+<span><span class="st">    eta[j] ~ dnorm(0, 1)</span></span>
+<span><span class="st">  }</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  mu ~ dnorm(0, 0.01)       # precision = 1/variance</span></span>
+<span><span class="st">  tau ~ dunif(0, 25)  </span></span>
+<span><span class="st">}</span></span>
+<span><span class="st">"</span></span>
+<span></span>
+<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>,<span class="st">"tau"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fitting the jags model</span></span>
+<span><span class="va">fit_jags</span> <span class="op">&lt;-</span> <span class="fu">jags</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">data_list</span>,</span>
+<span>  parameters.to.save <span class="op">=</span> <span class="va">params</span>,</span>
+<span>  model.file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></span><span class="op">(</span><span class="va">jags_model_string</span><span class="op">)</span>,</span>
+<span>  n.chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  n.iter <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>  n.burnin <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  n.thin <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plotting the results</span></span>
 <span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span><span class="va">fit_jags</span><span class="op">$</span><span class="va">BUGSoutput</span><span class="op">$</span><span class="va">sims.array</span><span class="op">[</span>,,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>,<span class="st">"tau"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Omitting the plot for brevity</span></span></code></pre></div>
@@ -283,7 +314,7 @@ Started</a> page we can define the <code>rjuliabugs</code> model also
 using the BUGS-syntax style. Being more precise, it would be the same
 code as the <code>JAGS</code> subsection. The following steps may
 differ, by the example below</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mateusmaiads.github.io/rjuliabugs/">rjuliabugs</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rjuliabugs_model_string</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
@@ -295,7 +326,7 @@ differ, by the example below</p>
 <span><span class="st">  }</span></span>
 <span><span class="st"></span></span>
 <span><span class="st">  mu ~ dnorm(0, 0.01)       </span></span>
-<span><span class="st">  tau ~ dunif(0, 10)  </span></span>
+<span><span class="st">  tau ~ dunif(0, 25)  </span></span>
 <span><span class="st">}</span></span>
 <span><span class="st">"</span></span>
 <span></span>
@@ -315,7 +346,7 @@ differ, by the example below</p>
 <span></span>
 <span><span class="co"># Extract posterior samples</span></span>
 <span><span class="va">rjuliabugs_post_samples</span> <span class="op">&lt;-</span> <span class="fu">rjuliabugs</span><span class="fu">::</span><span class="fu"><a href="../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">fit_juliabugs</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Visualize mu and tau</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span><span class="va">rjuliabugs_post_samples</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
