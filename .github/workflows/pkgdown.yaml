@@ -13,14 +13,13 @@ permissions: write-all
 
 jobs:
   pkgdown:
-    runs-on: windows-latest  # Windows runner to ensure rjags works
+    runs-on: windows-latest
 
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      # Julia depot path
       JULIA_DEPOT_PATH: C:/julia
 
     permissions:
@@ -44,13 +43,15 @@ jobs:
       - name: Set R_HOME for Julia
         run: echo "R_HOME=$(Rscript -e 'cat(R.home())')" >> $GITHUB_ENV
 
-      # 4. Set up Julia
+      # 4. Set up Julia (Windows installer)
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
           version: '1.11.5'
+          architecture: 'x64'
+          release: 'stable'
 
-      # 5. Install Julia packages
+      # 5. Install Julia packages and test RCall
       - name: Install Julia packages
         shell: julia {0}
         run: |
@@ -73,7 +74,7 @@ jobs:
           extra-packages: any::pkgdown, local::., any::devtools
           needs: website
 
-      # 8. Install your package (with vignettes)
+      # 8. Install your package with vignettes
       - name: Install package
         run: Rscript -e 'devtools::install(build = TRUE, build_vignettes = TRUE, upgrade = "never")'
 
