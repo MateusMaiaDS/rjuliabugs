@@ -13,54 +13,44 @@ permissions: write-all
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-22.04   # Use Ubuntu 22.04 to get libjags-dev
+    runs-on: windows-latest  # Windows runner to ensure rjags works
+
+    concurrency:
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # Julia depot path
+      JULIA_DEPOT_PATH: C:/julia
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Install system JAGS and headers
-      - name: Install JAGS
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y jags libjags-dev
-
-      # 2. Ensure LD_LIBRARY_PATH includes JAGS library
-      - name: Set library path for JAGS
-        run: |
-          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-          echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> $GITHUB_ENV
-
-      # 3. Set up R
+      # 1. Set up R
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
           r-version: '4.4.1'
 
-      # 4. Install rjags from source
-      - name: Install rjags from source
-        run: Rscript -e 'install.packages("rjags", type = "source")'
+      # 2. Install rjags (Windows binary)
+      - name: Install rjags
+        run: Rscript -e 'install.packages("rjags")'
 
-      # 5. Set R_HOME for Julia
+      # 3. Set R_HOME for Julia
       - name: Set R_HOME for Julia
-        shell: bash
-        run: |
-          R_HOME_PATH=$(Rscript -e 'cat(R.home())')
-          echo "R_HOME=$R_HOME_PATH" >> $GITHUB_ENV
-          export R_HOME=$R_HOME_PATH
+        run: echo "R_HOME=$(Rscript -e 'cat(R.home())')" >> $GITHUB_ENV
 
-      # 6. Set up Julia
+      # 4. Set up Julia
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
           version: '1.11.5'
-        env:
-          JULIA_DEPOT_PATH: /home/runner/.julia
 
-      # 7. Install Julia packages
+      # 5. Install Julia packages
       - name: Install Julia packages
         shell: julia {0}
         run: |
@@ -69,18 +59,29 @@ jobs:
           Pkg.add("RCall")
           Pkg.add("Suppressor")
           Pkg.add("JuliaBUGS")
+          using RCall
+          my_julia_range = 1:5
+          @rput my_julia_range
+          println("RCall test successful!")
 
-      # 8. Install R package dependencies
+      # 6. Setup Pandoc
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      # 7. Install R package dependencies
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::., any::devtools
           needs: website
 
-      # 9. Build the package site
+      # 8. Install your package (with vignettes)
+      - name: Install package
+        run: Rscript -e 'devtools::install(build = TRUE, build_vignettes = TRUE, upgrade = "never")'
+
+      # 9. Build pkgdown site
       - name: Build site
         run: Rscript -e 'pkgdown::build_site_github_pages(new_process = TRUE, install = TRUE)'
 
-      # 10. Deploy site to GitHub Pages
+      # 10. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
