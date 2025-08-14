@@ -198,7 +198,7 @@ model {
 params <- c("mu","tau")
 
 # Fitting the jags model
-fit_jags <- R2jags::jags(
+fit_jags <- jags(
   data = data_list,
   parameters.to.save = params,
   model.file = textConnection(jags_model_string),

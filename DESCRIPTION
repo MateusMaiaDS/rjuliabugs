@@ -19,7 +19,6 @@ Suggests:
     knitr,
     rmarkdown,
     gridExtra,
-    R2jags,
     rstan,
     nimble
 URL: https://mateusmaiads.github.io/rjuliabugs/
