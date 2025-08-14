@@ -13,7 +13,7 @@ permissions: write-all
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # <- use 22.04 to get libjags-dev easily
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Install system JAGS
+      # 1. Install system JAGS and headers
       - name: Install JAGS
         run: |
           sudo apt-get update -y
