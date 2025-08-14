@@ -180,7 +180,7 @@ mcmc_areas(samples_array, pars = c("mu", "tau"))
 JAGS uses BUGS-style syntax to define hierarchical Bayesian models. Therefore, it use can be defined below:
 
 ```{r rjags_example,eval=FALSE}
-library(R2jags)  # or rjags
+# library(R2jags)  # or rjags
 
 jags_model_string <- "
 model {
