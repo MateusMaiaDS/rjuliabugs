@@ -411,7 +411,7 @@ setup_juliaBUGS <- function(
   }
   if (install_from_dev && verify_package) {
     JuliaCall::julia_eval(
-      'Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl.git")'
+      'Pkg.add("JuliaBUGS")'
     )
   } else if (verify_package) {
     JuliaCall::julia_install_package_if_needed("JuliaBUGS")
