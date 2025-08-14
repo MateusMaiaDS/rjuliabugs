@@ -176,7 +176,7 @@ mcmc_areas(samples_array, pars = c("mu", "tau"))
 
 JAGS uses BUGS-style syntax to define hierarchical Bayesian models. Therefore, it use can be defined below:
 
-```{r rjags_example, include=FALSE}
+```{r rjags_example, include=FALSE,eval=FALSE}
 library(R2jags)  # or rjags
 
 jags_model_string <- "
@@ -208,9 +208,10 @@ fit_jags <- R2jags::jags(
 ```
 
 
-```{r viz_jags}
+```{r viz_jags,eval=FALSE}
 # Plotting the results
 bayesplot::mcmc_areas(fit_jags$BUGSoutput$sims.array[,,c("mu","tau")])
+# Omitting the plot for brevity
 
 ```
 
