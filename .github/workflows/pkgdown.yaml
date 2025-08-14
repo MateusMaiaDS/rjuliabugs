@@ -69,7 +69,7 @@ jobs:
           import Pkg
           Pkg.add("RCall")
           Pkg.add("Suppressor")
-          Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl")
+          Pkg.add("JuliaBUGS")
           using RCall
           my_range = 1:5
           @rput my_range
