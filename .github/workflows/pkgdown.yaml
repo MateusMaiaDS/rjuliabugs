@@ -49,11 +49,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      # Install rjags from source so it links to the freshly installed JAGS
-      - name: Install rjags from source
-        run: |
-          Rscript -e 'install.packages("rjags", type = "source")'
-
       - name: Determine and set R_HOME for Julia
         shell: bash
         run: |
@@ -93,6 +88,11 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+
+      # Install rjags from source so it links to the freshly installed JAGS
+      - name: Install rjags from source
+        run: |
+          Rscript -e 'install.packages("rjags", type = "source")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
