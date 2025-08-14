@@ -60,10 +60,10 @@ We use a **non-centered parameterization** for the hierarchical model.
 Summarising the model setup we have:
 $$
 \begin{aligned}
-y_j \mid \theta_j &\sim \mathcal{N}(\theta_j, \sigma_j^2), \quad j = 1, \dots, 8 \\
-\theta_j &= \mu + \tau \eta_j, \quad \eta_j \sim \mathcal{N}(0,1) \\
-\mu &\sim \mathcal{N}(0, 10) \\
-\tau &\sim \mathcal{N}^{+}(0, 5)
+y_j \mid \theta_j &\sim \mbox{Normal}(\theta_j, \sigma_j^2), \quad j = 1, \dots, 8 \\
+\theta_j &= \mu + \tau \eta_j, \quad \eta_j \sim \mbox{Normal}(0,1) \\
+\mu &\sim \mbox{Normal}(0, 10) \\
+\tau &\sim \mbox{Normal}^{+}(0, 5)
 \end{aligned}
 $$
 
