@@ -1,4 +1,4 @@
-name: pkgdown.yaml
+name: pkgdown-macos
 
 on:
   push:
@@ -13,43 +13,47 @@ permissions: write-all
 
 jobs:
   pkgdown:
-    runs-on: windows-latest
-
-    concurrency:
-      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
-
+    runs-on: macos-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      JULIA_DEPOT_PATH: C:/julia
-
+      JULIA_DEPOT_PATH: /Users/runner/.julia
     permissions:
       contents: write
 
     steps:
+      # 1. Checkout code
       - uses: actions/checkout@v4
 
-      # 1. Set up R
+      # 2. Install JAGS (macOS-only)
+      - name: Install JAGS
+        run: |
+          brew update
+          brew install jags
+          brew link --force jags
+
+      # 3. Set up R
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
         with:
-          use-public-rspm: true
           r-version: '4.4.1'
+          use-public-rspm: true
 
-      # 2. Install rjags (Windows binary)
+      # 4. Install rjags from source (requires JAGS)
       - name: Install rjags
-        run: Rscript -e 'install.packages("rjags")'
+        run: Rscript -e 'install.packages("rjags", type = "source")'
 
-      # 3. Set R_HOME for Julia
+      # 5. Set R_HOME for Julia
       - name: Set R_HOME for Julia
         run: echo "R_HOME=$(Rscript -e 'cat(R.home())')" >> $GITHUB_ENV
 
+      # 6. Set up Julia (macOS-only)
       - name: Set up Julia
         uses: julia-actions/setup-julia@v2
         with:
           version: '1.11.5'
           arch: 'x64'
 
-      # 5. Install Julia packages and test RCall
+      # 7. Install Julia packages and test RCall
       - name: Install Julia packages
         shell: julia {0}
         run: |
@@ -63,24 +67,23 @@ jobs:
           @rput my_julia_range
           println("RCall test successful!")
 
-      # 6. Setup Pandoc
+      # 8. Setup Pandoc (macOS)
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # 7. Install R package dependencies
+      # 9. Install R package dependencies
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::., any::devtools
-          needs: website
 
-      # 8. Install your package with vignettes
+      # 10. Install your R package with vignettes
       - name: Install package
         run: Rscript -e 'devtools::install(build = TRUE, build_vignettes = TRUE, upgrade = "never")'
 
-      # 9. Build pkgdown site
+      # 11. Build pkgdown site
       - name: Build site
         run: Rscript -e 'pkgdown::build_site_github_pages(new_process = TRUE, install = TRUE)'
 
-      # 10. Deploy to GitHub Pages
+      # 12. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
