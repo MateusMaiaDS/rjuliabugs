@@ -53,9 +53,9 @@ data_list <- list(J = J, y = y, sigma = sigma)
 ## Model Specification
 
 We use a **non-centered parameterization** for the hierarchical model.  
-- Observation model: $y_j \sim \mathcal{N}(\theta_j, \sigma_j^2)$  
-- Non-centered prior: $\theta_j = \mu + \tau \cdot \eta_j, \eta_j \sim \mathcal{N}(0,1)$  
-- Weakly informative priors: $\mu \sim \mathcal{N}(0, 10)$, $\tau \sim \mathcal{N}(0, 5), \tau > 0$  
+- Observation model: $y_j \sim \mbox{Normal}(\theta_j, \sigma_j^2)$  
+- Non-centered prior: $\theta_j = \mu + \tau \cdot \eta_j, \eta_j \sim \mbox{Normal}(0,1)$  
+- Weakly informative priors: $\mu \sim \mbox{Normal}(0, 10)$, $\tau \sim \mbox{Uniform}(0, 10)$  
 
 Summarising the model setup we have:
 $$
@@ -63,7 +63,7 @@ $$
 y_j \mid \theta_j &\sim \mbox{Normal}(\theta_j, \sigma_j^2), \quad j = 1, \dots, 8 \\
 \theta_j &= \mu + \tau \eta_j, \quad \eta_j \sim \mbox{Normal}(0,1) \\
 \mu &\sim \mbox{Normal}(0, 10) \\
-\tau &\sim \mbox{Normal}^{+}(0, 5)
+\tau &\sim \mbox{Uniform}(0, 10)
 \end{aligned}
 $$
 
@@ -99,7 +99,7 @@ model {
   eta ~ normal(0, 1);
   y ~ normal(theta, sigma);
   mu ~ normal(0, 10);
-  tau ~ normal(0, 5);
+  tau ~ uniform(0, 10);
 }
 "
 
@@ -138,7 +138,7 @@ nimble_model_code <- nimbleCode({
   }
   
   mu ~ dnorm(0, 10)
-  tau ~ T(dnorm(0, 5), 0, )  # truncated at 0
+  tau ~ dunif(0, 10)  
 })
 
 # Constants
@@ -188,7 +188,7 @@ model {
   }
 
   mu ~ dnorm(0, 0.01)       # precision = 1/variance
-  tau ~ dnorm(0, 0.04)T(0,) # truncated at 0
+  tau ~ dunif(0, 10)  
 }
 "
 
@@ -231,7 +231,7 @@ model {
   }
 
   mu ~ dnorm(0, 0.01)       
-  tau ~ dnorm(0, 0.04)T(0,) 
+  tau ~ dunif(0, 10)  
 }
 "
 
