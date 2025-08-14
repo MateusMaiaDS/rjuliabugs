@@ -61,7 +61,7 @@ jobs:
         run: |
           # R_HOME is now available as a persistent environment variable for this step
           echo "Using R_HOME for Julia: $R_HOME"
-          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl"); Pkg.update(); using RCall'
+          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.add("Suppressor"); Pkg.add("JuliaBUGS"); Pkg.update(); using RCall'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
