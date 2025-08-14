@@ -31,7 +31,14 @@ jobs:
 
       # Install JAGS on macOS before installing R packages
       - name: Install JAGS
-        run: brew install jags
+        run: |
+          brew install jags
+          brew link jags --force
+
+      # Install rjags from source so it links to the freshly installed JAGS
+      - name: Install rjags from source
+        run: |
+          Rscript -e 'install.packages("rjags", type = "source")'
 
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1

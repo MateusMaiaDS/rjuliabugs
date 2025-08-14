@@ -20,7 +20,6 @@ Suggests:
     rmarkdown,
     gridExtra,
     R2jags,
-    rjags,
     rstan,
     nimble
 URL: https://mateusmaiads.github.io/rjuliabugs/
