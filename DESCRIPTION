@@ -18,6 +18,8 @@ Suggests:
     bayesplot,
     knitr,
     rmarkdown,
-    gridExtra
+    gridExtra,
+    rstan,
+    nimble
 URL: https://mateusmaiads.github.io/rjuliabugs/
 VignetteBuilder: knitr
