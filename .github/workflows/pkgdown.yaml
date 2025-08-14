@@ -35,11 +35,6 @@ jobs:
           brew install jags
           brew link jags --force
 
-      # Install rjags from source so it links to the freshly installed JAGS
-      - name: Install rjags from source
-        run: |
-          Rscript -e 'install.packages("rjags", type = "source")'
-
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
@@ -54,6 +49,10 @@ jobs:
         with:
           use-public-rspm: true
 
+      # Install rjags from source so it links to the freshly installed JAGS
+      - name: Install rjags from source
+        run: |
+          Rscript -e 'install.packages("rjags", type = "source")'
 
       - name: Determine and set R_HOME for Julia
         shell: bash
