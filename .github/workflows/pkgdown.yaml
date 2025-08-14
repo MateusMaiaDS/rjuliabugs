@@ -43,13 +43,11 @@ jobs:
       - name: Set R_HOME for Julia
         run: echo "R_HOME=$(Rscript -e 'cat(R.home())')" >> $GITHUB_ENV
 
-      # 4. Set up Julia (Windows installer)
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
           version: '1.11.5'
-          architecture: 'x64'
-          release: 'stable'
+          arch: 'x64'
 
       # 5. Install Julia packages and test RCall
       - name: Install Julia packages
