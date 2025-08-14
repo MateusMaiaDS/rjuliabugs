@@ -681,6 +681,9 @@ extract <- function(rjuliabugs, pars = NULL, type = "array", include = TRUE) {
     ]
   }
 
+  # Getting n_chain
+  n_chain <- rjuliabugs$mcmc$n_chain
+
   if (type == "array") {
     post_samples <- as.array(post_samples)
   } else if (type == "rvar") {

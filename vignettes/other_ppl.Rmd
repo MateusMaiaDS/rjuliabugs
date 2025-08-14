@@ -1,5 +1,5 @@
 ---
-title: "Translating Probabilistic Models: From JAGS, Nimble, and Stan to rjuliabugs""
+title: "Translating Probabilistic Models: From JAGS, Nimble, and Stan to rjuliabugs"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Translating Probabilistic Models: From JAGS, Nimble, and Stan to rjuliabugs}
@@ -148,7 +148,7 @@ constants <- list(J = J)
 params <- c("mu", "tau", "theta")
 
 # Build the model
-model_nimble <- nimbleModel(code = eight_schools_code, data = data_list, constants = constants)
+model_nimble <- nimbleModel(code = nimble_model_code, data = data_list, constants = constants)
 
 # Compile to C++ for speed
 cmodel <- compileNimble(model_nimble)
@@ -218,7 +218,7 @@ bayesplot::mcmc_areas(fit_jags$BUGSoutput$sims.array[,,c("mu","tau")])
 
 For the `rjuliabugs` as we previous seem in the [Get Started](https://mateusmaiads.github.io/rjuliabugs/articles/rjuliabugs.html) page we can define the `rjuliabugs` model also using the BUGS-syntax style. Being more precise, it would be the same code as the `JAGS` subsection. The following steps may differ, by the example below
 
-```{r rjuliabugs, include=FALSE}
+```{r rjuliabugs, results='hide'}
 library(rjuliabugs)
 
 rjuliabugs_model_string <- "
