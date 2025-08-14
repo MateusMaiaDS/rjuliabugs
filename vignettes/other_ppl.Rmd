@@ -245,7 +245,8 @@ fit_juliabugs <- juliaBUGS(
   params_to_save = params,
   n_iter = 2000,
   n_chain = 4,
-  posterior_type = "array"
+  posterior_type = "array",
+  progress = FALSE
 )
 
 # Extract posterior samples
