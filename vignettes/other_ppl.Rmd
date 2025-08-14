@@ -55,7 +55,7 @@ data_list <- list(J = J, y = y, sigma = sigma)
 We use a **non-centered parameterization** for the hierarchical model.  
 - Observation model: $y_j \sim \mbox{Normal}(\theta_j, \sigma_j^2)$  
 - Non-centered prior: $\theta_j = \mu + \tau \cdot \eta_j, \eta_j \sim \mbox{Normal}(0,1)$  
-- Weakly informative priors: $\mu \sim \mbox{Normal}(0, 10)$, $\tau \sim \mbox{Uniform}(0, 10)$  
+- Weakly informative priors: $\mu \sim \mbox{Normal}(0, 10)$, $\tau \sim \mbox{Uniform}(0, 25)$  
 
 Summarising the model setup we have:
 $$
@@ -63,7 +63,7 @@ $$
 y_j \mid \theta_j &\sim \mbox{Normal}(\theta_j, \sigma_j^2), \quad j = 1, \dots, 8 \\
 \theta_j &= \mu + \tau \eta_j, \quad \eta_j \sim \mbox{Normal}(0,1) \\
 \mu &\sim \mbox{Normal}(0, 10) \\
-\tau &\sim \mbox{Uniform}(0, 10)
+\tau &\sim \mbox{Uniform}(0, 25)
 \end{aligned}
 $$
 
@@ -138,7 +138,7 @@ nimble_model_code <- nimbleCode({
   }
   
   mu ~ dnorm(0, 10)
-  tau ~ dunif(0, 10)  
+  tau ~ dunif(0, 25)  
 })
 
 # Constants
@@ -176,7 +176,7 @@ mcmc_areas(samples_array, pars = c("mu", "tau"))
 
 JAGS uses BUGS-style syntax to define hierarchical Bayesian models. Therefore, it use can be defined below:
 
-```{r rjags_example, include=FALSE,eval=FALSE}
+```{r rjags_example,eval=FALSE}
 library(R2jags)  # or rjags
 
 jags_model_string <- "
@@ -188,7 +188,7 @@ model {
   }
 
   mu ~ dnorm(0, 0.01)       # precision = 1/variance
-  tau ~ dunif(0, 10)  
+  tau ~ dunif(0, 25)  
 }
 "
 
@@ -231,7 +231,7 @@ model {
   }
 
   mu ~ dnorm(0, 0.01)       
-  tau ~ dunif(0, 10)  
+  tau ~ dunif(0, 25)  
 }
 "
 
