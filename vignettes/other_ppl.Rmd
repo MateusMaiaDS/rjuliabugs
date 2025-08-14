@@ -44,6 +44,9 @@ For each school $j = 1, \dots, 8$, we have an estimated treatment effect $y_j$ a
 The data are as follows:
 
 ```{r data_setup}
+# Setting a seed
+set.seed(42)
+
 J <- 8
 y <- c(28, 8, -3, 7, -1, 1, 18, 12)          # estimated treatment effects
 sigma <- c(15, 10, 16, 11, 9, 11, 10, 18)   # standard errors
