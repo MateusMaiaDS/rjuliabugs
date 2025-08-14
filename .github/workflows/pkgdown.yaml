@@ -29,6 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Install JAGS on macOS before installing R packages
+      - name: Install JAGS
+        run: brew install jags
+
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
