@@ -102,7 +102,7 @@ model {
   eta ~ normal(0, 1);
   y ~ normal(theta, sigma);
   mu ~ normal(0, 10);
-  tau ~ uniform(0, 10);
+  tau ~ uniform(0, 25);
 }
 "
 
