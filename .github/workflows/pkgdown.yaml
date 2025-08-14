@@ -68,7 +68,7 @@ jobs:
           println("Adding RCall.jl and Suppressor.jl...")
           Pkg.add("RCall")
           Pkg.add("Suppressor")
-          Pkg.add(url="https://github.com/TuringLang/JuliaBUGS.jl")
+          Pkg.add("JuliaBUGS")
 
           println("Packages added. Testing RCall...")
 
