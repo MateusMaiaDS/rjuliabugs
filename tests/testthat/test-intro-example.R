@@ -58,7 +58,7 @@ model {
     n_chain = 1,
     use_parallel = FALSE,
     n_thin = 1,
-    progress = FALSE
+    progress = TRUE
   )
 
   # Basic structure checks
