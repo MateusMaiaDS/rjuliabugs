@@ -35,9 +35,15 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      CI: "true"
+      JULIA_DEPOT_PATH: /tmp/julia-depot
+      JULIA_NUM_THREADS: "1"
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Prepare Julia depot
+        run: mkdir -p /tmp/julia-depot
 
       - name: Set up Julia
         uses: julia-actions/setup-julia@v2
