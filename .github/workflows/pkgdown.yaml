@@ -68,7 +68,8 @@ jobs:
           println("Adding Julia dependencies...")
           Pkg.add(["RCall","Suppressor","LogDensityProblemsAD","ReverseDiff","AdvancedHMC","AbstractMCMC","LogDensityProblems","MCMCChains","DataFrames"])
           # JuliaBUGS moved under a subdirectory in the repo
-          Pkg.add(Pkg.PackageSpec(url="https://github.com/TuringLang/JuliaBUGS.jl", subdir="JuliaBUGS"))
+          Pkg.add("JuliaBUGS")
+          Pkg.precompile();
 
           println("Packages added. Testing RCall...")
 
