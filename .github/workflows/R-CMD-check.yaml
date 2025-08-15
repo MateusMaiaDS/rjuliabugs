@@ -1,5 +1,4 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches:
@@ -10,14 +9,13 @@ on:
       - main
       - mm/make_tests_ci_work_ubuntu
 
-
-
 name: R-CMD-check.yaml
 
 permissions: read-all
 
 jobs:
   R-CMD-check:
+    # --- CHANGE 1: use Ubuntu 20.04 for Linux runners (stable for JuliaCall)
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -28,9 +26,9 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+          - {os: ubuntu-20.04,   r: 'devel', http-user-agent: 'release'}   # Ubuntu downgraded from latest
+          - {os: ubuntu-20.04,   r: 'release'}                              # Ubuntu downgraded from latest
+          - {os: ubuntu-20.04,   r: 'oldrel-1'}                             # Ubuntu downgraded from latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -45,39 +43,36 @@ jobs:
       - name: Prepare Julia depot
         run: mkdir -p /tmp/julia-depot
 
-      - name: Set up Julia
-        uses: julia-actions/setup-julia@v2
-        with:
-          version: '1.10.8'
-
-      - uses: r-lib/actions/setup-pandoc@v2
-
-      # This step should come before  need R_HOME for Julia
+      # --- CHANGE 2: move setup-r BEFORE setup-pandoc & Julia to ensure R_HOME is set early
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.10.8'
+
+      # --- CHANGE 3: explicitly export R_HOME for JuliaCall
       - name: Set R_HOME for Julia
         shell: bash
         run: |
-          # Get R_HOME after setup-r has configured R
           R_HOME_PATH=$(Rscript -e 'cat(R.home())')
-          echo "Determined R_HOME_PATH: $R_HOME_PATH"
-          # Export R_HOME for subsequent steps
           echo "R_HOME=$R_HOME_PATH" >> $GITHUB_ENV
-          echo "R_HOME environment variable set."
+          echo "R_HOME environment variable set to $R_HOME_PATH"
 
-      - name: Configure Julia and RCall
+      # --- CHANGE 4: minimal safe Julia package setup for JuliaCall + rjuliabugs
+      - name: Configure Julia packages
         shell: bash
         run: |
-          # R_HOME is now available as a persistent environment variable for this step
           echo "Using R_HOME for Julia: $R_HOME"
-          # Install all packages except RCall first
-          julia -e 'import Pkg; Pkg.add(["Suppressor", "Serialization", "LogDensityProblemsAD", "ReverseDiff", "AdvancedHMC", "AbstractMCMC", "LogDensityProblems", "MCMCChains", "DataFrames", "JuliaBUGS"])'
-          # Install RCall but don't load it - let JuliaCall handle the initialization
-          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.add("RCall"); Pkg.build("RCall")'
+          # Install only necessary packages first to avoid precompilation conflicts
+          julia -e 'import Pkg; Pkg.add(["RCall", "JuliaBUGS"])'
+          julia -e 'ENV["R_HOME"] = ENV["R_HOME"]; import Pkg; Pkg.build("RCall")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

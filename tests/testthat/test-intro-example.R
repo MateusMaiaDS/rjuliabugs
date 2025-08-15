@@ -6,12 +6,12 @@ test_that("intro vignette example runs on Julia", {
 
   # Ensure R_HOME is visible to Julia's RCall (extra safety in addition to CI setup)
   Sys.setenv(R_HOME = R.home())
-  
+
   # Setup Julia environment
   capture.output({
     if (Sys.getenv("CI") == "true") {
       # In CI: packages are pre-installed, skip verification
-      rjuliabugs::setup_juliaBUGS(verify_package = FALSE)
+      rjuliabugs::setup_juliaBUGS(verify_package = TRUE)
     } else {
       # Local development: verify packages
       rjuliabugs::setup_juliaBUGS(verify_package = TRUE)
@@ -63,14 +63,14 @@ model {
 
   # Basic structure checks
   expect_s3_class(posterior, "rjuliabugs")
-  
+
   # Check if params exist and have the right structure
   expect_true(!is.null(posterior$params))
-  
+
   # For a single chain with array output, we might get a 2D array (iterations x parameters)
   # or a 3D array (iterations x chains x parameters)
   dims <- dim(posterior$params)
-  
+
   if (length(dims) == 2) {
     # 2D array: iterations x parameters
     expect_equal(dims[2], length(params_to_save))
