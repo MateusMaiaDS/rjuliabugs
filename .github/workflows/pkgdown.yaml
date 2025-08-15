@@ -77,6 +77,7 @@ jobs:
           import Pkg
           println("Adding Julia dependencies...")
           Pkg.add(["RCall","Suppressor","LogDensityProblemsAD","ReverseDiff","AdvancedHMC","AbstractMCMC","LogDensityProblems","MCMCChains","DataFrames","JuliaBUGS"])
+          Pkg.precompile();
 
           println("Packages added. Testing RCall...")
           using RCall
