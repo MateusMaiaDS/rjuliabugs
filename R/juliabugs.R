@@ -193,7 +193,10 @@ juliaBUGS <- function(
   }
 
   # Setting up the Julia Environment
-  setup_juliaBUGS(...)
+  # Only setup if forced or if Julia is not yet initialized
+  if (force_setup_juliaBUGS || !JuliaCall::julia_exists("JuliaBUGS")) {
+    setup_juliaBUGS(...)
+  }
 
   # Setting default configuration for control parameters
   if (is.null(control)) {

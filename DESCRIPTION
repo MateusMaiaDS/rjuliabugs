@@ -20,6 +20,8 @@ Suggests:
     rmarkdown,
     gridExtra,
     rstan,
-    nimble
+    nimble,
+    testthat (>= 3.0.0)
 URL: https://mateusmaiads.github.io/rjuliabugs/
 VignetteBuilder: knitr
+Config/testthat/edition: 3

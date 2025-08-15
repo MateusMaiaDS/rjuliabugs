@@ -33,6 +33,14 @@ jobs:
           brew install jags
           brew link --force jags
 
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.10.8' # Ensure this version is stable and compatible with RCall
+        env:
+          # This helps ensure Julia installs packages into a predictable location
+          JULIA_DEPOT_PATH: /Users/runner/.julia
+
       # Setup R
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
@@ -67,9 +75,11 @@ jobs:
         run: |
           ENV["R_HOME"] = get(ENV, "R_HOME", "")
           import Pkg
-          Pkg.add("RCall")
-          Pkg.add("Suppressor")
-          Pkg.add("JuliaBUGS")
+          println("Adding Julia dependencies...")
+          Pkg.add(["RCall","Suppressor","LogDensityProblemsAD","ReverseDiff","AdvancedHMC","AbstractMCMC","LogDensityProblems","MCMCChains","DataFrames","JuliaBUGS"])
+          Pkg.precompile();
+
+          println("Packages added. Testing RCall...")
           using RCall
           my_range = 1:5
           @rput my_range
@@ -94,7 +104,7 @@ jobs:
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
