@@ -26,9 +26,9 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-20.04,   r: 'devel', http-user-agent: 'release'}   # Ubuntu downgraded from latest
-          - {os: ubuntu-20.04,   r: 'release'}                              # Ubuntu downgraded from latest
-          - {os: ubuntu-20.04,   r: 'oldrel-1'}                             # Ubuntu downgraded from latest
+          - {os: ubuntu-22.04,   r: 'devel', http-user-agent: 'release'}   # Ubuntu downgraded from latest
+          - {os: ubuntu-22.04,   r: 'release'}                              # Ubuntu downgraded from latest
+          - {os: ubuntu-22.04,   r: 'oldrel-1'}                             # Ubuntu downgraded from latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
