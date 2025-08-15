@@ -1,5 +1,5 @@
-rm(list=ls())
-devtools::load_all()
+# rm(list=ls())
+# devtools::load_all()
 
 
 data <- list(
