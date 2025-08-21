@@ -26,7 +26,14 @@
 #'     \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the BUGS model. Default is `FALSE`.}
 #'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format used by the models under the `Turing.jl` appraoch, not a BUGS model. Default is `FALSE`.}
 #'   }
-#' @param progress Logical. If `TRUE`, a progress bar will be displayed; if `FALSE`, it will not. The default is `TRUE`.
+#' @param progress Logical. If `TRUE`, a progress bar is displayed; if `FALSE`,
+#' no progress bar is shown. The default is `TRUE`. However, when the function
+#' is run interactively inside an RStudio session, `progress` is automatically
+#' overridden to `FALSE`, which suppresses the progress output from
+#' `AbstractMCMC.sample`. For a complete progress bar display with `rjuliabugs`,
+#' as the one showed when running Julia code,we recommend running the code from
+#' a terminal outside of RStudio.
+#'
 #' @param ... Additional arguments passed to `setup_juliaBUGS()`.
 #'
 #' @return An object of class `"rjuliabugs"` containing:
@@ -93,6 +100,18 @@ juliaBUGS <- function(
   progress = TRUE,
   ...
 ) {
+  # Adding a restriction to set progress as FALSE if the model is run from Rstudio interactive session
+  if (interactive() && Sys.getenv("RSTUDIO") == "1") {
+    if (isTRUE(progress)) {
+      warning(
+        "Progress bar is disabled in interactive RStudio sessions (progress = FALSE). ",
+        "For a full progress display, run this function from a modern terminal console."
+      )
+    }
+
+    progress <- FALSE
+  }
+
   # False dictionary
   bool_dictionary <- list(
     "FALSE" = "false",
@@ -251,7 +270,7 @@ juliaBUGS <- function(
     "AbstractMCMC.MCMCSerial()"
   )
 
-  cat("Initialising AbstractMCMC.sample()...")
+  cat("Initialising AbstractMCMC.sample()... \n")
 
   ## Once the PR for parallel progress bar is working
   # JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
@@ -278,7 +297,7 @@ juliaBUGS <- function(
   cat(" DONE!\n")
 
   params_raw <- if (!is.null(params_to_save)) {
-    get_params_from_name(name = name, params = params_to_save)
+    get_params_from_name_raw(name = name, params = params_to_save)
   }
 
   # Converting the posterior type

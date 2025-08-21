@@ -45,7 +45,7 @@ julia_assign_int <- function(x, value) {
 #' \item{\code{"draws"}}{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
 #'
 #' @details
-#' The function assumes that \code{get_params_from_name()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
+#' The function assumes that \code{get_params_from_name_raw()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
 #'
 #' @importFrom posterior rvar as_draws
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
