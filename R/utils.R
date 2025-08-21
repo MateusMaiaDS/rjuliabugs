@@ -394,7 +394,15 @@ setup_juliaBUGS <- function(
   ...
 ) {
   cat("Preparing JuliaBUGS setup... ")
-  julia <- JuliaCall::julia_setup(...)
+  
+  # Add special handling for Linux CI to avoid segfaults
+  julia_args <- list(...)
+  if (Sys.getenv("CI") == "true" && grepl("linux", R.version$os)) {
+    julia_args$installJulia <- FALSE
+    julia_args$rebuild <- FALSE
+  }
+  
+  julia <- do.call(JuliaCall::julia_setup, julia_args)
 
   # Install all dependencies if needed
   if (verify_package) {
@@ -411,7 +419,7 @@ setup_juliaBUGS <- function(
   }
   if (install_from_dev && verify_package) {
     JuliaCall::julia_eval(
-      'Pkg.add("JuliaBUGS")'
+      'import Pkg; Pkg.add("JuliaBUGS")'
     )
   } else if (verify_package) {
     JuliaCall::julia_install_package_if_needed("JuliaBUGS")
@@ -419,7 +427,7 @@ setup_juliaBUGS <- function(
 
   # Loading those libraries
   JuliaCall::julia_eval(
-    "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames,JuliaBUGS"
+    "using RCall, Suppressor, Serialization, LogDensityProblemsAD, ReverseDiff, AdvancedHMC, AbstractMCMC, LogDensityProblems, MCMCChains, DataFrames, JuliaBUGS"
   )
 
   if (!is.null(extra_packages)) {
