@@ -29,89 +29,6 @@ julia_assign_int <- function(x, value) {
 }
 
 
-#' Extract Parameter Samples from a Turing.jl MCMCChains Object
-#'
-#' This function extracts posterior samples for specified parameters from a Julia
-#' `Chains` object (from the `Turing.jl` package) using `JuliaCall`.
-#'
-#' It supports extracting one or more parameters and returns the result as a numeric matrix in R.
-#'
-#' @param name A character string giving the name of the Julia object in the current Julia session,
-#'   which must be a `Chains` object (from the `MCMCChains.jl` package).
-#' @param params A character vector of parameter names (as defined in the Julia model) to extract.
-#'
-#' @details
-#' This function builds a Julia expression of the form `Array(chains[:, [:param1, :param2], :])`
-#' to extract values for the specified parameters from the sampler object. The result is evaluated
-#' in Julia and returned to R as a numeric matrix.
-#'
-#' The function reshapes the output if only one parameter is extracted to ensure a consistent matrix format.
-#'
-#' @return A numeric matrix where rows represent samples and columns represent parameters.
-#'
-#' @examples
-#' \dontrun{
-#' JuliaCall::julia_setup()
-#' samples <- get_params(name = "sampler_juliaBUGS",params = c("alpha", "beta"))
-#' head(samples)
-#' }
-#'
-#' @export
-get_params_from_name <- function(name, params) {
-  if (!is.character(params)) {
-    stop("`params` must be a character vector of parameter names.")
-  }
-
-  if (!is.character(name)) {
-    stop("`name` must be the name of a Julia object (as a string).")
-  }
-
-  params_names <- paste0("[", paste0(paste0(":", params), collapse = ","), "]")
-
-  JuliaCall::julia_eval(
-    paste0("julia_params = get_params(", name, ")"),
-    need_return = "Julia"
-  )
-
-  post_samples <- vector("list", length = length(params))
-
-  for (i in 1:length(params)) {
-    post_samples[[i]] <- JuliaCall::julia_eval(
-      paste0("Float64.(julia_params.", params[i], ".data)"),
-      need_return = "R"
-    )
-  }
-
-  mcmc_n_chains <- as.numeric(
-    (JuliaCall::julia_eval(
-      paste0("size(", name, ", 3)"),
-      need_return = "Julia"
-    ))
-  )
-
-  if (mcmc_n_chains == 1) {
-    post_samples <- do.call(cbind, post_samples)
-    colnames(post_samples) <- params
-  } else {
-    post_samples_array <- array(
-      dim = c(
-        nrow(post_samples[[1]]),
-        ncol(post_samples[[1]]),
-        length(post_samples)
-      )
-    )
-    for (i in 1:length(params)) {
-      post_samples_array[,, i] <- post_samples[[i]]
-    }
-
-    dimnames(post_samples_array)[[3]] <- params
-
-    post_samples <- post_samples_array
-  }
-
-  return(post_samples)
-}
-
 #' Extract and convert posterior parameters
 #'
 #' This function extracts parameters from an object created by `rjuliabugs` and converts them to a specified posterior format.
@@ -151,7 +68,7 @@ get_params <- function(rjuliabugs, params, posterior_type = "array") {
   }
 
   params_raw <- if (!is.null(params_to_save)) {
-    get_params_from_name(name = name, params = params_to_save)
+    get_params_from_name_raw(name = name, params = params_to_save)
   }
 
   # Converting the posterior type
@@ -206,7 +123,7 @@ get_params <- function(rjuliabugs, params, posterior_type = "array") {
 #' }
 #'
 #' @keywords internal
-get_params_from_name <- function(params, name) {
+get_params_from_name_raw <- function(params, name) {
   if (!is.character(params)) {
     stop("`params` must be a character vector of parameter names.")
   }
@@ -394,14 +311,14 @@ setup_juliaBUGS <- function(
   ...
 ) {
   cat("Preparing JuliaBUGS setup... ")
-  
+
   # Add special handling for Linux CI to avoid segfaults
   julia_args <- list(...)
   if (Sys.getenv("CI") == "true" && grepl("linux", R.version$os)) {
     julia_args$installJulia <- FALSE
     julia_args$rebuild <- FALSE
   }
-  
+
   julia <- do.call(JuliaCall::julia_setup, julia_args)
 
   # Install all dependencies if needed
