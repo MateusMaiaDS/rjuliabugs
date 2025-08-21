@@ -148,7 +148,13 @@ The default is <code>NULL</code>, which means no default initial values are used
 
 
 <dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, a progress bar will be displayed; if <code>FALSE</code>, it will not. The default is <code>TRUE</code>.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, a progress bar is displayed; if <code>FALSE</code>,
+no progress bar is shown. The default is <code>TRUE</code>. However, when the function
+is run interactively inside an RStudio session, <code>progress</code> is automatically
+overridden to <code>FALSE</code>, which suppresses the progress output from
+<code>AbstractMCMC.sample</code>. For a complete progress bar display with <code>rjuliabugs</code>,
+as the one showed when running Julia code,we recommend running the code from
+a terminal outside of RStudio.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
