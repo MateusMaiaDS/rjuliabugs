@@ -24,7 +24,7 @@ The posterior samples converted to the specified format. The return type depends
 This function extracts parameters from an object created by `rjuliabugs` and converts them to a specified posterior format.
 }
 \details{
-The function assumes that \code{get_params_from_name()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
+The function assumes that \code{get_params_from_name_raw()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
 }
 \examples{
 \dontrun{
