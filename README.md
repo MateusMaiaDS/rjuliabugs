@@ -80,4 +80,5 @@ This package is licensed under the MIT License. See the
 ## Acknowledgements
 
 This project is part of a Google Summer of Code 2025 initiative under
-the [Turing.jl](https://turing.ml/dev/) organization.
+the [Turing.jl](https://turing.ml/dev/) organization. The mentors were
+Xianda Sun and Robert Goudie.
