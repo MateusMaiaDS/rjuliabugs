@@ -50,6 +50,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MateusMaiaDS/rjuliabugs/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -65,7 +66,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Getting Started with rjuliabugs: A Step-by-Step Logistic Regression Example with Random Effects</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/MateusMaiaDS/rjuliabugs/blob/main/vignettes/rjuliabugs.Rmd" class="external-link"><code>vignettes/rjuliabugs.Rmd</code></a></small>
       <div class="d-none name"><code>rjuliabugs.Rmd</code></div>
     </div>
 
@@ -263,16 +264,16 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  parameters      mean     std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 38.875058 85.6981 5.348264    351.9    330.8 1.009          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.833578  0.4341 0.007851   3032.5   3660.1 1.002          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.356921  0.2752 0.005167   2843.8   3413.5 1.002          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.087804  0.3138 0.005715   3037.7   4364.2 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.554101  0.1898 0.003411   3075.7   4030.7 1.001          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.196761  0.2610 0.005973   2026.9   4205.8 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.008802  0.2175 0.002851   5902.9   4252.2 1.004          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.200699  0.2320 0.005215   2100.8   4196.5 1.001          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.275464  0.2595 0.007121   1379.0   3938.0 1.003          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.116876  0.2397 0.003888   3997.7   3808.0 1.002          NA</span></span>
+<span><span class="co">#&gt;         tau 33.315262 70.8239 3.915096    448.5    457.4 1.005          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.821324  0.4359 0.007582   3318.8   4297.6 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.347570  0.2777 0.004942   3148.3   3908.5 1.002          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.079017  0.3134 0.005281   3534.7   4164.4 1.000          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.547844  0.1937 0.003351   3351.6   3858.8 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.202466  0.2603 0.005323   2578.8   4334.1 1.000          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.007093  0.2253 0.003044   5615.1   4389.3 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.207039  0.2348 0.005032   2305.5   3692.1 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.281862  0.2636 0.006757   1594.1   3785.0 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.118366  0.2436 0.003869   4435.9   3808.5 1.002          NA</span></span>
 <span><span class="co">#&gt;          ...</span></span>
 <span><span class="co">#&gt;   17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -383,7 +384,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3096.066</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3340.307</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>
@@ -407,7 +408,7 @@ object</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mateus Maia.</p>
+  <p>Developed by Mateus Maia, Xianda Sun, Robert Goudie.</p>
 </div>
 
 <div class="pkgdown-footer-right">
