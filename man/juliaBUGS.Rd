@@ -84,7 +84,7 @@ Executes a Hamiltonian Monte Carlo (HMC) sampler in Julia from R, using a model
 specified in Julia or in BUGS syntax. It compiles the model, converts data,
 sets sampler parameters, and returns posterior samples in various formats. The setup
 for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-δ=0.8) for step size adaptation.
+\eqn{\delta}=0.8) for step size adaptation.
 }
 \details{
 This function relies on Julia packages \code{LogDensityProblems}, \code{AdvancedHMC}, and \code{AbstractMCMC}.

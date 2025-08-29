@@ -3,15 +3,14 @@ Type: Package
 Title: Interface to 'JuliaBUGS.jl' from R
 Version: 0.1.0
 Authors@R: c(person("Mateus", "Maia", email = "mateus.maiamarques@glasgow.ac.uk", role = c("aut", "cre")), person("Xianda", "Sun", role = "aut"), person("Robert", "Goudie", role = "aut"))
-Description: Provides an R interface to the 'JuliaBUGS.jl' package (https://github.com/TuringLang/JuliaBUGS.jl) for Bayesian inference using the BUGS modeling language. Allows R users to run models in Julia and return results as familiar R objects. Visualization and posterior analysis are supported via the 'bayesplot' and 'posterior' packages.
+Description: Provides an R interface to the 'JuliaBUGS.jl' package (<https://github.com/TuringLang/JuliaBUGS.jl>) for Bayesian inference using the BUGS modeling language. Allows R users to run models in Julia and return results as familiar R objects. Visualization and posterior analysis are supported via the 'bayesplot' and 'posterior' packages.
 License: MIT + file LICENSE
 Encoding: UTF-8
 SystemRequirements: Julia (>= 1.10.8) with the following packages installed: 'JuliaBUGS.jl', 'LogDensityProblemsAD.jl', 'ReverseDiff.jl', 'AdvancedHMC.jl', 'AbstractMCMC.jl', 'LogDensityProblems.jl', 'MCMCChains.jl', 'RCall.jl', 'Suppressor.jl'.
 LazyData: true
 Imports: coda, JuliaCall, posterior
-Suggests: bayesplot, knitr, rmarkdown, gridExtra, rstan, nimble, testthat (>= 3.0.0)
+Suggests: bayesplot, knitr, rmarkdown, gridExtra, testthat (>= 3.0.0)
 URL: https://mateusmaiads.github.io/rjuliabugs/
 BugReports: https://github.com/MateusMaiaDS/rjuliabugs/issues
-VignetteBuilder: knitr
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2

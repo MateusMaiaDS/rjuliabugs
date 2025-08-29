@@ -1,4 +1,10 @@
 test_that("intro vignette example runs on Julia", {
+
+  # Skip everything on CRAN
+  if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
+    skip("Skipping test on CRAN")
+  }
+
   # Only run when Julia is available (e.g., in CI)
   if (Sys.which("julia") == "") {
     skip("Julia is not available on PATH; skipping intro example test.")

@@ -4,7 +4,7 @@
 #' specified in Julia or in BUGS syntax. It compiles the model, converts data,
 #' sets sampler parameters, and returns posterior samples in various formats. The setup
 #' for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance probability
-#' δ=0.8) for step size adaptation.
+#' \eqn{\delta}=0.8) for step size adaptation.
 #'
 #' @param data A named list of numeric values (integer or double). All elements must be named.
 #' @param model_def A character string with the model definition, either in Julia-compatible format or BUGS syntax.
