@@ -17,14 +17,14 @@ as_rvar(x, ...)
 
 \item{...}{Further arguments passed to specific methods.}
 
-\item{n_mcmc}{(For arrays only) Number of MCMC chains. Required if \code{x} is an array.}
+\item{n_mcmc}{(For arrays only) Number of Markov Chain Monte Carlo (MCMC) chains. Required if \code{x} is an array.}
 }
 \value{
 An object of class \code{rvar}, or an updated \code{rjuliabugs} object with \code{params} converted to \code{rvar}.
 }
 \description{
 Generic function to convert an object to a \code{\link[posterior:rvar]{posterior::rvar}} representation.
-This is typically used to convert MCMC output into a more flexible and vectorized format.
+This is typically used to convert Markov Chain Monte Carlo (MCMC) output into a more flexible and vectorized format.
 }
 \seealso{
 \code{\link[posterior:rvar]{posterior::rvar()}}

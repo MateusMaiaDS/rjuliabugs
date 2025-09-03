@@ -21,7 +21,7 @@ as_mcmc(x, ...)
 An object of class \code{mcmc}, \code{mcmc.list}, or a \code{rjuliabugs} object with updated \code{params}.
 }
 \description{
-Generic function to convert MCMC output to \code{\link[coda:mcmc]{coda::mcmc}} or \code{\link[coda:mcmc.list]{coda::mcmc.list}} format.
+Generic function to convert Markov Chain Monte Carlo (MCMC) output to \code{\link[coda:mcmc]{coda::mcmc}} or \code{\link[coda:mcmc.list]{coda::mcmc.list}} format.
 }
 \seealso{
 \code{\link[coda:mcmc]{coda::as.mcmc()}}, \code{\link[coda:mcmc]{coda::mcmc()}}

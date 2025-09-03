@@ -178,13 +178,13 @@ get_params_from_name_raw <- function(params, name) {
   return(post_samples)
 }
 
-#' Wrap BUGS Model for Julia
+#' Wrap Bayesian Updating for Gibbs Sampling (BUGS) Model for Julia
 #'
-#' Wraps a BUGS model string with `model = @bugs begin` and `end`,
+#' Wraps a Bayesian Updating for Gibbs Sampling (BUGS) model string with `model = @bugs begin` and `end`,
 #' if it is not already wrapped. This is useful for preparing BUGS models
 #' for use with Julia packages that expect this specific block structure.
 #'
-#' @param model_code A character string containing the body of a BUGS model.
+#' @param model_code A character string containing the body of a Bayesian Updating for Gibbs Sampling (BUGS) model.
 #'   If the model already starts with `model = @bugs begin` and ends with `end`,
 #'   the function returns it unchanged.
 #'
@@ -218,9 +218,10 @@ wrap_model_to_juliaBUGS <- function(model_code) {
 }
 
 
-#' Convert BUGS Model to Julia's `@bugs` Macro Format
+#' Convert Bayesian Updating for Gibbs Sampling (BUGS) Model to Julia's `@bugs` Macro Format
 #'
-#' Formats a BUGS model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
+#' Formats a Bayesian Updating for Gibbs Sampling (BUGS)
+#' model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
 #' used in the Julia ecosystem for running BUGS models. By default, this macro converts
 #' R-style variable names (e.g., `a.b.c`) to Julia-style (`a_b_c`). You can disable this behavior
 #' by setting `convert_var_name = FALSE`.

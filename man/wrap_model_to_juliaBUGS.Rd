@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{wrap_model_to_juliaBUGS}
 \alias{wrap_model_to_juliaBUGS}
-\title{Wrap BUGS Model for Julia}
+\title{Wrap Bayesian Updating for Gibbs Sampling (BUGS) Model for Julia}
 \usage{
 wrap_model_to_juliaBUGS(model_code)
 }
 \arguments{
-\item{model_code}{A character string containing the body of a BUGS model.
+\item{model_code}{A character string containing the body of a Bayesian Updating for Gibbs Sampling (BUGS) model.
 If the model already starts with `model = @bugs begin` and ends with `end`,
 the function returns it unchanged.}
 }
@@ -15,7 +15,7 @@ the function returns it unchanged.}
 A character string with the BUGS model wrapped properly in Julia-compatible syntax.
 }
 \description{
-Wraps a BUGS model string with `model = @bugs begin` and `end`,
+Wraps a Bayesian Updating for Gibbs Sampling (BUGS) model string with `model = @bugs begin` and `end`,
 if it is not already wrapped. This is useful for preparing BUGS models
 for use with Julia packages that expect this specific block structure.
 }

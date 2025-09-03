@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{bugs2juliaBUGS}
 \alias{bugs2juliaBUGS}
-\title{Convert BUGS Model to Julia's `@bugs` Macro Format}
+\title{Convert Bayesian Updating for Gibbs Sampling (BUGS) Model to Julia's `@bugs` Macro Format}
 \usage{
 bugs2juliaBUGS(model_code, convert_var_name = TRUE)
 }
@@ -16,7 +16,8 @@ are translated to `a_b_c` in the Julia model. Set to `FALSE` to preserve origina
 A character string formatted as a Julia `@bugs` macro call.
 }
 \description{
-Formats a BUGS model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
+Formats a Bayesian Updating for Gibbs Sampling (BUGS)
+model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
 used in the Julia ecosystem for running BUGS models. By default, this macro converts
 R-style variable names (e.g., `a.b.c`) to Julia-style (`a_b_c`). You can disable this behavior
 by setting `convert_var_name = FALSE`.

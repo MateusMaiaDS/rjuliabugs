@@ -1,9 +1,9 @@
 #' Summary Method for JuliaBUGS Sampler Output
 #'
-#' Provides a summary of the results from a JuliaBUGS sampler object, including MCMC settings,
+#' Provides a summary of the results from a JuliaBUGS sampler object, including Markov Chain Monte Carlo (MCMC) settings,
 #' summary statistics, and optionally quantiles.
 #'
-#' @param object An object of class `rjuliabugs` containing a reference to a Julia MCMC sampler.
+#' @param object An object of class `rjuliabugs` containing a reference to a Markov Chain Monte Carlo (MCMC) sampler from Julia.
 #' @param ... Additional optional arguments. Supported options:
 #' * `digits`: Integer. Number of significant digits to display. Default: 4.
 #' * `n_display`: Integer. Number of rows of summary statistics to show. Default: 10.

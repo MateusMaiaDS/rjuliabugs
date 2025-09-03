@@ -23,8 +23,8 @@
 #' @param control Optional list of control parameters. Supported entries:
 #'   \describe{
 #'     \item{`data_convert_int`}{Logical. If `TRUE`, coerces numeric values to integers when possible. Default is `TRUE`.}
-#'     \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the BUGS model. Default is `FALSE`.}
-#'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format used by the models under the `Turing.jl` appraoch, not a BUGS model. Default is `FALSE`.}
+#'     \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the Bayesian Updating for Gibbs Sampling (BUGS) model. Default is `FALSE`.}
+#'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format used by the models under the `Turing.jl` appraoch, not a Bayesian Updating for Gibbs Sampling (BUGS) model. Default is `FALSE`.}
 #'   }
 #' @param progress Logical. If `TRUE`, a progress bar is displayed; if `FALSE`,
 #' no progress bar is shown. The default is `TRUE`. However, when the function

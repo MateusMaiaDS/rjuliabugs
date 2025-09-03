@@ -54,8 +54,8 @@ The default is \code{NULL}, which means no default initial values are used.}
 \item{control}{Optional list of control parameters. Supported entries:
 \describe{
 \item{\code{data_convert_int}}{Logical. If \code{TRUE}, coerces numeric values to integers when possible. Default is \code{TRUE}.}
-\item{\code{convert_var_name}}{Logical. If \code{TRUE}, automatically renames variables in the BUGS model. Default is \code{FALSE}.}
-\item{\code{julia_model}}{Logical. If \code{TRUE}, assumes the model is already in Julia format used by the models under the \code{Turing.jl} appraoch, not a BUGS model. Default is \code{FALSE}.}
+\item{\code{convert_var_name}}{Logical. If \code{TRUE}, automatically renames variables in the Bayesian Updating for Gibbs Sampling (BUGS) model. Default is \code{FALSE}.}
+\item{\code{julia_model}}{Logical. If \code{TRUE}, assumes the model is already in Julia format used by the models under the \code{Turing.jl} appraoch, not a Bayesian Updating for Gibbs Sampling (BUGS) model. Default is \code{FALSE}.}
 }}
 
 \item{progress}{Logical. If \code{TRUE}, a progress bar is displayed; if \code{FALSE},

@@ -7,7 +7,7 @@
 \method{summary}{rjuliabugs}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{rjuliabugs} containing a reference to a Julia MCMC sampler.}
+\item{object}{An object of class \code{rjuliabugs} containing a reference to a Markov Chain Monte Carlo (MCMC) sampler from Julia.}
 
 \item{...}{Additional optional arguments. Supported options:
 \itemize{
@@ -27,7 +27,7 @@ Otherwise, returns a list possibly containing:
 }
 }
 \description{
-Provides a summary of the results from a JuliaBUGS sampler object, including MCMC settings,
+Provides a summary of the results from a JuliaBUGS sampler object, including Markov Chain Monte Carlo (MCMC) settings,
 summary statistics, and optionally quantiles.
 }
 \details{
