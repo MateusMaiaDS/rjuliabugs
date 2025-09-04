@@ -119,6 +119,7 @@ get_params_from_name_raw <- function(params, name) {
 #' @return A character string with the BUGS model wrapped properly in Julia-compatible syntax.
 #'
 #' @examples
+#' \dontrun{
 #' model_body <- "
 #'   for i in 1:N
 #'     r[i] ~ dbin(p[i], n[i])
@@ -130,6 +131,7 @@ get_params_from_name_raw <- function(params, name) {
 #'   sigma = 1 / sqrt(tau)
 #' "
 #' wrap_model_to_juliaBUGS(model_body)
+#'}
 #'
 #' @export
 wrap_model_to_juliaBUGS <- function(model_code) {
@@ -247,7 +249,7 @@ setup_juliaBUGS <- function(
   ...
 ) {
 
-  if(verbose){  
+  if(verbose){
       cat("Preparing JuliaBUGS setup... ")
   }
 
@@ -310,13 +312,14 @@ setup_juliaBUGS <- function(
 #' integers for whole numbers, and floats otherwise. Names are preserved.
 #'
 #' @examples
+#' \dontrun{
 #' input_list <- list(
 #'   a = c(x = 1.0, y = 2.5, z = 3.0),
 #'   b = c(foo = 4.0, bar = 5.1),
 #'   c = c(6, 7, 8)
 #' )
 #' convert_numeric_types(input_list)
-#'
+#'}
 #' @export
 #' @md
 convert_numeric_types <- function(data) {
