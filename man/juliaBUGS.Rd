@@ -20,6 +20,7 @@ juliaBUGS(
   force_setup_juliaBUGS = FALSE,
   control = NULL,
   progress = TRUE,
+  verbose = TRUE,
   ...
 )
 }
@@ -58,13 +59,16 @@ The default is \code{NULL}, which means no default initial values are used.}
 \item{\code{julia_model}}{Logical. If \code{TRUE}, assumes the model is already in Julia format used by the models under the \code{Turing.jl} appraoch, not a Bayesian Updating for Gibbs Sampling (BUGS) model. Default is \code{FALSE}.}
 }}
 
-\item{progress}{Logical. If \code{TRUE}, a progress bar is displayed; if \code{FALSE},
-no progress bar is shown. The default is \code{TRUE}. However, when the function
+\item{progress}{Logical. If \code{TRUE}, a progress bar for the sampler is displayed;
+if \code{FALSE}, no progress bar is shown. The default is \code{TRUE}. However, when the function
 is run interactively inside an RStudio session, \code{progress} is automatically
 overridden to \code{FALSE}, which suppresses the progress output from
 \code{AbstractMCMC.sample}. For a complete progress bar display with \code{rjuliabugs},
 as the one showed when running Julia code,we recommend running the code from
 a terminal outside of RStudio.}
+
+\item{verbose}{Logical. If \code{FALSE} will ommit any message from the function to indicate
+the sampler/setup progress}
 
 \item{...}{Additional arguments passed to \code{setup_juliaBUGS()}.}
 }

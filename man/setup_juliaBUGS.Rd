@@ -8,6 +8,7 @@ setup_juliaBUGS(
   extra_packages = NULL,
   verify_package = TRUE,
   install_from_dev = FALSE,
+  verbose = TRUE,
   ...
 )
 }
@@ -18,6 +19,9 @@ Defaults to \code{NULL}, meaning only the core packages are handled.}
 \item{verify_package}{Logical; if \code{TRUE}, verifies and installs missing core packages. Default is \code{TRUE}.}
 
 \item{install_from_dev}{Logical; if \code{TRUE}, installs \code{JuliaBUGS} from its development repository. Default is \code{FALSE}.}
+
+\item{verbose}{Logical. If \code{FALSE} will ommit any message from the function to indicate
+the setup progress.}
 
 \item{...}{Additional arguments passed to \code{JuliaCall::julia_setup()}, such as \code{installJulia = TRUE}.}
 }
