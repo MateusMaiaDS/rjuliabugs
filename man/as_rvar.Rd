@@ -21,6 +21,24 @@ as_rvar(x, ...)
 }
 \value{
 An object of class \code{rvar}, or an updated \code{rjuliabugs} object with \code{params} converted to \code{rvar}.
+
+An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+\describe{
+\item{params}{Posterior samples, converted to the requested format:
+\code{rvar} for \code{as_rvar},
+\code{mcmc}/\code{mcmc.list} for \code{as_mcmc},
+\code{draws_array} for \code{as_draws}.}
+\item{name}{The name of the Julia sampler object.}
+\item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia.}
+\item{n_threads}{Number of Julia threads detected.}
+\item{mcmc}{A list of MCMC configuration parameters, now including \code{posterior_type}
+indicating the format of \code{params}.}
+\item{control}{Control options passed to and used by the sampler.}
+}
+
+An object of class \code{rvar} (from the \pkg{posterior} package). The input 3D array
+(iterations × chains × parameters) is converted into a posterior \code{rvar} object,
+where each parameter is represented as a random variable across iterations and chains.
 }
 \description{
 Generic function to convert an object to a \code{\link[posterior:rvar]{posterior::rvar}} representation.

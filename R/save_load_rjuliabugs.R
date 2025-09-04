@@ -13,8 +13,9 @@
 #'   object should be serialized. The file name should have the `.jls` extension.
 #'    If `NULL`, uses the `chains_file` field from `rjuliabugs_model`.
 #'
-#' @return Returns `invisible(NULL)`. Used saving both the
-#'   Julia object and the R `rjuliabugs` object to disk.
+#' @return
+#' No return value, called for saving both the
+#' Julia object and the R `rjuliabugs` object to disk.
 #'
 #' @examples
 #' \dontrun{
@@ -22,6 +23,7 @@
 #' }
 #'
 #' @export
+#' 
 #' @md
 save_rjuliabugs <- function(rjuliabugs_model, file, chains_file = NULL) {
   if (is.null(rjuliabugs_model$name)) {

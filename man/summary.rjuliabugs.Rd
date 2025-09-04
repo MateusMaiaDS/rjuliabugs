@@ -19,7 +19,7 @@
 }}
 }
 \value{
-If \code{julia_summary_only = TRUE}, returns \code{NULL} invisibly.
+If \code{julia_summary_only = TRUE}, no value is called for the print message.
 Otherwise, returns a list possibly containing:
 \itemize{
 \item \code{summary}: Data frame of summary statistics (if \code{get_summary = TRUE}).

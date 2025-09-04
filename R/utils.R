@@ -29,71 +29,7 @@ julia_assign_int <- function(x, value) {
 }
 
 
-#' Extract and convert posterior parameters
-#'
-#' This function extracts parameters from an object created by `rjuliabugs` and converts them to a specified posterior format.
-#'
-#' @param rjuliabugs An object containing posterior samples and a `name` attribute used to extract parameters.
-#' @param params A character vector specifying which parameters to extract. **(NOTE: This argument is unused in the current function body.)**
-#' @param posterior_type A character string specifying the desired output format. Options are: \code{"array"}, \code{"rvar"}, \code{"mcmc"}, \code{"draws"}.
-#'
-#' @return
-#' The posterior samples converted to the specified format. The return type depends on \code{posterior_type}:
-#' \item{\code{"array"}}{A 3D array of posterior samples.}
-#' \item{\code{"rvar"}}{An object of class \code{rvar} from the \pkg{posterior} package.}
-#' \item{\code{"mcmc"}}{An \code{mcmc} or \code{mcmc.list} object from the \pkg{coda} package.}
-#' \item{\code{"draws"}}{An object of class \code{draws_array} or similar from the \pkg{posterior} package.}
-#'
-#' @details
-#' The function assumes that \code{get_params_from_name_raw()} and other referenced variables such as \code{params_to_save} and \code{n_chain} are available in the current environment.
-#'
-#' @importFrom posterior rvar as_draws
-#' @importFrom coda as.mcmc as.mcmc.list mcmc
-#' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' get_params(rjuliabugs = fit, params = c("alpha", "beta"), posterior_type = "array")
-#' }
-
-get_params <- function(rjuliabugs, params, posterior_type = "array") {
-  name <- rjuliabugs$name
-  n_chain <- rjuliabugs$mcmc$n_chain
-  params_to_save <- rjuliabugs$mcmc$params_to_save
-
-  if (!(posterior_type %in% c("array", "rvar", "mcmc", "draws"))) {
-    stop(
-      "Insert a valid posterior_type. The available options are: 'array','rvar','mcmc' and 'draws'."
-    )
-  }
-
-  params_raw <- if (!is.null(params_to_save)) {
-    get_params_from_name_raw(name = name, params = params_to_save)
-  }
-
-  # Converting the posterior type
-  if (posterior_type == "array") {
-    params <- params_raw
-  } else if (posterior_type == "rvar") {
-    params <- posterior::rvar(x = params_raw, nchains = n_chain)
-  } else if (posterior_type == "mcmc") {
-    params <- if (n_chain == 1) {
-      coda::as.mcmc(params_raw)
-    } else {
-      coda::as.mcmc.list(lapply(seq(dim(params_raw)[2]), function(x) {
-        coda::mcmc(params_raw[, x, ])
-      }))
-    }
-  } else if (posterior_type == "draws") {
-    params <- posterior::as_draws(params_raw)
-  } else {
-    stop("Insert a valid posterior_type.")
-  }
-
-  return(params)
-}
-
-#' Extract Parameter Samples from a Turing.jl MCMCChains Object
+#' Extract Parameter Samples from a Turing.jl MCMCChains Object (internal use only)
 #'
 #' This function extracts posterior samples for specified parameters from a Julia
 #' `Chains` object (from the `Turing.jl` package) using `JuliaCall`.
@@ -113,16 +49,8 @@ get_params <- function(rjuliabugs, params, posterior_type = "array") {
 #'
 #' @return A numeric matrix where rows represent samples and columns represent parameters.
 #'
-#' @examples
-#' \dontrun{
-#' JuliaCall::julia_setup()
-#' JuliaCall::julia_library("Turing")
-#' JuliaCall::julia_command("... define model and sample into 'chains' ...")
-#' samples <- get_params(c("alpha", "beta"), "chains")
-#' head(samples)
-#' }
-#'
 #' @keywords internal
+
 get_params_from_name_raw <- function(params, name) {
   if (!is.character(params)) {
     stop("`params` must be a character vector of parameter names.")
@@ -220,19 +148,22 @@ wrap_model_to_juliaBUGS <- function(model_code) {
 
 #' Convert Bayesian Updating for Gibbs Sampling (BUGS) Model to Julia's `@bugs` Macro Format
 #'
-#' Formats a Bayesian Updating for Gibbs Sampling (BUGS)
-#' model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
-#' used in the Julia ecosystem for running BUGS models. By default, this macro converts
-#' R-style variable names (e.g., `a.b.c`) to Julia-style (`a_b_c`). You can disable this behavior
-#' by setting `convert_var_name = FALSE`.
+#' This function formats a Bayesian Updating for Gibbs Sampling (BUGS) model string
+#' into Julia's `@bugs("""...""", convert_var_name, true)` macro syntax, used to run
+#' BUGS models in Julia. By default, R-style variable names (e.g., `a.b.c`) are converted
+#' to Julia-style (`a_b_c`). You can disable this behavior by setting `convert_var_name = FALSE`.
 #'
-#' @param model_code A character string containing the BUGS model.
-#' @param convert_var_name Logical; if `TRUE` (default), R-style variable names such as `a.b.c`
-#'   are translated to `a_b_c` in the Julia model. Set to `FALSE` to preserve original names.
+#' @param model_code A character string containing the BUGS model code.
+#' @param convert_var_name Logical; if \code{TRUE} (default), R-style variable names
+#'   (e.g., \code{a.b.c}) are converted to Julia-style (\code{a_b_c}). Set to \code{FALSE}
+#'   to preserve the original names.
 #'
-#' @return A character string formatted as a Julia `@bugs` macro call.
+#' @return
+#' A character string representing a valid Julia `@bugs` macro call. This string can
+#' be evaluated in Julia to define the BUGS model with optional variable name conversion.
 #'
 #' @examples
+#' \dontrun{
 #' model <- "
 #'   for i in 1:N
 #'     y[i] ~ dnorm(mu, tau)
@@ -242,6 +173,7 @@ wrap_model_to_juliaBUGS <- function(model_code) {
 #' "
 #' bugs2juliaBUGS(model)
 #' bugs2juliaBUGS(model, convert_var_name = FALSE)
+#' }
 #'
 #' @export
 bugs2juliaBUGS <- function(model_code, convert_var_name = TRUE) {
@@ -272,6 +204,8 @@ bugs2juliaBUGS <- function(model_code, convert_var_name = TRUE) {
 #'   Defaults to \code{NULL}, meaning only the core packages are handled.
 #' @param verify_package Logical; if \code{TRUE}, verifies and installs missing core packages. Default is \code{TRUE}.
 #' @param install_from_dev Logical; if \code{TRUE}, installs \code{JuliaBUGS} from its development repository. Default is \code{FALSE}.
+#' @param verbose Logical. If `FALSE` will ommit any message from the function to indicate
+#' the setup progress.
 #' @param ... Additional arguments passed to \code{JuliaCall::julia_setup()}, such as \code{installJulia = TRUE}.
 #'
 #' @details
@@ -309,9 +243,13 @@ setup_juliaBUGS <- function(
   extra_packages = NULL,
   verify_package = TRUE,
   install_from_dev = FALSE,
+  verbose = TRUE,
   ...
 ) {
-  cat("Preparing JuliaBUGS setup... ")
+
+  if(verbose){  
+      cat("Preparing JuliaBUGS setup... ")
+  }
 
   # Add special handling for Linux CI to avoid segfaults
   julia_args <- list(...)
@@ -354,7 +292,9 @@ setup_juliaBUGS <- function(
       JuliaCall::julia_eval(paste0("using ", extra_packages[i]))
     }
   }
-  cat("DONE!\n")
+  if(verbose){
+      cat("DONE!\n")
+  }
 }
 
 #' Convert Numeric Elements in a List to Integer or Float
@@ -432,6 +372,9 @@ break_string_to_numeric <- function(input_string) {
 #' }
 #'
 #' @export
+#' @return
+#' No return value, called for side effects.
+#'
 #' @md
 delete_julia_obj <- function(obj_name) {
   JuliaCall::julia_eval(paste0("Base.delete_binding(Main, :", obj_name, ")"))
@@ -487,7 +430,22 @@ check_sampler_is_defined <- function(name) {
 #' @rdname as_rvar
 #' @export
 #' @importFrom posterior rvar
+#' @return
+#' An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+#' \describe{
+#'   \item{params}{Posterior samples, converted to the requested format:
+#'         \code{rvar} for \code{as_rvar},
+#'         \code{mcmc}/\code{mcmc.list} for \code{as_mcmc},
+#'         \code{draws_array} for \code{as_draws}.}
+#'   \item{name}{The name of the Julia sampler object.}
+#'   \item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia.}
+#'   \item{n_threads}{Number of Julia threads detected.}
+#'   \item{mcmc}{A list of MCMC configuration parameters, now including \code{posterior_type}
+#'         indicating the format of \code{params}.}
+#'   \item{control}{Control options passed to and used by the sampler.}
+#' }
 #' @md
+
 as_rvar.rjuliabugs <- function(x, ...) {
   n_chain <- x$mcmc$n_chain
   x$params <- posterior::rvar(x = x$params, nchains = n_chain)
@@ -495,11 +453,21 @@ as_rvar.rjuliabugs <- function(x, ...) {
   return(x)
 }
 
-
 #' @rdname as_mcmc
 #' @export
 #' @importFrom coda as.mcmc as.mcmc.list mcmc
 #' @md
+#' @return
+#' An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+#' \describe{
+#'   \item{params}{Posterior samples converted to \code{coda::mcmc} if a single chain,
+#'         or \code{coda::mcmc.list} if multiple chains.}
+#'   \item{name}{The name of the Julia sampler object (unchanged).}
+#'   \item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia (unchanged).}
+#'   \item{n_threads}{Number of Julia threads detected (unchanged).}
+#'   \item{mcmc}{MCMC configuration parameters; \code{posterior_type} is updated to \code{"mcmc"}.}
+#'   \item{control}{Control options passed to and used by the sampler (unchanged).}
+#' }
 as_mcmc.rjuliabugs <- function(x, ...) {
   n_chain <- x$mcmc$n_chain
   x$params <- if (n_chain == 1) {
@@ -520,6 +488,16 @@ as_mcmc.rjuliabugs <- function(x, ...) {
 #' @export
 #' @importFrom posterior as_draws
 #' @md
+#' @return
+#' An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+#' \describe{
+#'   \item{params}{Posterior samples converted to \code{posterior::draws_array}.}
+#'   \item{name}{The name of the Julia sampler object (unchanged).}
+#'   \item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia (unchanged).}
+#'   \item{n_threads}{Number of Julia threads detected (unchanged).}
+#'   \item{mcmc}{MCMC configuration parameters; \code{posterior_type} is updated to \code{"draws"}.}
+#'   \item{control}{Control options passed to and used by the sampler (unchanged).}
+#' }
 as_draws.rjuliabugs <- function(x, ...) {
   x$params <- posterior::as_draws(x$params)
   x$mcmc$posterior_type <- "draws"
@@ -527,9 +505,14 @@ as_draws.rjuliabugs <- function(x, ...) {
 }
 
 
+
 #' @rdname as_rvar
 #' @export
 #' @md
+#' @return
+#' An object of class \code{rvar} (from the \pkg{posterior} package). The input 3D array
+#' (iterations × chains × parameters) is converted into a posterior \code{rvar} object,
+#' where each parameter is represented as a random variable across iterations and chains.
 as_rvar.array <- function(x, n_mcmc = NULL, ...) {
   if (is.null(n_mcmc)) {
     stop("You must provide `n_mcmc` when using `as_rvar()` on an array.")
@@ -537,9 +520,15 @@ as_rvar.array <- function(x, n_mcmc = NULL, ...) {
   posterior::rvar(x = x, nchains = n_mcmc)
 }
 
+
 #' @rdname as_mcmc
 #' @export
 #' @md
+#' @return
+#' Returns posterior samples converted to \code{coda::mcmc} if the array has one chain,
+#' or \code{coda::mcmc.list} if multiple chains. Input must be a 3D array
+#' (iterations × chains × parameters). Each column corresponds to a parameter, and each row
+#' corresponds to an iteration.
 as_mcmc.array <- function(x, ...) {
   dims <- dim(x)
   if (length(dims) != 3) {
@@ -559,12 +548,18 @@ as_mcmc.array <- function(x, ...) {
   }
 }
 
+
 #' @rdname as_draws
 #' @export
 #' @md
+#' @return
+#' An object of class \code{draws_array} (from the \pkg{posterior} package). The 3D array
+#' (iterations × chains × parameters) is converted to a \code{draws_array}, preserving the
+#' chain structure and parameter names.
 as_draws.array <- function(x, ...) {
   posterior::as_draws(x)
 }
+
 
 # ============================================================ #
 

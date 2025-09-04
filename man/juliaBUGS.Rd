@@ -69,14 +69,15 @@ a terminal outside of RStudio.}
 \item{...}{Additional arguments passed to \code{setup_juliaBUGS()}.}
 }
 \value{
-An object of class \code{"rjuliabugs"} containing:
+An object of class \code{"rjuliabugs"} (a named list) with the following elements:
 \describe{
-\item{params}{Posterior samples, in the format specified by \code{posterior_type}.}
-\item{name}{Character string identifying the Julia sampler object.}
-\item{sampler}{Sampler object returned by \code{AbstractMCMC.sample}.}
-\item{n_threads}{Number of Julia threads detected.}
-\item{mcmc}{List of MCMC configuration parameters.}
-\item{control}{Control options used in the sampler setup.}
+\item{params}{Posterior samples, in the format specified by \code{posterior_type}
+("array", "rvar", "mcmc", or "draws").}
+\item{name}{A character string giving the name of the Julia sampler object.}
+\item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia.}
+\item{n_threads}{An integer giving the number of Julia threads detected.}
+\item{mcmc}{A list of MCMC configuration parameters used in the run.}
+\item{control}{The list of control options passed to and used by the sampler.}
 }
 }
 \description{

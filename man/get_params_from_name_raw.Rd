@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{get_params_from_name_raw}
 \alias{get_params_from_name_raw}
-\title{Extract Parameter Samples from a Turing.jl MCMCChains Object}
+\title{Extract Parameter Samples from a Turing.jl MCMCChains Object (internal use only)}
 \usage{
 get_params_from_name_raw(params, name)
 }
@@ -28,15 +28,5 @@ to extract values for the specified parameters from the sampler object. The resu
 in Julia and returned to R as a numeric matrix.
 
 The function reshapes the output if only one parameter is extracted to ensure a consistent matrix format.
-}
-\examples{
-\dontrun{
-JuliaCall::julia_setup()
-JuliaCall::julia_library("Turing")
-JuliaCall::julia_command("... define model and sample into 'chains' ...")
-samples <- get_params(c("alpha", "beta"), "chains")
-head(samples)
-}
-
 }
 \keyword{internal}

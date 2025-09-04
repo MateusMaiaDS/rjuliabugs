@@ -12,7 +12,8 @@
 #' * `julia_summary_only`: Logical. If `TRUE`, displays the Julia summary directly and returns `NULL` invisibly. Default: `FALSE`.
 #' @md
 #'
-#' @return If `julia_summary_only = TRUE`, returns `NULL` invisibly.
+#' @return
+#' If `julia_summary_only = TRUE`, no value is called for the print message.
 #' Otherwise, returns a list possibly containing:
 #' * `summary`: Data frame of summary statistics (if `get_summary = TRUE`).
 #' * `quantiles`: Data frame of quantiles (if `get_quantiles = TRUE`).

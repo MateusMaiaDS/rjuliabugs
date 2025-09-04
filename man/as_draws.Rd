@@ -19,6 +19,20 @@ as_draws(x, ...)
 }
 \value{
 A \code{draws} object (e.g., \code{draws_array}) or a modified \code{rjuliabugs} object.
+
+An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+\describe{
+\item{params}{Posterior samples converted to \code{posterior::draws_array}.}
+\item{name}{The name of the Julia sampler object (unchanged).}
+\item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia (unchanged).}
+\item{n_threads}{Number of Julia threads detected (unchanged).}
+\item{mcmc}{MCMC configuration parameters; \code{posterior_type} is updated to \code{"draws"}.}
+\item{control}{Control options passed to and used by the sampler (unchanged).}
+}
+
+An object of class \code{draws_array} (from the \pkg{posterior} package). The 3D array
+(iterations × chains × parameters) is converted to a \code{draws_array}, preserving the
+chain structure and parameter names.
 }
 \description{
 Generic function to convert an object to a \code{\link[posterior:draws]{posterior::draws}} representation

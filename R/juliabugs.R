@@ -26,24 +26,27 @@
 #'     \item{`convert_var_name`}{Logical. If `TRUE`, automatically renames variables in the Bayesian Updating for Gibbs Sampling (BUGS) model. Default is `FALSE`.}
 #'     \item{`julia_model`}{Logical. If `TRUE`, assumes the model is already in Julia format used by the models under the `Turing.jl` appraoch, not a Bayesian Updating for Gibbs Sampling (BUGS) model. Default is `FALSE`.}
 #'   }
-#' @param progress Logical. If `TRUE`, a progress bar is displayed; if `FALSE`,
-#' no progress bar is shown. The default is `TRUE`. However, when the function
+#' @param progress Logical. If `TRUE`, a progress bar for the sampler is displayed;
+#' if `FALSE`, no progress bar is shown. The default is `TRUE`. However, when the function
 #' is run interactively inside an RStudio session, `progress` is automatically
 #' overridden to `FALSE`, which suppresses the progress output from
 #' `AbstractMCMC.sample`. For a complete progress bar display with `rjuliabugs`,
 #' as the one showed when running Julia code,we recommend running the code from
 #' a terminal outside of RStudio.
-#'
+#' @param verbose Logical. If `FALSE` will ommit any message from the function to indicate
+#' the sampler/setup progress
 #' @param ... Additional arguments passed to `setup_juliaBUGS()`.
 #'
-#' @return An object of class `"rjuliabugs"` containing:
+#' @return
+#' An object of class \code{"rjuliabugs"} (a named list) with the following elements:
 #' \describe{
-#'   \item{params}{Posterior samples, in the format specified by `posterior_type`.}
-#'   \item{name}{Character string identifying the Julia sampler object.}
-#'   \item{sampler}{Sampler object returned by `AbstractMCMC.sample`.}
-#'   \item{n_threads}{Number of Julia threads detected.}
-#'   \item{mcmc}{List of MCMC configuration parameters.}
-#'   \item{control}{Control options used in the sampler setup.}
+#'   \item{params}{Posterior samples, in the format specified by \code{posterior_type}
+#'   ("array", "rvar", "mcmc", or "draws").}
+#'   \item{name}{A character string giving the name of the Julia sampler object.}
+#'   \item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia.}
+#'   \item{n_threads}{An integer giving the number of Julia threads detected.}
+#'   \item{mcmc}{A list of MCMC configuration parameters used in the run.}
+#'   \item{control}{The list of control options passed to and used by the sampler.}
 #' }
 #'
 #' @details
@@ -98,6 +101,7 @@ juliaBUGS <- function(
   force_setup_juliaBUGS = FALSE,
   control = NULL,
   progress = TRUE,
+  verbose = TRUE,
   ...
 ) {
   # Adding a restriction to set progress as FALSE if the model is run from Rstudio interactive session
@@ -214,7 +218,7 @@ juliaBUGS <- function(
   # Setting up the Julia Environment
   # Only setup if forced or if Julia is not yet initialized
   if (force_setup_juliaBUGS || !JuliaCall::julia_exists("JuliaBUGS")) {
-    setup_juliaBUGS(...)
+    setup_juliaBUGS(verbose = verbose,...)
   }
 
   # Setting default configuration for control parameters
@@ -270,8 +274,9 @@ juliaBUGS <- function(
     "AbstractMCMC.MCMCSerial()"
   )
 
-  cat("Initialising AbstractMCMC.sample()... \n")
-
+  if (verbose) {
+    cat("Initialising AbstractMCMC.sample()... \n")
+  }
   ## Once the PR for parallel progress bar is working
   # JuliaCall::julia_eval("struct M <: AbstractMCMC.AbstractModel end; struct S <: AbstractMCMC.AbstractSampler end; function AbstractMCMC.step(rng, ::M, ::S, state=nothing; kwargs...); sleep(0.001); rand(rng), nothing; end")
   # JuliaCall::julia_eval("sample(M(), S(), MCMCThreads(), 500, 4; progress=:perchain)",need_return = "Julia")
@@ -294,7 +299,10 @@ juliaBUGS <- function(
     bool_dictionary[[as.character(progress)]],
     ")"
   ))
-  cat(" DONE!\n")
+
+  if (verbose) {
+    cat(" DONE!\n")
+  }
 
   params_raw <- if (!is.null(params_to_save)) {
     get_params_from_name_raw(name = name, params = params_to_save)

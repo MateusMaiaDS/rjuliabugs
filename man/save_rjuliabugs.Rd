@@ -18,7 +18,7 @@ object should be serialized. The file name should have the \code{.jls} extension
 If \code{NULL}, uses the \code{chains_file} field from \code{rjuliabugs_model}.}
 }
 \value{
-Returns \code{invisible(NULL)}. Used saving both the
+No return value, called for saving both the
 Julia object and the R \code{rjuliabugs} object to disk.
 }
 \description{

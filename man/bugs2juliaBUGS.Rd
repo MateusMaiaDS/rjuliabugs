@@ -7,22 +7,24 @@
 bugs2juliaBUGS(model_code, convert_var_name = TRUE)
 }
 \arguments{
-\item{model_code}{A character string containing the BUGS model.}
+\item{model_code}{A character string containing the BUGS model code.}
 
-\item{convert_var_name}{Logical; if `TRUE` (default), R-style variable names such as `a.b.c`
-are translated to `a_b_c` in the Julia model. Set to `FALSE` to preserve original names.}
+\item{convert_var_name}{Logical; if \code{TRUE} (default), R-style variable names
+(e.g., \code{a.b.c}) are converted to Julia-style (\code{a_b_c}). Set to \code{FALSE}
+to preserve the original names.}
 }
 \value{
-A character string formatted as a Julia `@bugs` macro call.
+A character string representing a valid Julia `@bugs` macro call. This string can
+be evaluated in Julia to define the BUGS model with optional variable name conversion.
 }
 \description{
-Formats a Bayesian Updating for Gibbs Sampling (BUGS)
-model string to Julia's `@bugs("""...""", convert_var_name, true)` syntax,
-used in the Julia ecosystem for running BUGS models. By default, this macro converts
-R-style variable names (e.g., `a.b.c`) to Julia-style (`a_b_c`). You can disable this behavior
-by setting `convert_var_name = FALSE`.
+This function formats a Bayesian Updating for Gibbs Sampling (BUGS) model string
+into Julia's `@bugs("""...""", convert_var_name, true)` macro syntax, used to run
+BUGS models in Julia. By default, R-style variable names (e.g., `a.b.c`) are converted
+to Julia-style (`a_b_c`). You can disable this behavior by setting `convert_var_name = FALSE`.
 }
 \examples{
+\dontrun{
 model <- "
   for i in 1:N
     y[i] ~ dnorm(mu, tau)
@@ -32,5 +34,6 @@ model <- "
 "
 bugs2juliaBUGS(model)
 bugs2juliaBUGS(model, convert_var_name = FALSE)
+}
 
 }

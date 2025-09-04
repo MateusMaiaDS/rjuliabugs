@@ -10,6 +10,9 @@ delete_julia_obj(obj_name)
 \item{obj_name}{A character string specifying the name of the Julia object to be deleted.
 This should correspond to a variable or symbol previously defined in the Julia \code{Main} module.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 This function removes a variable or object from the Julia \code{Main} module using JuliaCall.
 It is useful for cleaning up or resetting objects defined in the Julia environment from R.

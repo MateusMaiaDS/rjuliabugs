@@ -19,6 +19,22 @@ as_mcmc(x, ...)
 }
 \value{
 An object of class \code{mcmc}, \code{mcmc.list}, or a \code{rjuliabugs} object with updated \code{params}.
+
+An object of class \code{"rjuliabugs"} (a named list) with the following elements:
+\describe{
+\item{params}{Posterior samples converted to \code{coda::mcmc} if a single chain,
+or \code{coda::mcmc.list} if multiple chains.}
+\item{name}{The name of the Julia sampler object (unchanged).}
+\item{sampler}{The sampler object returned by \code{AbstractMCMC.sample} in Julia (unchanged).}
+\item{n_threads}{Number of Julia threads detected (unchanged).}
+\item{mcmc}{MCMC configuration parameters; \code{posterior_type} is updated to \code{"mcmc"}.}
+\item{control}{Control options passed to and used by the sampler (unchanged).}
+}
+
+Returns posterior samples converted to \code{coda::mcmc} if the array has one chain,
+or \code{coda::mcmc.list} if multiple chains. Input must be a 3D array
+(iterations × chains × parameters). Each column corresponds to a parameter, and each row
+corresponds to an iteration.
 }
 \description{
 Generic function to convert Markov Chain Monte Carlo (MCMC) output to \code{\link[coda:mcmc]{coda::mcmc}} or \code{\link[coda:mcmc.list]{coda::mcmc.list}} format.
