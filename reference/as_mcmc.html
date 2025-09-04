@@ -69,6 +69,30 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>mcmc</code>, <code>mcmc.list</code>, or a <code>rjuliabugs</code> object with updated <code>params</code>.</p>
+<p>An object of class <code>"rjuliabugs"</code> (a named list) with the following elements:</p><dl><dt>params</dt>
+<dd><p>Posterior samples converted to <code><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">coda::mcmc</a></code> if a single chain,
+or <code><a href="https://rdrr.io/pkg/coda/man/mcmc.list.html" class="external-link">coda::mcmc.list</a></code> if multiple chains.</p></dd>
+
+<dt>name</dt>
+<dd><p>The name of the Julia sampler object (unchanged).</p></dd>
+
+<dt>sampler</dt>
+<dd><p>The sampler object returned by <code>AbstractMCMC.sample</code> in Julia (unchanged).</p></dd>
+
+<dt>n_threads</dt>
+<dd><p>Number of Julia threads detected (unchanged).</p></dd>
+
+<dt>mcmc</dt>
+<dd><p>MCMC configuration parameters; <code>posterior_type</code> is updated to <code>"mcmc"</code>.</p></dd>
+
+<dt>control</dt>
+<dd><p>Control options passed to and used by the sampler (unchanged).</p></dd>
+
+
+</dl><p>Returns posterior samples converted to <code><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">coda::mcmc</a></code> if the array has one chain,
+or <code><a href="https://rdrr.io/pkg/coda/man/mcmc.list.html" class="external-link">coda::mcmc.list</a></code> if multiple chains. Input must be a 3D array
+(iterations × chains × parameters). Each column corresponds to a parameter, and each row
+corresponds to an iteration.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

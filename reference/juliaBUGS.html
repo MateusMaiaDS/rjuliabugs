@@ -164,23 +164,24 @@ a terminal outside of RStudio.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>"rjuliabugs"</code> containing:</p><dl><dt>params</dt>
-<dd><p>Posterior samples, in the format specified by <code>posterior_type</code>.</p></dd>
+    <p>An object of class <code>"rjuliabugs"</code> (a named list) with the following elements:</p><dl><dt>params</dt>
+<dd><p>Posterior samples, in the format specified by <code>posterior_type</code>
+("array", "rvar", "mcmc", or "draws").</p></dd>
 
 <dt>name</dt>
-<dd><p>Character string identifying the Julia sampler object.</p></dd>
+<dd><p>A character string giving the name of the Julia sampler object.</p></dd>
 
 <dt>sampler</dt>
-<dd><p>Sampler object returned by <code>AbstractMCMC.sample</code>.</p></dd>
+<dd><p>The sampler object returned by <code>AbstractMCMC.sample</code> in Julia.</p></dd>
 
 <dt>n_threads</dt>
-<dd><p>Number of Julia threads detected.</p></dd>
+<dd><p>An integer giving the number of Julia threads detected.</p></dd>
 
 <dt>mcmc</dt>
-<dd><p>List of MCMC configuration parameters.</p></dd>
+<dd><p>A list of MCMC configuration parameters used in the run.</p></dd>
 
 <dt>control</dt>
-<dd><p>Control options used in the sampler setup.</p></dd>
+<dd><p>The list of control options passed to and used by the sampler.</p></dd>
 
 
 </dl></div>

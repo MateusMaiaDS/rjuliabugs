@@ -72,6 +72,28 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>draws</code> object (e.g., <code>draws_array</code>) or a modified <code>rjuliabugs</code> object.</p>
+<p>An object of class <code>"rjuliabugs"</code> (a named list) with the following elements:</p><dl><dt>params</dt>
+<dd><p>Posterior samples converted to <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">posterior::draws_array</a></code>.</p></dd>
+
+<dt>name</dt>
+<dd><p>The name of the Julia sampler object (unchanged).</p></dd>
+
+<dt>sampler</dt>
+<dd><p>The sampler object returned by <code>AbstractMCMC.sample</code> in Julia (unchanged).</p></dd>
+
+<dt>n_threads</dt>
+<dd><p>Number of Julia threads detected (unchanged).</p></dd>
+
+<dt>mcmc</dt>
+<dd><p>MCMC configuration parameters; <code>posterior_type</code> is updated to <code>"draws"</code>.</p></dd>
+
+<dt>control</dt>
+<dd><p>Control options passed to and used by the sampler (unchanged).</p></dd>
+
+
+</dl><p>An object of class <code>draws_array</code> (from the <span class="pkg">posterior</span> package). The 3D array
+(iterations × chains × parameters) is converted to a <code>draws_array</code>, preserving the
+chain structure and parameter names.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
