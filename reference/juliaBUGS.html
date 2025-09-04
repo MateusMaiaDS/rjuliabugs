@@ -73,6 +73,7 @@ for the HMC sampler uses Not-U-Turn Sampler (NUTS) with the target acceptance pr
 <span>  force_setup_juliaBUGS <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  control <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -149,13 +150,18 @@ The default is <code>NULL</code>, which means no default initial values are used
 
 
 <dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, a progress bar is displayed; if <code>FALSE</code>,
-no progress bar is shown. The default is <code>TRUE</code>. However, when the function
+<dd><p>Logical. If <code>TRUE</code>, a progress bar for the sampler is displayed;
+if <code>FALSE</code>, no progress bar is shown. The default is <code>TRUE</code>. However, when the function
 is run interactively inside an RStudio session, <code>progress</code> is automatically
 overridden to <code>FALSE</code>, which suppresses the progress output from
 <code>AbstractMCMC.sample</code>. For a complete progress bar display with <code>rjuliabugs</code>,
 as the one showed when running Julia code,we recommend running the code from
 a terminal outside of RStudio.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical. If <code>FALSE</code> will ommit any message from the function to indicate
+the sampler/setup progress</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -49,6 +49,7 @@
 <span>  extra_packages <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verify_package <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  install_from_dev <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -68,6 +69,11 @@ Defaults to <code>NULL</code>, meaning only the core packages are handled.</p></
 
 <dt id="arg-install-from-dev">install_from_dev<a class="anchor" aria-label="anchor" href="#arg-install-from-dev"></a></dt>
 <dd><p>Logical; if <code>TRUE</code>, installs <code>JuliaBUGS</code> from its development repository. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Logical. If <code>FALSE</code> will ommit any message from the function to indicate
+the setup progress.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
