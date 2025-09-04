@@ -20,6 +20,7 @@ if it is not already wrapped. This is useful for preparing BUGS models
 for use with Julia packages that expect this specific block structure.
 }
 \examples{
+\dontrun{
 model_body <- "
   for i in 1:N
     r[i] ~ dbin(p[i], n[i])
@@ -31,5 +32,6 @@ model_body <- "
   sigma = 1 / sqrt(tau)
 "
 wrap_model_to_juliaBUGS(model_body)
+}
 
 }

@@ -20,11 +20,12 @@ integer (if it is a whole number) or kept as a float (numeric).
 It also preserves the original names of vector elements, if any.
 }
 \examples{
+\dontrun{
 input_list <- list(
   a = c(x = 1.0, y = 2.5, z = 3.0),
   b = c(foo = 4.0, bar = 5.1),
   c = c(6, 7, 8)
 )
 convert_numeric_types(input_list)
-
+}
 }
