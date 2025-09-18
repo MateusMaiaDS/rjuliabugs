@@ -13,4 +13,4 @@ Suggests: bayesplot, knitr, rmarkdown, gridExtra, testthat (>= 3.0.0)
 URL: https://mateusmaiads.github.io/rjuliabugs/
 BugReports: https://github.com/MateusMaiaDS/rjuliabugs/issues
 Config/testthat/edition: 3
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
