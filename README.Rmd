@@ -11,7 +11,7 @@ output: github_document
 <!-- badges: end -->
 
 
-**rjuliabugs** is an R package that provides a bridge between R and [JuliaBUGS](https://github.com/TuringLang/JuliaBUGS.jl?tab=readme-ov-file), the [BUGS](https://en.wikipedia.org/wiki/WinBUGS)-style Bayesian modeling interface developed in Julia as part of the [Turing.jl](https://turing.ml/dev/) probabilistic programming ecosystem.
+**rjuliabugs** is an R package that provides a bridge between R and [JuliaBUGS](https://github.com/TuringLang/JuliaBUGS.jl?tab=readme-ov-file), the [BUGS](https://en.wikipedia.org/wiki/WinBUGS)-style Bayesian modeling interface developed in Julia as part of the [Turing.jl](https://turinglang.org/) probabilistic programming ecosystem.
 
 **JuliaBUGS** allows users to define models using the familiar BUGS syntax while leveraging the speed and flexibility of the Julia language. It enables automatic translation of BUGS code into modern probabilistic programs that run efficiently with advanced inference engines such as Hamiltonian Monte Carlo (HMC) — all accessible via Turing.jl.
 
@@ -51,4 +51,4 @@ This package is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgements
 
-This project is part of a Google Summer of Code 2025 initiative under the [Turing.jl](https://turing.ml/dev/) organization. The mentors were Xianda Sun and Robert Goudie.
+This project is part of a Google Summer of Code 2025 initiative under the [Turing.jl](https://turinglang.org/) organization. The mentors were Xianda Sun and Robert Goudie.
