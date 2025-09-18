@@ -13,7 +13,7 @@ MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/
 [JuliaBUGS](https://github.com/TuringLang/JuliaBUGS.jl?tab=readme-ov-file),
 the [BUGS](https://en.wikipedia.org/wiki/WinBUGS)-style Bayesian
 modeling interface developed in Julia as part of the
-[Turing.jl](https://turing.ml/dev/) probabilistic programming ecosystem.
+[Turing.jl](turinglang.org) probabilistic programming ecosystem.
 
 **JuliaBUGS** allows users to define models using the familiar BUGS
 syntax while leveraging the speed and flexibility of the Julia language.
@@ -80,5 +80,5 @@ This package is licensed under the MIT License. See the
 ## Acknowledgements
 
 This project is part of a Google Summer of Code 2025 initiative under
-the [Turing.jl](https://turing.ml/dev/) organization. The mentors were
+the [Turing.jl](turinglang.org) organization. The mentors were
 Xianda Sun and Robert Goudie.
