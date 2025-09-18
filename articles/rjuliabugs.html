@@ -263,17 +263,17 @@ through <code>summary</code> function</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  parameters      mean      std      mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
-<span><span class="co">#&gt;         tau 48.351264 133.8809 10.468533    335.6    195.1 1.015          NA</span></span>
-<span><span class="co">#&gt;     alpha12 -0.827773   0.4444  0.007721   3359.5   3582.8 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha2  1.353985   0.2800  0.005204   2975.5   3052.6 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha1  0.079766   0.3209  0.005748   3296.5   3881.6 1.001          NA</span></span>
-<span><span class="co">#&gt;      alpha0 -0.550086   0.1958  0.003506   3196.2   3296.6 1.001          NA</span></span>
-<span><span class="co">#&gt;        b[1] -0.201828   0.2631  0.005751   2193.2   3850.9 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[2]  0.005365   0.2230  0.003124   5296.2   3568.3 1.004          NA</span></span>
-<span><span class="co">#&gt;        b[3] -0.205748   0.2324  0.005635   1716.8   3882.7 1.002          NA</span></span>
-<span><span class="co">#&gt;        b[4]  0.275604   0.2618  0.007690   1087.7   4617.0 1.003          NA</span></span>
-<span><span class="co">#&gt;        b[5]  0.114701   0.2407  0.003707   4596.1   4143.1 1.001          NA</span></span>
+<span><span class="co">#&gt;  parameters      mean     std     mcse ess_bulk ess_tail  rhat ess_per_sec</span></span>
+<span><span class="co">#&gt;         tau 34.876682 85.7835 5.720688    461.8    291.5 1.008          NA</span></span>
+<span><span class="co">#&gt;     alpha12 -0.827966  0.4422 0.007186   3810.1   3436.9 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha2  1.355327  0.2775 0.004849   3305.1   3402.1 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha1  0.080584  0.3232 0.005637   3291.5   4104.1 1.001          NA</span></span>
+<span><span class="co">#&gt;      alpha0 -0.550664  0.1974 0.003521   3099.5   4221.4 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[1] -0.201992  0.2600 0.005059   2822.6   4403.6 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[2]  0.007469  0.2250 0.002965   5859.9   4295.8 1.001          NA</span></span>
+<span><span class="co">#&gt;        b[3] -0.206573  0.2331 0.004995   2305.3   3799.0 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[4]  0.285714  0.2602 0.006398   1680.7   3538.3 1.002          NA</span></span>
+<span><span class="co">#&gt;        b[5]  0.120503  0.2426 0.003777   4627.0   4273.4 1.001          NA</span></span>
 <span><span class="co">#&gt;          ...</span></span>
 <span><span class="co">#&gt;   17 rows omitted</span></span></code></pre></div>
 <p>If we wish to obtain the summary statistics for each saved parameter,
@@ -384,7 +384,7 @@ package:</p>
 <span></span>
 <span><span class="co"># Example: effective sample size</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/ess_basic.html" class="external-link">ess_basic</a></span><span class="op">(</span><span class="va">posterior</span><span class="op">$</span><span class="va">params</span><span class="op">[</span>,,<span class="st">"alpha0"</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3118.906</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 3142.333</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-the-rjuliabugs-model">Saving and loading the <code>rjuliabugs</code> model<a class="anchor" aria-label="anchor" href="#saving-and-loading-the-rjuliabugs-model"></a>
